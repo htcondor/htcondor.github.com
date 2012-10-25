@@ -28,30 +28,91 @@ end
 module FeedAggregator
   extend Octopress::Date
 
-  def self.compile_feeds(site, fa_data)
-    defaults = { 'title' => 'Blog Feed', 'post_limit' => 5, 'feed_list' => [] }
-    @params = defaults.merge(fa_data)
+  def self.summary(content)
+    if content.index(/<!--\s*more\s*-->/i)
+      s = content.split(/<!--\s*more\s*-->/i)[0]
+    elsif content.index(/\n\n/)
+      s = content.split(/\n\n/)[0]
+    else
+      return ""
+    end
+    while s.chomp! do
+    end
+    s.chomp!("</p>")
+    nopt = s.scan("<p>").size
+    ncpt = s.scan("</p>").size
+    s += " [...]"
+    n = nopt-ncpt
+    warn "%d more closing </p> tags than opened\n" % [-n] if n < 0
+    n.times { s += "</p>" }
+    s += "\n"
+    s
+  end
+
+  def self.age_limit_seconds(age_limit)
+    sec = 0
+    if /^([0-9]+)\s*(\w*)$/.match(age_limit) then
+      nn = $1.to_i
+      unit = $2
+      case unit
+      when "s","sec","secs","second","seconds"
+        fs = 1
+      when "m","min","mins","minute","minutes"
+        fs = 60
+      when "h","hour","hours"
+        fs = 3600
+      when "d","day","days"
+        fs = 24*3600
+      when "w","week","weeks"
+        fs = 7*24*3600
+      when "mon","month","months"
+        fs = 30*24*3600
+      when "y","year","years"
+        fs = 365*24*3600
+      else
+        warn "unrecognized post age limit unit '%s'\n" % [unit]
+        return 0
+      end
+      sec = nn * fs
+    else
+      warn "unrecognized post age limit '%s'\n" % [post_age_limit]
+      return 0
+    end
+    sec
+  end
+
+  def self.compile_feeds(site, params)
+    recognized_feed = ['url', 'author', 'author_url']
 
     # title to use for the blog feed
-    @title = @params['title']
+    title = params['title']
 
     # max number of posts to take from each feed url
-    @post_limit = @params['post_limit'].to_i
+    post_limit = params['post_limit'].to_i
+
+    post_age_limit = age_limit_seconds(params['post_age_limit'])
+    full_post_age_limit = age_limit_seconds(params['full_post_age_limit'])
+
+    now = Time.new
+    earliest = now - post_age_limit
+    earliest_full = now - full_post_age_limit
 
     # get the list of feed urls
-    @feeds = @params['feed_list']
-    @feeds.uniq!
+    feeds = params['feed_list']
+    feeds.uniq!
 
     # aggregate all feed urls into a single list of entries
     entries = []
     authors = Set.new()
-    @feeds.each do |f|
+    feeds.each do |f|
       if f.class <= Hash then
-        unk = f.keys - ['url', 'author', 'author_url']
-        if unk.size > 0 then
-          warn "Unknown feed parameters: %s\n" % [unk.to_s]
+        if not f.key?('url') then
+          warn "Ignoring feed missing 'url' key: %s" % [f.to_s]
+          next
         end
         feed_url = f['url']
+        unk = f.keys - recognized_feed
+        warn "Feed %s has unrecognized feed parameters: %s\n" % [feed_url, unk.to_s] if unk.size > 0
       else
         feed_url = f
       end
@@ -68,12 +129,15 @@ module FeedAggregator
       # apparently I can't assume these, although my patches to parsers above create them
       missing_feed_methods = [:entries, :author, :url].select {|e| not feed.respond_to?(e)} 
       if missing_feed_methods.size > 0 then
-        warn "feed %s does not support methods: %s\n" % [feed_url, missing_feed_methods.to_s]
+        warn "feed %s is missing methods: %s\n" % [feed_url, missing_feed_methods.to_s]
         next
       end
 
       # take entries, up to the given post limit
-      ef = feed.entries.first(@post_limit)
+      ef = feed.entries
+      ef = ef.first(post_limit) if post_limit > 0
+      ef = ef.select{|e| e.published >= earliest} if post_age_limit > 0
+
       # if no entries, skip this feed
       next if ef.length < 1
 
@@ -108,21 +172,31 @@ module FeedAggregator
     authors.sort! { |a,b| [a['last'],a['first']] <=> [b['last'],b['first']] }
 
     # eliminate any duplicate blog entries, by post id
-    # (appears to be using entry url for id, which seems reasonable)
     entries.uniq! { |e| e.entry_id }
 
     # sort by pub date, most-recent first
     entries.sort! { |a,b| b.published <=> a.published }
 
+    post_total_limit = params['post_total_limit'].to_i
+    entries = entries.first(post_total_limit) if post_total_limit > 0
+
+    full_post_limit = params['full_post_limit'].to_i
     posts = []
+    pn = 0
     entries.each do |e|
+      pn += 1
+      if (full_post_limit >= 0 and pn > full_post_limit) or (full_post_age_limit > 0 and e.published < earliest_full) then
+        content = (e.summary or summary(e.content))
+      else
+        content = (e.content or e.summary)
+      end
       posts << {
         'id' => e.entry_id,
         'url' => e.url,
         'title' => e.title,
         'author' => e.author,
         'author_url' => e.author_url,
-        'content' => (e.content or e.summary),
+        'content' => content,
         'date' => e.published,
         'date_formatted' => format_date(e.published, site.config['date_format']),
         'comments' => 'false'
@@ -131,7 +205,7 @@ module FeedAggregator
 
     # return data from compiling the feeds
     {
-      'title' => @title,
+      'title' => title,
       'authors' => authors,
       'posts' => posts
     }    
@@ -189,12 +263,29 @@ module Jekyll
 
   class Site
     def generate_feed_aggregators
+      defaults = { 
+        'title' => 'Blog Feed', 
+        'post_limit' => 5,
+        'post_total_limit' => 100,
+        'post_age_limit' => '1 year',
+        'full_post_limit' => -1,
+        'full_post_age_limit' => '0 days',
+        'feed_list' => []
+      }
+      recognized = defaults.keys + ['meta_feed', 'layout']
+
       # render content for any pages with layout 'feed_aggregator':
       self.pages.select{|p| p.data['layout']=='feed_aggregator'}.each do |page|
+
+        unk = page.data.keys - recognized
+        warn "Unrecognized feed aggregator parameters: %s\n" % [unk.to_s] if unk.size > 0
+
+        params = defaults.merge(page.data.select {|k,v| recognized.include?(k)})
+
         fa_data = page.data
 
         # compile the requested feeds and save the result on fa_data
-        fa_data['feed_aggregator'] = FeedAggregator.compile_feeds(self, page.data)
+        fa_data['feed_aggregator'] = FeedAggregator.compile_feeds(self, params)
 
         # render the feed aggregator page
         fa_page = FeedAggregatorPage.new(page, fa_data)

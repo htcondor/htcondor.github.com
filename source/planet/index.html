@@ -6,7 +6,28 @@ layout: feed_aggregator
 title: Planet Condor
 
 # limit posts from each feed (defaults to 5)
+# use 0 for 'no limit'
 post_limit: 5
+
+# limit on total posts for feed (defaults to 100)
+# use 0 for 'no limit'
+post_total_limit: 0
+
+# maximum post age to include:  <N> { seconds | minutes | hours | days | months | years }
+# the following are equivalent:  d, day, days
+# defaults to '1 year'
+# use '0 <your-choice>' for 'no limit'
+post_age_limit: 1 year
+
+# only render full content for the first <N> posts 
+# (default is full content for all posts)
+# use limit of 0 to use all summaries
+#full_post_limit: 10
+
+# use summaries for all posts older than this 
+# (default is no maximum age)
+# works like post_age_limit
+full_post_age_limit: 1 month
 
 # generate a metafeed (optional)
 meta_feed: atom.xml
