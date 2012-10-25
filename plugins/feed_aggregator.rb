@@ -172,7 +172,8 @@ module FeedAggregator
     authors.sort! { |a,b| [a['last'],a['first']] <=> [b['last'],b['first']] }
 
     # eliminate any duplicate blog entries, by post id
-    entries.uniq! { |e| e.entry_id }
+    # entry_id doesn't seem 100% reliable so pair it with the url
+    entries.uniq! { |e| [e.entry_id, e.url] }
 
     # sort by pub date, most-recent first
     entries.sort! { |a,b| b.published <=> a.published }
