@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2012-10-29T13:17:42-07:00</updated>
+  <updated>2012-10-29T13:18:02-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Welcome To The HTCondor Project Github Site]]></title>
+      <link href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/"/>
+      <updated>2012-10-29T20:15:00Z</updated>
+      <id>http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site</id>
+      <author>
+        <name><![CDATA[HTCondor Team GitHub]]></name>
+        <uri>http://htcondor.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project.</p>
+
+<p>We will also be hosting the Planet HTCondor feed aggregator for blog entries from HTCondor community members, which you can see <a href="http://htcondor.github.com/planet">here</a>.  You can subscribe to the meta-feed for Planet HTCondor at <a href="http://htcondor.github.com/planet/atom.xml">this link</a>.</p>
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Pre and Post job scripts]]></title>
@@ -102,21 +117,6 @@ Sun Oct 14 18:06:02 UTC 2012
         <uri>http://research.cs.wisc.edu/condor</uri>
       </author>
       <content type="html"><![CDATA[In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Welcome To The Condor Project Github Site]]></title>
-      <link href="http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site/"/>
-      <updated>2012-10-24T22:01:00Z</updated>
-      <id>http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site</id>
-      <author>
-        <name><![CDATA[HTCondor Team GitHub]]></name>
-        <uri>http://htcondor.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Welcome to the Condor Project GitHub website!  This site is the github web and blog presence for the Condor project.</p>
-
-<p>We will also be hosting the Planet Condor feed aggregator for blog entries from Condor community members, which you can see <a href="http://htcondor.github.com/planet">here</a>.  You can subscribe to the meta-feed for Planet Condor at <a href="http://htcondor.github.com/planet/atom.xml">this link</a>.</p>
 ]]></content>
     </entry>
   
