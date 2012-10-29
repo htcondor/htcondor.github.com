@@ -2,10 +2,10 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://condor-project.github.com
-title: Condor Project
-subtitle: The website and blog for the Condor project on github.
-author: Condor Project
+url: http://htcondor.github.com
+title: HTCondor Project
+subtitle: The website and blog for the HTCondor project on github.
+author: HTCondor Project
 simple_search: http://google.com/search
 description:
 
