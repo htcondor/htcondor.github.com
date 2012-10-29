@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2012-10-29T13:10:26-07:00</updated>
+  <updated>2012-10-29T13:17:42-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -14,12 +14,12 @@
   
     <entry>
       <title type="html"><![CDATA[Pre and Post job scripts]]></title>
-      <link href="https://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/"/>
+      <link href="http://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/"/>
       <updated>2012-10-29T11:07:05Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=801</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p><a href="http://cs.wisc.edu/condor">Condor</a> has a few ways to run programs associated with a job, beyond the job itself. If you&#8217;re an administrator, you can use the USER_JOB_WRAPPER. If you&#8217;re a user who is friends with your administrator, you can use Job Hooks. If you are ambitious, you can wrap all your jobs in a script that runs programs before and after your actual job.</p>
 <p>Or, you can use the PreCmd and PostCmd attributes on your job. They specify programs to run before and after your job executes. By example,</p>
@@ -108,7 +108,7 @@ Sun Oct 14 18:06:02 UTC 2012
     <entry>
       <title type="html"><![CDATA[Welcome To The Condor Project Github Site]]></title>
       <link href="http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site/"/>
-      <updated>2012-10-24T19:01:00Z</updated>
+      <updated>2012-10-24T22:01:00Z</updated>
       <id>http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site</id>
       <author>
         <name><![CDATA[HTCondor Team GitHub]]></name>
@@ -168,12 +168,12 @@ Sun Oct 14 18:06:02 UTC 2012
   
     <entry>
       <title type="html"><![CDATA[Tip: ISO8601 dates in your logs]]></title>
-      <link href="https://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/"/>
+      <link href="http://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/"/>
       <updated>2012-10-22T11:37:21Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=757</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>Condor produces internal data in both structured and unstructured forms.</p>
 <p>The structured forms are just that and designed to be processed by external programs. These are the event logs (UserLog or EVENT_LOG), the HISTORY file and PER_JOB_HISTORY_DIR and POOL_HISTORY_DIR, and the job_queue.log and Accountantnew.log transaction logs.</p>
@@ -270,12 +270,12 @@ an HA schedd in your pool.</p>
   
     <entry>
       <title type="html"><![CDATA[Advanced scheduling: Execute periodically with cron jobs]]></title>
-      <link href="https://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/"/>
+      <link href="http://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/"/>
       <updated>2012-10-15T09:55:02Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=744</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>If you want to run a job periodically you could repeatedly submit jobs, or qedit existing jobs after they run, but both of those options are a kludge. Instead, the condor_schedd provides support for cron-like jobs as a first-class citizen.</p>
 <p>The cron-like feature builds on the ability to <a href="http://spinningmatt.wordpress.com/2012/09/24/advanced-scheduling-execute-in-the-future-with-job-deferral/">defer job execution</a>. However, instead of using <code>deferral_time</code>, commands analogous to <a href="http://crontab.org/">crontab(5)</a> fields are available. <code>cron_month</code>, <code>cron_day_of_month</code>, <code>cron_day_of_week</code>, <code>cron_hour</code>, and <code>cron_minute</code> all behave as you would expect, and default to * when not provided.</p>
@@ -381,12 +381,12 @@ $ grep ^00 cron.log
   
     <entry>
       <title type="html"><![CDATA[Tip: notification = never]]></title>
-      <link href="https://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/"/>
+      <link href="http://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/"/>
       <updated>2012-10-08T10:36:25Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=784</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>By default, the condor_schedd will notify you, via email, when your job completes. This is a handy feature when running a few jobs, but can become overwhelming if you are running many jobs.</p>
 <p>It can even turn into a problem if you are being notified at a mailbox you do not monitor.</p>
@@ -583,12 +583,12 @@ meta_feed:
   
     <entry>
       <title type="html"><![CDATA[Partitionable slot utilization]]></title>
-      <link href="https://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/"/>
+      <link href="http://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/"/>
       <updated>2012-10-01T11:07:41Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=764</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>There are already ways to get <a href="http://spinningmatt.wordpress.com/2012/01/31/pool-utilization/">pool utilization</a> information on a macro level. Until Condor 7.8 and the introduction of TotalSlot{Cpus,Memory,Disk}, there were no good ways to get utilization on a micro level. At least not with only the standard command-line tools.</p>
 <p>Resource data is available per slot. Getting macro, pool utilization always requires aggregating data across multiple slots. Getting micro, slot utilization should not.</p>
