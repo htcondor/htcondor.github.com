@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[Planet HTCondor Meta Feed]]></title>
+  <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
+  <link href="http://htcondor.github.com/"/>
+  <updated>2012-10-29T13:10:26-07:00</updated>
+  <id>http://htcondor.github.com/planet/atom.xml</id>
+  <author>
+    <name><![CDATA[HTCondor Project]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+    <entry>
+      <title type="html"><![CDATA[Pre and Post job scripts]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/"/>
+      <updated>2012-10-29T11:07:05Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=801</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p><a href="http://cs.wisc.edu/condor">Condor</a> has a few ways to run programs associated with a job, beyond the job itself. If you&#8217;re an administrator, you can use the USER_JOB_WRAPPER. If you&#8217;re a user who is friends with your administrator, you can use Job Hooks. If you are ambitious, you can wrap all your jobs in a script that runs programs before and after your actual job.</p>
+<p>Or, you can use the PreCmd and PostCmd attributes on your job. They specify programs to run before and after your job executes. By example,</p>
+<p><pre class="brush: plain; gutter: false;">
+$ cat prepost.job
+cmd = /bin/sleep
+args = 1
+
+log = prepost.log
+output = prepost.out
+error = prepost.err
+
++PreCmd = &amp;quot;pre_script&amp;quot;
++PostCmd = &amp;quot;post_script&amp;quot;
+
+transfer_input_files = pre_script, post_script
+should_transfer_files = always
+
+queue
+</pre></p>
+<p><pre class="brush: bash; gutter: false;">
+$ cat pre_script
+#!/bin/sh
+date &amp;gt; prepost.pre
+
+$ cat post_script
+#!/bin/sh
+date &amp;gt; prepost.post
+</pre></p>
+<p>Running,</p>
+<p><pre class="brush: plain; gutter: false;">
+$ condor_submit prepost.job
+Submitting job(s)
+.
+1 job(s) submitted to cluster 1.
+
+...wait a few seconds, or 259...
+
+$ cat prepost.pre
+Sun Oct 14 18:06:00 UTC 2012
+
+$ cat prepost.post
+Sun Oct 14 18:06:02 UTC 2012
+</pre></p>
+<p>That&#8217;s about it, except for some gotchas.</p>
+<ul>
+<li>transfer_input_files is manual and required</li>
+<li>The scripts are run from Iwd, you can&#8217;t use +PreCmd=&#8221;/bin/blah&#8221;, instead +PreCmd=&#8221;blah&#8221; and transfer_input_files=/bin/blah</li>
+<li>should_transfer_files = always, scripts are run from Iwd, if run local to the Schedd Iwd will be in the EXECUTE directory but the scripts won&#8217;t be</li>
+<li>Script stdout/err and exit code are ignored</li>
+<li>You must use +Attr=&#8221;" syntax, +PreCmd=pre_script won&#8217;t work</li>
+<li>There is no option of arguments for the scripts</li>
+<li>There is no starter environment, thus no $_CONDOR_JOB_AD/$_CONDOR_MACHINE_AD, but you can find .job_ad and .machine_ad in $_CONDOR_SCRATCH_DIR</li>
+<li>Make sure the scripts are executable, otherwise the job will be put on hold with a reason similar to: Error from 127-0-0-1.NO_DNS: Failed to execute &#8216;&#8230;/dir_30626/pre_script&#8217;: Permission denied </li>
+<li>PostCmd is broken in condor 7.6, but works in 7.8</li>
+</ul>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/801/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/801/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=801&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Condor Security Release: 7.8.6 (October 25, 2012)]]></title>
+      <link href="http://research.cs.wisc.edu/condor/security/vulnerabilities/CONDOR-2012-0003.html"/>
+      <updated>2012-10-25T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.8.6. which contains an important security fix that was incorrectely documented as being in the 7.8.5 release.  This release is otherwise identical to the 7.8.5 release.  Affected users should upgrade as soon as possible.  More details on the security issue can be found here.  Condor binaries and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ "Condor" name changing to "HTCondor" (October 25, 2012)]]></title>
+      <link href="http://www.cs.wisc.edu/condor"/>
+      <updated>2012-10-25T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Welcome To The Condor Project Github Site]]></title>
+      <link href="http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site/"/>
+      <updated>2012-10-24T19:01:00Z</updated>
+      <id>http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site</id>
+      <author>
+        <name><![CDATA[HTCondor Team GitHub]]></name>
+        <uri>http://htcondor.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Welcome to the Condor Project GitHub website!  This site is the github web and blog presence for the Condor project.</p>
+
+<p>We will also be hosting the Planet Condor feed aggregator for blog entries from Condor community members, which you can see <a href="http://htcondor.github.com/planet">here</a>.  You can subscribe to the meta-feed for Planet Condor at <a href="http://htcondor.github.com/planet/atom.xml">this link</a>.</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Configuring high-availability Condor central managers with Wallaby]]></title>
+      <link href="http://chapeau.freevariable.com/2012/10/configuring-high-availability-condor-central-managers-with-wallaby.html"/>
+      <updated>2012-10-23T04:34:58Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.37</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[
+        <p>Rob Rati and I gave a tutorial on <a href="http://research.cs.wisc.edu/condor/CondorWeek2012/presentations/rati-benton-condor-ha.pdf">highly-available job queues at Condor Week this year</a>.  While it was not a <a href="http://getwallaby.com">Wallaby</a>-specific tutorial, we did point out that configuring highly-available job queues is easier for users who manage and deploy their configurations with Wallaby; compare the manual and automated approaches in the following slides:</p>
+
+<p><img src="http://chapeau.freevariable.com//haschedd.png" alt="Haschedd" title="haschedd.png" border="0" width="398" height="600" /></p>
+
+<p>Configuring <a href="http://research.cs.wisc.edu/condor/manual/v7.6/3_11High_Availability.html#SECTION004112000000000000000">highly-available central managers</a> (HA CMs) is rather more involved than configuring highly-available job queues.  Here&#8217;s what a successful HA CM setup requires:</p>
+
+<ul>
+<li>all hosts that serve as candidate central managers (CMs) must be included in the <code>CONDOR_HOST</code> variable across the pool</li>
+<li>the <code>had</code> and <code>replication</code> daemons must be set up to run on candidate CMs</li>
+<li>the <code>HAD_LIST</code> and <code>REPLICATION_LIST</code> configuration variables must include a list of candidate CMs and the ports on which the <code>had</code> and <code>replication</code> daemons are running on these hosts</li>
+<li>various tunable settings related to shared-state and failure detection must be set</li>
+</ul>
+
+<p>Wallaby includes <code>HACentralManager</code>, a ready-to-install feature that has sensible defaults for setting up a candidate CM.  The tedious work of constructing lists of hostnames and ports &#8212; and ensuring that these are set everywhere that they must be &#8212; can take great advantage of Wallaby&#8217;s scriptability.  At the bottom of this post is a simple Wallaby shell command that sets up a highly-available central manager with several nodes serving as candidate CMs.  To use it, download it and place it in your <code>WALLABY_COMMAND_DIR</code> (<a href="http://getwallaby.com/2010/10/extending-the-wallaby-shell/">review how to install Wallaby shell command extensions if necessary</a>).  Then invoke it with </p>
+
+<pre><code>wallaby setup-ha-cms fred barney wilma betty
+</code></pre>
+
+<p>The above invocation will set up <code>fred</code>, <code>barney</code>, <code>wilma</code>, and <code>betty</code> as candidate CMs, place the candidate CMs in the <code>PotentialCMs</code> group (creating this group if necessary), and configure Wallaby&#8217;s default group to use the highly-available CM cluster.  (The <code>setup-ha-cms</code> command takes options to put candidate CMs in a different group or apply this configuration to some subset of the pool; invoke it with <code>--help</code> for more information.)</p>
+
+<p>Once you&#8217;ve set up your candidate CMs, be sure to activate the new configuration:</p>
+
+<pre><code>wallaby activate
+</code></pre>
+
+<p>Of course, <code>wallaby activate</code> will alert you to any problems that prevent your configuration from taking effect.  Correct any errors that come up and activate again, if necessary.  The <code>setup-ha-cms</code> command is a pretty simple example of automating configuration, but it saves a lot of repetitive and error-prone effort!</p>
+
+<p><strong>UPDATE</strong>:  The command will now remove all nodes from the candidate CM group before adding any nodes to it.  This ensures that if the command is run multiple times with different candidate CM node sets, only the most recent set will receive the candidate CM configuration.  (The command as initially posted would apply the candidate CM configuration to every node that was in the candidate CM group at invocation time, but only those nodes that were named in its most recent invocation would actually become candidate CMs.)  Thanks to <a href="http://rrati.github.com">Rob Rati</a> for the observation.</p>
+
+<p><script src="https://gist.github.com/3936568.js"> </script><noscript>View this post in your browser to see the embedded script.</noscript></p>
+
+        
+
+    ]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Tip: ISO8601 dates in your logs]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/"/>
+      <updated>2012-10-22T11:37:21Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=757</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Condor produces internal data in both structured and unstructured forms.</p>
+<p>The structured forms are just that and designed to be processed by external programs. These are the event logs (UserLog or EVENT_LOG), the HISTORY file and PER_JOB_HISTORY_DIR and POOL_HISTORY_DIR, and the job_queue.log and Accountantnew.log transaction logs.</p>
+<p>The unstructured forms are for debugging and designed to be read by a person, often an experienced person. They are often called trace, or debug, logs and are the files in the LOG directory, or the extra output seen when passing -debug to command-line tools, i.e. condor_q -debug.</p>
+<p>Consuming and processing the unstructured forms with external programs is increasingly important. Consider tracing incidents through a deployment of 50,000 geographically distributed, physical and virtual systems. Or, even 100 local systems.</p>
+<p>More and more tools that provide the ability to aggregate unstructured logs are emerging and they all need to do some basic parsing of the logs. Help make their integration simpler and use a well defined format for timestamps.</p>
+<p>For instance, ISO8601 -</p>
+<pre>
+DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
+</pre>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/757/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/757/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=757&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Condor 7.8.5 Released! (October 22, 2012)]]></title>
+      <link href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000"/>
+      <updated>2012-10-22T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Condor 7.9.1 released! (October 22, 2012)]]></title>
+      <link href="http://research.cs.wisc.edu/condor/manual/v7.9/9_3Development_Release.html"/>
+      <updated>2012-10-22T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.9.1.  This is a development release which includes many new features, as well as all bug and security fixes from 7.8.5.  See the Version History for a complete list of changes. Condor 7.9.1 binaries and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Using Cluster Suite's GUI to configure High Availability Schedulers ]]></title>
+      <link href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/"/>
+      <updated>2012-10-18T17:20:00Z</updated>
+      <id>http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers</id>
+      <author>
+        <name><![CDATA[Robert Rati]]></name>
+        <uri>http://rrati.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In an <a href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/">earlier post</a> I talked about using Cluster Suite
+to manage high availability schedulers and referenced the command line tools
+available perform the configuration.  I'd like to focus on using the GUI that
+is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
+process but does require you run a wallaby shell command to complete the
+configuration.</p>
+
+<p>The first thing you need to do is create or import your cluster in the GUI.
+If you already have a cluster in the GUI then make sure the nodes you want to
+be part of a HA schedd configuration are part of the cluster.</p>
+
+<p>The next step is to create a restricted Failover Domain.  Nodes in this domain
+will run the schedd service you create, and making it restricted ensures that
+no nodes outside the Failover Domain will run the service.  If a node in the
+Failover Domain isn't available then the service won't run.</p>
+
+<p>The third step is to create a service that will comprise your schedd. Make
+sure that the relocation policy on the service is Relocate and that it is
+configured to use whatever Failover Domain you have already setup.  The
+service will contain 2 resources in a parent-child configuration.  The parent
+service is the NFS Mount and the child service is a condor instance resource.
+This is what sets up the dependency between the NFS Mount being required for
+the condor instance to run.  When the resources are configured like this it
+means the parent must be functioning for the child to operate.</p>
+
+<p>Finally, you need to sync the cluster configuration with wallaby.  This is
+easily accomplished by logging into a machine in the cluster and running:</p>
+
+<pre><code>wallaby cluster-sync-to-store
+</code></pre>
+
+<p>That wallaby shell command will inspect the cluster configuration and
+configure wallaby to match it.  It can handle any number of schedd
+configurations so you don't need to run it once per setup.  However, until
+the cluster-sync-to-store command is executed, the schedd service you created
+can't and won't run.</p>
+
+<p>Start your service or wait for Cluster Suite to do it for you and you'll find
+an HA schedd in your pool.</p>
+
+<p>You can get a video of the process as <a href="http://rrati.fedorapeople.org/videos/cs_gui_schedd.ogv">ogv</a> or <a href="http://rrati.fedorapeople.org/videos/cs_gui_schedd.mp4">mp4</a> if the inline video doesn't work.</p>
+
+<p><video width='800' height='600' preload='none' controls poster=''><source src='http://rrati.fedorapeople.org/videos/cs_gui_schedd.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/></video></p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Advanced scheduling: Execute periodically with cron jobs]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/"/>
+      <updated>2012-10-15T09:55:02Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=744</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>If you want to run a job periodically you could repeatedly submit jobs, or qedit existing jobs after they run, but both of those options are a kludge. Instead, the condor_schedd provides support for cron-like jobs as a first-class citizen.</p>
+<p>The cron-like feature builds on the ability to <a href="http://spinningmatt.wordpress.com/2012/09/24/advanced-scheduling-execute-in-the-future-with-job-deferral/">defer job execution</a>. However, instead of using <code>deferral_time</code>, commands analogous to <a href="http://crontab.org/">crontab(5)</a> fields are available. <code>cron_month</code>, <code>cron_day_of_month</code>, <code>cron_day_of_week</code>, <code>cron_hour</code>, and <code>cron_minute</code> all behave as you would expect, and default to * when not provided.</p>
+<p>To run a job every two minutes,</p>
+<p><pre class="brush: plain; gutter: false;">
+executable = /bin/date
+log = cron.log
+output = cron.out
+error = cron.err
+
+cron_minute = 0-59/2
+on_exit_remove = false
+
+queue
+</pre></p>
+<p>Note &#8211; <code>on_exit_remove = false</code> is required or the job will only be run once. It is arguable that on_exit_remove should default to false for jobs using cron_* commands.</p>
+<p>After submitting and waiting 10 minutes, results can be found in the cron.log file.</p>
+<p><pre class="brush: plain; gutter: false;">
+$ grep ^00 cron.log
+000 (009.000.000) 09/09 09:22:46 Job submitted from host: &amp;lt;127.0.0.1:56639&amp;gt;
+001 (009.000.000) 09/09 09:24:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
+006 (009.000.000) 09/09 09:24:00 Image size of job updated: 75
+004 (009.000.000) 09/09 09:24:00 Job was evicted.
+001 (009.000.000) 09/09 09:26:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
+004 (009.000.000) 09/09 09:26:00 Job was evicted.
+001 (009.000.000) 09/09 09:28:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
+004 (009.000.000) 09/09 09:28:00 Job was evicted.
+001 (009.000.000) 09/09 09:30:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
+004 (009.000.000) 09/09 09:30:00 Job was evicted.
+001 (009.000.000) 09/09 09:32:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
+004 (009.000.000) 09/09 09:32:01 Job was evicted.
+</pre></p>
+<p>Note &#8211; the job appears to be evicted instead of terminated. What really happens is the job remains in the queue on termination. This is arguably a poor choice of wording in the log.</p>
+<p>Just like for <a href="http://spinningmatt.wordpress.com/2012/09/24/advanced-scheduling-execute-in-the-future-with-job-deferral/">job deferral</a>, there is no guarantee resources will be available at exactly the right time to run the job. <code>cron_prep_time</code> and <code>cron_window</code> provide a means to introduce tolerance.</p>
+<p>Common question: What happens when a job takes longer than the time between defined starts, i.e. job takes 30 minutes to complete and is set to be run every 15 minutes?</p>
+<p>Answer: The job will run serially. It will not stack up. The job does not need to serialize itself.</p>
+<p>Note &#8211; a common complication, arguably a bug, which occurs only in pools with little or no new jobs being submitted, is that matchmaking must happen in time for the job dispatch. The Schedd does not publish a new Submitter Ad for the cron job&#8217;s owner when the job completes. This means that submitter ad the Negotiator sees may have zero idle jobs, resulting in no new match being handed out to dispatch the job on the next time it is set to execute.</p>
+<p>Enjoy.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/744/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/744/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=744&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Credentials in LDAP URLs when Anonymous Search is Disabled]]></title>
+      <link href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/"/>
+      <updated>2012-10-10T20:55:00Z</updated>
+      <id>http://tmckayus.github.com/blog/2012/10/10/ldap-credentials</id>
+      <author>
+        <name><![CDATA[Trevor McKay]]></name>
+        <uri>http://tmckayus.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Cumin authenticates logins against LDAP using a two step process:</p>
+
+<ul>
+<li>Search for LDAP entries based on the login name and the search filter in the LDAP URL</li>
+<li>Attempt a simple bind operation using the distinguished names (dn) in returned entries and the password</li>
+</ul>
+
+
+<p>If anonymous access is disabled by the LDAP server, the first step will fail.  In this case, Cumin needs to bind to the server with credentials before doing the search for user records.  Happily, the URL syntax allows for credentials in the URL and Cumin will use them if provided to bind before the search.</p>
+
+<h3>Extra Attributes</h3>
+
+<p>The credentials for an initial bind can be set using LDAP extensions supported by the ldapurl module.  There are two additional attributes:</p>
+
+<ul>
+<li>bindname (a formal dn corresponding to an LDAP entry)</li>
+<li>X-BINDPW (a password that will work for that entry)</li>
+</ul>
+
+
+<p>These attributes follow the filter specification and are separated by a comma.  Any comma (,) characters present in the bindname value must be html-escaped because the URL parser will see them as attribute separators.  Futhermore, the % character in the escape code for a comma must be escaped itself to prevent Python from seeing it as a string substituion sequence.  Simple, right?</p>
+
+<h3>An Example</h3>
+
+<p>Let&#8217;s assume the following:</p>
+
+<ul>
+<li>The LDAP server is at example.com:389</li>
+<li>The search dn is ou=People,dc=example,dc=com</li>
+<li>The search scope is sub</li>
+<li>The filter compares uid to username (this is actually the default)</li>
+<li>The dn for an initial bind is uid=joeuser,ou=People,dc=example,dc=com</li>
+<li>The password for the initial bind is joepassword</li>
+</ul>
+
+
+<p>The LDAP URL in the Cumin configuration file would like like this:</p>
+
+<pre><code>auth: ldap://example.com:389/ou=People,dc=example,dc=com??sub?(&amp;(uid=%%s))?bindname=uid=joeuser%%2cou=People%%2cdc=example%%2cdc=com,X-BINDPW=joespassword  
+</code></pre>
+
+<p>Note in particular the %%2c substrings in the URL.  These are the commas in the bindname value.  In the interest of full disclosure, let me  be the first to say &#8220;yuck&#8221;.  But it works!</p>
+
+<h3>Caution!</h3>
+
+<p>LDAP credentials specified as part of a URL in the cumin configuration file will be visible to anyone who has access to the configuration file.  When Cumin is installed as a package the configuration file will be located at <code>/etc/cumin/cumin.conf</code> and will only be readable by the <code>cumin</code> user.  This should be adequate to protect the credentials as long as the permissions on that file are not changed.</p>
+
+<p>However, if Cumin is run from sources in a development instance, alternate configuration files are possible.  Care should be taken to protect those configuration files if they contain credentials.</p>
+
+<p>The Cumin project wiki can be found <a href="http://fedorahosted.org/grid/wiki/Cumin">here</a></p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Tip: notification = never]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/"/>
+      <updated>2012-10-08T10:36:25Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=784</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>By default, the condor_schedd will notify you, via email, when your job completes. This is a handy feature when running a few jobs, but can become overwhelming if you are running many jobs.</p>
+<p>It can even turn into a problem if you are being notified at a mailbox you do not monitor.</p>
+<p><pre class="brush: plain; gutter: false;">
+# df /var
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/...             233747128 215868920   5813032  98% /
+
+# du -a /var | sort -n -r | head -n 4
+150436072       /var
+111752396       /var/spool
+111706452       /var/spool/mail
+108702404       /var/spool/mail/matt
+</pre></p>
+<p>Yes, that&#8217;s ~105GB of job completion notification emails. All ignored. Oops.</p>
+<p>The email notification feature is controlled on a per job basis by the <code>notification</code> command in a job&#8217;s submit file. See man condor_submit. To not get email notification, set it to <code>NEVER</code>, e.g.</p>
+<p><pre class="brush: plain; gutter: false;">
+$ echo queue | condor_submit -a cmd=/bin/hostname -a notification=never
+</pre></p>
+<p>If you are a pool administrator and want to change the default from <code>COMPLETE</code> to <code>NEVER</code> use the <code>SUBMIT_EXPRS</code> configuration parameter.</p>
+<p><pre class="brush: plain; gutter: false;">
+Notification = NEVER
+SUBMIT_EXPRS = $(SUBMIT_EXPRS) Notification
+</pre></p>
+<p>Users will still be able to override the configured default by putting <code>notification = complete|always|error</code> in their submit files.</p>
+<p>Keep those disks clean.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/784/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/784/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=784&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Hosting a Blog Feed Aggregator With Octopress]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/10/05/hosting-a-blog-feed-aggregator-with-octopress/"/>
+      <updated>2012-10-05T19:52:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/10/05/hosting-a-blog-feed-aggregator-with-octopress</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I have written an Octopress plugin to allow turnkey support for hosting a blog feed aggregator, in Octopress idiomatic style.  I will describe the steps to install it and use it below.  Some of its current features are:</p>
+
+<ul>
+<li>Easy configuration and deployment, providing all feed aggregator parameters as yaml front-matter</li>
+<li>Turn-key generation of feed aggregator pages, in the configured site style</li>
+<li>Optional generation of a 'meta-feed' in atom.xml format, from aggregated feed entries</li>
+<li>Automatic removal of duplicate feed list urls, and automatic removal of duplicate posts (e.g. if multiple category feeds from the same author are listed)</li>
+<li>Automatic generation of feed author list as an Octopress 'aside'</li>
+<li>Inclusion/exclusion of posts based on number of posts and/or post age</li>
+<li>Display of full or summary content based on number of posts and/or post age</li>
+</ul>
+
+
+<h3>Install the feed_aggregator.rb plugin</h3>
+
+<p>Currently, you can obtain a copy of "feed_aggregator.rb" here:</p>
+
+<p><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/plugins/feed_aggregator.rb">feed_aggregator.rb</a></p>
+
+<p>Simply copy this file into the plugins directory for your octopress repo:</p>
+
+<pre><code>$ cp feed_aggregator.rb /path/to/your/octopress/repo/plugins
+</code></pre>
+
+<h3>Install feed aggregator layout files</h3>
+
+<p>You can obtain a copy of the layout files here:</p>
+
+<ul>
+<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator.html">feed_aggregator.html</a></li>
+<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator_page.html">feed_aggregator_page.html</a></li>
+<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator_meta.xml">feed_aggregator_meta.xml</a></li>
+</ul>
+
+
+<p>Copy the layouts files to your '_layouts' directory:</p>
+
+<pre><code>$ cp feed_aggregator.html /path/to/your/octopress/repo/source/_layouts
+$ cp feed_aggregator_page.html /path/to/your/octopress/repo/source/_layouts
+$ cp feed_aggregator_meta.xml /path/to/your/octopress/repo/source/_layouts
+</code></pre>
+
+<h3>Add feedzirra dependency to the Octopress Gemfile</h3>
+
+<p>Octopress wants its dependencies bundled, so you will want to add this dependency to /path/to/your/octopress/repo/Gemfile:</p>
+
+<pre><code>gem 'feedzirra', '~&gt; 0.1.3'
+</code></pre>
+
+<p>Then update the bundles:</p>
+
+<pre><code>$ bundle update
+</code></pre>
+
+<h3>Create a page for your feed aggregator</h3>
+
+<p>Here is an example feed aggregator:</p>
+
+<pre><code>---
+# use the 'feed_aggregator' layout to generate a feed aggregator page
+layout: feed_aggregator
+
+# Title to display for the feed
+title: My Blog Feed Aggregator
+
+# maximum number of entries from each feed url to display (defaults to 5)
+# use '0' for 'no limit'
+post_limit: 5
+
+# limit on total posts for feed (defaults to 100)
+# use 0 for 'no limit'
+post_total_limit: 50
+
+# maximum post age to include: &lt;N&gt; { seconds | minutes | hours | days | weeks | months | years }
+# abbreviations and plurals are supported, e.g.  w, week, weeks
+# defaults to '1 year'
+# use '0 &lt;any-unit&gt;' for 'no limit'
+post_age_limit: 6 months
+
+# only render full content for the first &lt;N&gt; posts 
+# (default is 'full content for all posts')
+# use a limit of 0 to use all summaries
+full_post_limit: 10
+
+# use summaries for all posts older than this 
+# (default is 'no maximum age')
+# works like post_age_limit
+full_post_age_limit: 1 month
+
+# generate a 'meta-feed' atom file, with the given name 'atom.xml' (meta feeds are optional)
+# (with no directory, generates in same directory as the feed aggregator page)
+meta_feed: atom.xml
+
+# list all urls to aggregate here
+# You can either specify a single feed url, or explicitly specify 'url', 'author' 
+# and/or 'author_url' params for the feed aggregator to use.
+# feed_aggregator does its best to supply these values automatically otherwise.
+feed_list:
+  - http://blog_site_1.com/atom.xml
+  - http://blog_site_2.com/atom.xml
+  - url: http://www.john_doe.com/feed/feed.rss
+    author: John Doe
+    author_url: http://www.john_doe.com
+---
+</code></pre>
+
+<p>As you can see, you only need to supply some yaml front-matter.  Page formatting/rendering is performed automatically from the information in the header.  You must use <code>layout: feed_aggregator</code>, and include the standard <code>title</code> to use for the aggregator title, and the <code>feed_list</code> to supply the individual feeds to aggregate.  Other parameters have default values and behaviors, which are described above.  Various <code>meta_feed</code> path behaviors are described in their own section below.</p>
+
+<p>Once you've created the page, you can publish as usual:</p>
+
+<pre><code>$ rake generate
+$ rake deploy
+</code></pre>
+
+<p>If you want to update your feed automatically, you can set up a cron job:</p>
+
+<pre><code>cd /path/to/octopress/repo
+rake generate
+rake deploy
+</code></pre>
+
+<h3>Screen Shot</h3>
+
+<p>Here is a screen shot of a feed aggregator.  It respects whatever style theme is configured for the site.  The aggregator title is at the top, and a list of contributing authors is automatically generated as an 'aside'.  Each author name links to the parent blog of the author's feed.  In addition to the standard date, the author's name is also included.  Post titles link back to the original post url.</p>
+
+<p><img src="/assets/feed_aggregator/screen1.png" alt="Aggregator Screen Shot" /></p>
+
+<h3>Meta feed generation</h3>
+
+<p>You may optionally request that a meta feed, created from the aggregated posts, be generated.  The meta feed is created in atom format.  Following are some examples of specifying meta feed files</p>
+
+<pre><code># Generate a meta feed called 'atom.xml' in the same directory as the feed aggregator page
+# e.g. if the url for the feed aggregator page is  http://blog.site.com/aggregator/index.html, 
+# then the path to the meta-feed will be: http://blog.site.com/aggregator/atom.xml
+meta_feed: atom.xml
+
+# Generate a meta feed called 'wilma.xml' in subdirectory 'flintstones' of the website.
+# the url for this file will be:   http://blog.site.com/flintstones/wilma.xml
+meta_feed: /flintstones/wilma.xml
+
+# url for this will be http://blog.site.com/metafeed.xml
+meta_feed: /metafeed.xml
+
+# Supplying no file name is equivalent to 'meta_feed: atom.xml'
+meta_feed:
+</code></pre>
+
+<h3>To Do</h3>
+
+<ul>
+<li>It might be nice to support the display of an avatar/icon for authors</li>
+</ul>
+
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Partitionable slot utilization]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/"/>
+      <updated>2012-10-01T11:07:41Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=764</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>There are already ways to get <a href="http://spinningmatt.wordpress.com/2012/01/31/pool-utilization/">pool utilization</a> information on a macro level. Until Condor 7.8 and the introduction of TotalSlot{Cpus,Memory,Disk}, there were no good ways to get utilization on a micro level. At least not with only the standard command-line tools.</p>
+<p>Resource data is available per slot. Getting macro, pool utilization always requires aggregating data across multiple slots. Getting micro, slot utilization should not.</p>
+<p>In a pool using partitionable slots, you can now get per slot utilization from the slot itself. There is no need for any extra tooling to perform aggregation or correlation. This means condor_status can directly provide utilization information on the micro, per slot level.</p>
+<p><pre class="brush: plain; gutter: false;">
+$ echo &quot;           Name  Cpus Avail Util%  Memory Avail Util%&quot;
+$ condor_status -constraint &quot;PartitionableSlot =?= TRUE&quot; -format &quot;%15s&quot; Name -format &quot;%6d&quot; TotalSlotCpus -format &quot;%6d&quot; Cpus -format &quot;%5d%%&quot; &quot;((TotalSlotCpus - Cpus) / (TotalSlotCpus * 1.0)) * 100&quot; -format &quot;%8d&quot; TotalSlotMemory -format &quot;%6d&quot; Memory -format &quot;%5d%%&quot; &quot;((TotalSlotMemory - Memory) / (TotalSlotMemory * 1.0)) * 100&quot; -format &quot;\n&quot; TRUE 
+
+           Name  Cpus Avail Util%  Memory Avail Util%
+  slot1@eeyore0    16    12   25%   65536 48128   26%
+  slot2@eeyore0    16    14   12%   65536 58368   10%
+  slot1@eeyore1    16    12   25%   65536 40960   37%
+  slot2@eeyore1    16    15    6%   65536 62464    4%
+</pre></p>
+<p>This is especially useful when machines are configured into combinations of multiple partitionable slots or partitionable and static slots.</p>
+<p>Someday the pool utilization script should be integrated with condor_status.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/764/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/764/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=764&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Using Cluster Suite to Manage a High Availability Scheduler]]></title>
+      <link href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/"/>
+      <updated>2012-09-26T19:53:00Z</updated>
+      <id>http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler</id>
+      <author>
+        <name><![CDATA[Robert Rati]]></name>
+        <uri>http://rrati.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Condor provides simple and easy to configure HA functionality for the schedd
+that relies upon shared storage (usually NFS).  The shared store is used to
+store the job queue log and coordinate which node is running the schedd.  This
+means that each node that can run a particular schedd not only have condor
+configured but the node needs to be configured to access the shared storage. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Improved Parse Checking for ClassAd Log Files in Condor]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/09/26/improved-parse-checking-for-classad-log-files-in-condor/"/>
+      <updated>2012-09-26T17:06:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/09/26/improved-parse-checking-for-classad-log-files-in-condor</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Condor maintains certain key transactional information using the ClassAd Log system.  For example, both the negotiator's accountant log ("Accountantnew.log") and the scheduler's job queue log ("job_queue.log") are maintained in ClassAd Log format. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Integrating Cumin with LDAP for Authentication]]></title>
+      <link href="http://tmckayus.github.com/blog/2012/09/24/ldap-auth/"/>
+      <updated>2012-09-24T16:41:00Z</updated>
+      <id>http://tmckayus.github.com/blog/2012/09/24/ldap-auth</id>
+      <author>
+        <name><![CDATA[Trevor McKay]]></name>
+        <uri>http://tmckayus.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Past versions of Cumin have relied on a local database for storing user accounts.  However, that solution adds extra maintenance for site administrators who already have or plan to have a central authentication mechanism for their users.  Consequently, development is ongoing to integrate Cumin with common central auth mechanisms.  LDAP integration is available now, with support for other technologies planned for the future. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[So What is Cumin Anyway?]]></title>
+      <link href="http://tmckayus.github.com/blog/2012/09/24/new-post/"/>
+      <updated>2012-09-24T16:07:00Z</updated>
+      <id>http://tmckayus.github.com/blog/2012/09/24/new-post</id>
+      <author>
+        <name><![CDATA[Trevor McKay]]></name>
+        <uri>http://tmckayus.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Cumin is a Python web UI developed in the Fedora community for managing Condor pools and Qpid messaging brokers.  It is packaged for Fedora but may be run from sources and would probably be easy to port to other Linux distributions (or just run Fedora on a node or two in a heterogeneous environment!)  The current development focus for Cumin is on expanding the Condor management facilities. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Red Hat releases Enterprise MRG 2.2 (September 24, 2012)]]></title>
+      <link href="http://www.redhat.com/about/news/archive/2012/9/red-hat-updates-messaging-realtime-and-grid-platform-with-enterprise-mrg-2-2"/>
+      <updated>2012-09-24T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[This Red Hat press release describes updates in the new 2.2 release.  New features increase security and expand cloud readiness with jobs that can be submitted to use the Condor Deltacloud API. 
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Elastic Grid with Condor and oVirt Integration]]></title>
+      <link href="http://timothysc.github.com/blog/2012/09/21/condor-n-overt/"/>
+      <updated>2012-09-21T08:50:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/09/21/condor-n-overt</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Putting It Together]]></title>
+      <link href="http://rrati.github.com/blog/2012/09/18/putting-it-together/"/>
+      <updated>2012-09-18T12:59:00Z</updated>
+      <id>http://rrati.github.com/blog/2012/09/18/putting-it-together</id>
+      <author>
+        <name><![CDATA[Robert Rati]]></name>
+        <uri>http://rrati.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Authorization for Wallaby clients]]></title>
+      <link href="http://getwallaby.com/2012/09/authorization-for-wallaby-clients/"/>
+      <updated>2012-09-12T22:30:00Z</updated>
+      <id>http://getwallaby.com/2012/09/authorization-for-wallaby-clients</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://getwallaby.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways.  This post will explain how the authorization support works and show how to get started using it.  If you just want to get started using Wallaby with authorization support as quickly as possible, skip ahead to the section titled &#8220;Getting Started&#8221; below.  Detailed information about which role is required for each Wallaby API method is <a href="http://getwallaby.com/api-roles/">available here</a>. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Authorization for Wallaby clients]]></title>
+      <link href="http://chapeau.freevariable.com/2012/09/authorization-for-wallaby-clients.html"/>
+      <updated>2012-09-12T22:23:18Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.36</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways. This post will explain how the authorization support works and show how to...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Dust off nuke it from orbit]]></title>
+      <link href="http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit/"/>
+      <updated>2012-09-12T09:12:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Highly-available configuration data with Wallaby]]></title>
+      <link href="http://chapeau.freevariable.com/2012/08/highly-available-configuration-data-with-wallaby.html"/>
+      <updated>2012-08-29T21:03:00Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.35</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[Many Condor users are interested in high-availability (HA) services: they don't want their compute resources to become unavailable due to the failure of a single machine that is running an important Condor daemon. (See this talk that Rob Rati and...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Driving a Condor Job Renice Policy with Accounting Groups]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/07/27/driving-a-condor-job-renice-policy-with-accounting-groups/"/>
+      <updated>2012-07-27T20:50:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/07/27/driving-a-condor-job-renice-policy-with-accounting-groups</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Condor can run its jobs with a renice priority level specified by <code>JOB_RENICE_INCREMENT</code>, which defaults simply to 10, but can in fact be any ClassAd expression, and is evaluated in the context of the job ad corresponding to the job being run. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[LIFO and FIFO Preemption Policies for a Condor Pool]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/07/19/lifo-and-fifo-preemption-policies-for-a-condor-pool/"/>
+      <updated>2012-07-19T20:57:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/07/19/lifo-and-fifo-preemption-policies-for-a-condor-pool</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>On a Condor pool, a Last In First Out (LIFO) preemption policy favors choosing the longest-running job from the available preemption options.  Correspondingly, a First In First Out (FIFO) policy favors the most-recent job for preemption. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Configuring Minimum and Maximum Resources for Mission Critical Jobs in a Condor Pool]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/07/10/configuring-minimum-and-maximum-resources-for-mission-critical-jobs-in-a-condor-pool/"/>
+      <updated>2012-07-10T22:49:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/07/10/configuring-minimum-and-maximum-resources-for-mission-critical-jobs-in-a-condor-pool</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Suppose you are administering a Condor pool for a company or organization where you want to support both "mission critical" (MC) jobs and "regular" (R) jobs.  Mission critical jobs might include IT functions such as backups, or payroll, or experiment submissions from high profile internal customers.  Regular jobs encompass any jobs that can be delayed, or preempted, with little or no consequence. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Using Wallaby's skeleton group]]></title>
+      <link href="http://chapeau.freevariable.com/2012/06/using-wallabys-skeleton-group.html"/>
+      <updated>2012-06-15T21:04:21Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.34</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[Wallaby 0.15.0 includes a new feature called the skeleton group. (This feature was available in earlier versions of Wallaby, too, but it was experimental and had some rough edges.) Find out how the skeleton group makes configuration more flexible by...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Using the skeleton group]]></title>
+      <link href="http://getwallaby.com/2012/06/using-the-skeleton-group/"/>
+      <updated>2012-06-15T17:46:00Z</updated>
+      <id>http://getwallaby.com/2012/06/using-the-skeleton-group</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://getwallaby.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In Wallaby, Condor nodes are configured by applying <em>features</em> and <em>parameter</em> settings to <em>groups</em>.  In order for the group abstraction to be fully general, <a href="http://getwallaby.com/2011/05/using-wallaby-groups-to-implement-node-tagging/">Wallaby provides two kinds of <em>special groups</em></a>:  the <em>default group</em>, which contains every node (but which is the lowest-priority membership for each node), and a set of <em>identity groups</em>, each of which only contains a single node (and which is always its highest-priority membership, so that special settings applied to a node&#8217;s identity group always take precedence over settings from that node&#8217;s other memberships). [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Troubleshooting Condor with Wallaby]]></title>
+      <link href="http://chapeau.freevariable.com/2012/06/troubleshooting-condor-with-wallaby.html"/>
+      <updated>2012-06-01T20:49:36Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.33</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[Often, if you're trying to reproduce a problem someone else is having with Condor, you'll need their configuration. Likewise, if you're trying to help someone reproduce a problem you're having, you'll want to send along your configuration to aid them...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Troubleshooting Condor with Wallaby]]></title>
+      <link href="http://getwallaby.com/2012/06/troubleshooting/"/>
+      <updated>2012-06-01T17:27:00Z</updated>
+      <id>http://getwallaby.com/2012/06/troubleshooting</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://getwallaby.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Often, if you&#8217;re trying to reproduce a problem someone else is having with Condor, you&#8217;ll need their configuration.  Likewise, if you&#8217;re trying to help someone reproduce a problem you&#8217;re having, you&#8217;ll want to send along your configuration to aid them in replicating your setup.  For installations that use legacy flat-file configurations (optionally with a local configuration directory), this can be a pain, since you&#8217;ll need to copy several files from site to site (ensuring that you&#8217;ve included all the files necessary to replicate your configuration, perhaps across multiple machines on the site experiencing the problem). [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Now powered by OctoPress]]></title>
+      <link href="http://getwallaby.com/2012/03/getwallaby-dot-com-is-now-powered-by-octopress/"/>
+      <updated>2012-03-16T17:27:00Z</updated>
+      <id>http://getwallaby.com/2012/03/getwallaby-dot-com-is-now-powered-by-octopress</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://getwallaby.com/</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Resource Isolation in Condor using cgroups]]></title>
+      <link href="http://osgtech.blogspot.com/2012/03/resource-isolation-in-condor-using.html"/>
+      <updated>2012-03-10T19:28:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-2804145841486035015</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Improving File Isolation with chroot]]></title>
+      <link href="http://osgtech.blogspot.com/2012/02/improving-file-isolation-with-chroot.html"/>
+      <updated>2012-02-27T19:33:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-4833728643726960817</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[File Isolation using bind mounts and chroots]]></title>
+      <link href="http://osgtech.blogspot.com/2012/02/file-isolation-using-bind-mounts-and.html"/>
+      <updated>2012-02-20T16:03:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-5734694593802146494</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Job Isolation in Condor]]></title>
+      <link href="http://osgtech.blogspot.com/2012/02/job-isolation-in-condor.html"/>
+      <updated>2012-02-14T17:46:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-864451098144380179</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[openstack - update]]></title>
+      <link href="http://osgtech.blogspot.com/2012/01/openstack-update.html"/>
+      <updated>2012-01-27T18:29:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-1284219792325627410</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Exporting versioned configurations]]></title>
+      <link href="http://getwallaby.com/2011/11/exporting-versioned-configurations/"/>
+      <updated>2011-11-02T22:24:33Z</updated>
+      <id>http://getwallaby.com/2011/11/exporting-versioned-configurations</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://getwallaby.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Wallaby stores versioned configurations in a database.  <a href="http://getwallaby.com/the-wallaby-api/">Wallaby API</a> clients can access older versions of a node&#8217;s configuration by supplying the <code>version</code> option to the <code>Node#getConfig</code> method.  Sometimes, though, we&#8217;d like to inspect individual configurations in greater detail than the API currently allows. [...]</p>
+]]></content>
+    </entry>
+  
+</feed>

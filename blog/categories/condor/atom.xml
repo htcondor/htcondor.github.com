@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: condor | HTCondor Project]]></title>
+  <link href="http://htcondor.github.com/blog/categories/condor/atom.xml" rel="self"/>
+  <link href="http://htcondor.github.com/"/>
+  <updated>2012-10-29T13:10:26-07:00</updated>
+  <id>http://htcondor.github.com/</id>
+  <author>
+    <name><![CDATA[HTCondor Project]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Welcome To The Condor Project Github Site]]></title>
+    <link href="http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site/"/>
+    <updated>2012-10-24T15:01:00-07:00</updated>
+    <id>http://htcondor.github.com/blog/2012/10/24/welcome-to-the-condor-project-github-site</id>
+    <content type="html"><![CDATA[<p>Welcome to the Condor Project GitHub website!  This site is the github web and blog presence for the Condor project.</p>
+
+<p>We will also be hosting the Planet Condor feed aggregator for blog entries from Condor community members, which you can see <a href="/planet">here</a>.  You can subscribe to the meta-feed for Planet Condor at <a href="/planet/atom.xml">this link</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>
