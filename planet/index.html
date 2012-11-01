@@ -77,7 +77,7 @@
         <time datetime="2012-11-01T14:41:00Z" pubdate data-updated="true">Nov 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>In this post I will describe how to use HTCondor accounting groups with Wallaby.  I will begin by walking through an accounting group configuration on a pool managed by wallaby.  Following, I will demonstrate the configuration in action.</p>
+    <div class="entry-content"><p>In this post I will describe how to use HTCondor accounting groups with <a href="http://getwallaby.com">Wallaby</a>.  I will begin by walking through an accounting group configuration on a pool managed by wallaby.  Following, I will demonstrate the configuration in action.</p>
 
 <p>The gist of this demo will be to create a simple accounting group hierarchy:  A top-level group called <code>Demo</code>, and three child groups <code>Demo.A, Demo.B, Demo.C</code>.  <code>Demo</code> will be given a <em>static</em> quota to simulate the behavior of a pool with a particular number of slots available.  The child groups will use <em>dynamic</em> quotas to express their quota shares from the parent as ratios.</p>
 
@@ -287,19 +287,9 @@ queue 100
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">BOSCO v1.1 Features: SSH File Transfer</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-29T19:30:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
-      </p>
-    </header>
-    <div class="entry-content">I am hoping to write about a few of the new features of BOSCO 1.1 before it comes out in December or January. &nbsp;This is part 1 of that series:<br /><br /><h3>BOSCO v1.1 Feature: SSH File Transfer</h3><div><b>What is it?</b></div><div>SSH File Transfer feature improves the method of staging input and output files to the remote cluster. &nbsp;In 1.0, files are transferred by starting a daemon on the remote cluster that connects back to the submit host over a random port. &nbsp;This required a lot of open ports on the submit host. &nbsp;</div><div><br /></div><div>The new SSH File Transfer will limit the number of ports required on the submit host. &nbsp;BOSCO will now transfer files over a port that is forwarded over the SSH connection that BOSCO maintains with the remote cluster. &nbsp;The transfers are&nbsp;inherently&nbsp;secure as they are over the SSH connection, as well as they are authenticated by the Condor daemons on either end of the connection (remote cluster and submit host). &nbsp;&nbsp;</div><div><br /></div><div>This fits into the BOSCO team's goal of lowering the amount of ports used by Condor. &nbsp;Our eventual goal is using the Shared Port Daemon to limit the required ports to 1 for BOSCO on the submit host.</div><div><br /></div><div><b>Why should I care?</b></div><div>This will greatly reduce the number of ports required if you are only using the <span style="font-family: Courier New, Courier, monospace;">universe=grid</span><span style="font-family: inherit;">&nbsp;method of submitting jobs. &nbsp;In fact, it will reduce the open ports on the submit host to 0. &nbsp;That means no more configuring firewalls for BOSCO (no campus factory support, see below). &nbsp;Additionally, there is no new configuration required for this feature, it 'just works' (famous last words?)</span></div><div><span style="font-family: inherit;"><br /></span></div><div><span style="font-family: inherit;">The Campus Factory, which adds features such as fault tolerant Condor file transfer and transparent multi-cluster support, still requires multiple open ports in the firewall. &nbsp;Additional effort will be required to change the Campus Factory configuration and daemons to support the single port. &nbsp;I hope that a single port will be all that is needed for v1.2. &nbsp;</span></div><div><span style="font-family: inherit;"><br /></span></div><h3><span style="font-family: inherit;">What's Next</span></h3><div><span style="font-family: inherit;">Over the next couple weeks, I hope to write more about upcoming features such as:</span></div><div><ul><li>Multi-Platform support (ie cluster and submit host are different platforms)</li><li>Mac OSX Support</li><li>Improved Multi-User support</li></ul></div><div><span style="font-family: inherit;"><br /></span></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-3237281153809597870?l=derekweitzel.blogspot.com' alt='' /></div></div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/">Welcome to the HTCondor Project Github Site</a></h1>
       <p class="meta">
-        <time datetime="2012-10-29T17:15:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team GitHub</time>
+        <time datetime="2012-10-29T20:15:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team GitHub</time>
       </p>
     </header>
     <div class="entry-content"><p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project.</p>
@@ -310,7 +300,17 @@ queue 100
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/">Pre and Post Job Scripts</a></h1>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">BOSCO v1.1 Features: SSH File Transfer</a></h1>
+      <p class="meta">
+        <time datetime="2012-10-29T19:30:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">I am hoping to write about a few of the new features of BOSCO 1.1 before it comes out in December or January. &nbsp;This is part 1 of that series:<br /><br /><h3>BOSCO v1.1 Feature: SSH File Transfer</h3><div><b>What is it?</b></div><div>SSH File Transfer feature improves the method of staging input and output files to the remote cluster. &nbsp;In 1.0, files are transferred by starting a daemon on the remote cluster that connects back to the submit host over a random port. &nbsp;This required a lot of open ports on the submit host. &nbsp;</div><div><br /></div><div>The new SSH File Transfer will limit the number of ports required on the submit host. &nbsp;BOSCO will now transfer files over a port that is forwarded over the SSH connection that BOSCO maintains with the remote cluster. &nbsp;The transfers are&nbsp;inherently&nbsp;secure as they are over the SSH connection, as well as they are authenticated by the Condor daemons on either end of the connection (remote cluster and submit host). &nbsp;&nbsp;</div><div><br /></div><div>This fits into the BOSCO team's goal of lowering the amount of ports used by Condor. &nbsp;Our eventual goal is using the Shared Port Daemon to limit the required ports to 1 for BOSCO on the submit host.</div><div><br /></div><div><b>Why should I care?</b></div><div>This will greatly reduce the number of ports required if you are only using the <span style="font-family: Courier New, Courier, monospace;">universe=grid</span><span style="font-family: inherit;">&nbsp;method of submitting jobs. &nbsp;In fact, it will reduce the open ports on the submit host to 0. &nbsp;That means no more configuring firewalls for BOSCO (no campus factory support, see below). &nbsp;Additionally, there is no new configuration required for this feature, it 'just works' (famous last words?)</span></div><div><span style="font-family: inherit;"><br /></span></div><div><span style="font-family: inherit;">The Campus Factory, which adds features such as fault tolerant Condor file transfer and transparent multi-cluster support, still requires multiple open ports in the firewall. &nbsp;Additional effort will be required to change the Campus Factory configuration and daemons to support the single port. &nbsp;I hope that a single port will be all that is needed for v1.2. &nbsp;</span></div><div><span style="font-family: inherit;"><br /></span></div><h3><span style="font-family: inherit;">What's Next</span></h3><div><span style="font-family: inherit;">Over the next couple weeks, I hope to write more about upcoming features such as:</span></div><div><ul><li>Multi-Platform support (ie cluster and submit host are different platforms)</li><li>Mac OSX Support</li><li>Improved Multi-User support</li></ul></div><div><span style="font-family: inherit;"><br /></span></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-3237281153809597870?l=derekweitzel.blogspot.com' alt='' /></div></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/">Pre and Post Job Scripts</a></h1>
       <p class="meta">
         <time datetime="2012-10-29T11:07:05Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -441,7 +441,7 @@ Sun Oct 14 18:06:02 UTC 2012
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/">Tip: ISO8601 Dates in Your Logs</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/">Tip: ISO8601 Dates in Your Logs</a></h1>
       <p class="meta">
         <time datetime="2012-10-22T11:37:21Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -535,7 +535,7 @@ an HA schedd in your pool.</p>
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/">Advanced Scheduling: Execute Periodically With Cron Jobs</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/">Advanced Scheduling: Execute Periodically With Cron Jobs</a></h1>
       <p class="meta">
         <time datetime="2012-10-15T09:55:02Z" pubdate data-updated="true">Oct 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -642,7 +642,7 @@ $ grep ^00 cron.log
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/">Tip: Notification = Never</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/">Tip: Notification = Never</a></h1>
       <p class="meta">
         <time datetime="2012-10-08T10:36:25Z" pubdate data-updated="true">Oct 8<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -840,7 +840,7 @@ meta_feed:
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/">Partitionable Slot Utilization</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/">Partitionable Slot Utilization</a></h1>
       <p class="meta">
         <time datetime="2012-10-01T11:07:41Z" pubdate data-updated="true">Oct 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -1116,7 +1116,7 @@ configured but the node needs to be configured to access the shared storage. [..
     
       <a href="http://erikerlandson.github.com/"> Erik Erlandson</a><br>
     
-      <a href="https://spinningmatt.wordpress.com"> Matthew Farrellee</a><br>
+      <a href="http://spinningmatt.wordpress.com"> Matthew Farrellee</a><br>
     
       <a href="http://tmckayus.github.com/"> Trevor McKay</a><br>
     
