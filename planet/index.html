@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="In this post I will describe how to use HTCondor accounting groups with Wallaby. I will begin by walking through an accounting group configuration on &hellip;">
+  <meta name="description" content="Welcome to part 2 of my ongoing series of v1.1 features for BOSCO. &nbsp;Part 1 was on SSH File Transfer.This time, I'll talk about a new feature &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +24,7 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="HTCondor Project" type="application/atom+xml">
+  <link href="/planet/atom.xml" rel="alternate" title="HTCondor Project" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -43,7 +43,7 @@
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <li><a href="/planet/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
   
 </ul>
   
@@ -69,6 +69,43 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html">BOSCO v1.1 Features: Single Port Usage</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-01T20:59:00Z" pubdate data-updated="true">Nov 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">Welcome to part 2 of my ongoing series of v1.1 features for BOSCO. &nbsp;Part 1 was on <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">SSH File Transfer</a>.<br /><br />This time, I'll talk about a new feature that we didn't planned on implementing at first, using only a single port for all communication. &nbsp;After a small investigation, it was discovered that using a single port is very simple, and with no interruption to other components. &nbsp;I talked briefly about it in a <a href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html">previous post</a>.<br /><br /><h3>What is it?</h3><div>In 1.0 of BOSCO, the submit host needed a lot of ports open for connections originating from the remote clusters. &nbsp;This was caused by 2 mechanisms:</div><div><ol><li>File transfer from the BOSCO submit host to the cluster login node before issuing the local submit call (qsub, condor_submit...). &nbsp;This opens ports on the submit host because the cluster would call out to the submit host to initiate transfers.</li><li>Connections for control, status, and workflow management between the cluster worker nodes and BOSCO submit host. &nbsp;This is the Campus Factory, which gives BOSCO the traditional Condor look and feel.</li></ol>In order for BOSCO to function, the submit host needs a large swath of ports in order to operate correctly. &nbsp;Also, as you scale, you will need even more ports open.</div><div><br /></div><div>The file transfers from the submit host to the login node are now being transferred using SSH, see my <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">previous post</a>.</div><div><br /></div><div>With the new feature of single port usage, all control, status, and workflow management connections are routed through HTCondor's <a href="http://research.cs.wisc.edu/condor/manual/v7.9/3_7Networking_includes.html#SECTION00472000000000000000">share_port_daemon</a> on port 11000 (which is hardcoded, but I picked at random).</div><div><br /></div><h3>Why should I care?</h3><div>Limiting BOSCO to using only 1 incoming port is very useful for users on systems not managed by them. &nbsp;The node will only need 1 port open in order to run BOSCO, 11000. &nbsp;If the system has a firewall, you only have to request port 11000 be opened, rather than huge swaths. &nbsp;If you manage the system, then you will be happy that only 1 port needs to be opened in order to allow BOSCO submissions.</div><div><br /></div><div>Administrators will like this feature as it is more in line with other applications that they may run. &nbsp;For example, httpd only requires 1 port, 80. &nbsp;Now BOSCO is in the same realm, only requiring 1 port, 11000.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-2355522235500004311?l=derekweitzel.blogspot.com' alt='' /></div></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/11/best-practices-for-wallabys-default-group.html">Best practices for Wallaby's default group</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-01T20:14:53Z" pubdate data-updated="true">Nov 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
+      </p>
+    </header>
+    <div class="entry-content">
+        <p>Recall that <a href="http://getwallaby.com">Wallaby</a> applies partial configurations to <em>groups</em> of <em>nodes</em>.  Groups can be either <em>explicit</em> &#8212;- that is, a named subset of nodes created by the user, or <em>special</em> groups that are built-in to Wallaby; each node&#8217;s group memberships have a priority ordering, so that an individual node&#8217;s configuration can favor the partial configuration from one group over another.  There are two kinds of special groups:  the <em>default group</em>, which contains every node and a set of <em>identity groups</em>, each of which only contains a single node.  In addition, Wallaby includes a <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/"><em>skeleton group</em></a>, which combines aspects of explicit and special groups:  while it can be managed like an explicit group, all newly-created nodes become members of the skeleton group automatically.  The default group is always the lowest-priority membership for a node and its identity group is always the highest-priority membership; a node&#8217;s skeleton group membership can be reprioritized or removed as necessary.</p>
+
+<p>The default group is an appealing target for common pool configuration, since it is guaranteed to be applied to every node.  However, because Wallaby&#8217;s configuration model is <em>additive</em>, it is likely not the best place for every configured feature or parameter setting that you might initially consider applying to the whole pool.  For example, if a group&#8217;s partial configuration installs a feature, every node that is a member of that group will install that feature (there is no way to say &#8220;this group&#8217;s configuration removes feature <em>F</em>, if it happens to be installed already).  Similarly, if a parameter is set on a group, every node that is a member of that group will have that parameter set; individual node configurations can override the value that the parameter is set to within the group, but there is no way to unset the parameter altogether.  Therefore, if you need to enable a feature on <em>almost every</em> node, the default group is not the right place to install that feature.  (Indeed, the default group is not the right place to put a putatively universal parameter setting or feature installation even if you can imagine a future exception to its universality.)  The default group is also not a great place to put configuration that you expect to take priority over other possible group configurations, since it will always be at the lowest priority.</p>
+
+<p>At this point, you may be asking yourself why you&#8217;d want to put any configuration in the default group.  While I tend towards a minimal default group configuration myself, I absolutely see several use cases for the default group:</p>
+
+<ol>
+<li><strong>Setting configuration parameters that are actually uniform across the whole pool</strong> (and will require a new value, not the absence of a value, if they change).  One such parameter is <code>FILESYSTEM_DOMAIN</code>, which you can set to an arbitrary string in order to identify machines that access the same shared filesystem.  If you were to extend your pool with machines that couldn&#8217;t access that same filesystem, you&#8217;d provide a new value for this parameter.</li>
+<li><strong>Installing Wallaby features that you actually want installed on every node.</strong>  I&#8217;d include features like <code>Master</code>, which ensures that the <code>condor_master</code> daemon is running (since Wallaby&#8217;s configuration daemon runs under the <code>condor_master</code>; a node can&#8217;t be configured if it isn&#8217;t running) and <code>NodeAccess</code>, which controls access to the pool (although the specific policy parameters required by <code>NodeAccess</code> may change in pool subsets).</li>
+<li><strong>Rapidly prototyping configurations for homogeneous or small, experimental pools.</strong>  When you&#8217;re first using Wallaby, the default group is a convenient way to get things running.  Similarly, if most of your nodes are execute nodes with the same policies, you may be able to put most of your configuration in the default group, especially if your submit and central manager configurations are generally a superset of your execute node configuration.  Fortunately, Wallaby makes it straightforward to move configuration from the default group to an explicit group if you should require more flexibility.</li>
+</ol>
+
+<p>I&#8217;m sure there are other cases in which using the default group makes good sense, but in general, you should strongly consider using an explicit group or the skeleton group for almost all of your nearly-universal configuration.  If you haven&#8217;t used the skelton group before, <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/">read more about it</a>!</p>
+
+        
+
+    </div>
+  </article>
 
   <article>
     <header>
@@ -297,7 +334,7 @@ queue 100
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/">Welcome to the HTCondor Project Github Site</a></h1>
+      <h1 class="entry-title"><a href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/">Welcome To The HTCondor Project Github Site</a></h1>
       <p class="meta">
         <time datetime="2012-10-29T17:15:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team GitHub</time>
       </p>
@@ -310,7 +347,7 @@ queue 100
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/">Pre and Post Job Scripts</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/">Pre and Post job scripts</a></h1>
       <p class="meta">
         <time datetime="2012-10-29T11:07:05Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -375,18 +412,7 @@ Sun Oct 14 18:06:02 UTC 2012
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://www.cs.wisc.edu/condor">"Condor" Name Changing to "HTCondor" (October 25, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-25T05:00:00Z" pubdate data-updated="true">Oct 25<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/security/vulnerabilities/CONDOR-2012-0003.html">Condor Security Release: 7.8.6 (October 25, 2012)</a></h1>
+      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/security/vulnerabilities/CONDOR-2012-0003.html"> Condor Security Release: 7.8.6 (October 25, 2012)</a></h1>
       <p class="meta">
         <time datetime="2012-10-25T05:00:00Z" pubdate data-updated="true">Oct 25<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
       </p>
@@ -397,7 +423,18 @@ Sun Oct 14 18:06:02 UTC 2012
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/10/configuring-high-availability-condor-central-managers-with-wallaby.html">Configuring High-availability Condor Central Managers With Wallaby</a></h1>
+      <h1 class="entry-title"><a href="http://www.cs.wisc.edu/condor"> "Condor" name changing to "HTCondor" (October 25, 2012)</a></h1>
+      <p class="meta">
+        <time datetime="2012-10-25T05:00:00Z" pubdate data-updated="true">Oct 25<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/10/configuring-high-availability-condor-central-managers-with-wallaby.html">Configuring high-availability Condor central managers with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2012-10-23T04:34:58Z" pubdate data-updated="true">Oct 23<span>rd</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
@@ -441,7 +478,7 @@ Sun Oct 14 18:06:02 UTC 2012
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/">Tip: ISO8601 Dates in Your Logs</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/">Tip: ISO8601 dates in your logs</a></h1>
       <p class="meta">
         <time datetime="2012-10-22T11:37:21Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -460,18 +497,7 @@ DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000">Condor 7.8.5 Released! (October 22, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.9/9_3Development_Release.html">Condor 7.9.1 Released! (October 22, 2012)</a></h1>
+      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.9/9_3Development_Release.html"> Condor 7.9.1 released! (October 22, 2012)</a></h1>
       <p class="meta">
         <time datetime="2012-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
       </p>
@@ -482,7 +508,18 @@ DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/">Using Cluster Suite's GUI to Configure High Availability Schedulers</a></h1>
+      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000"> Condor 7.8.5 Released! (October 22, 2012)</a></h1>
+      <p class="meta">
+        <time datetime="2012-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/">Using Cluster Suite's GUI to configure High Availability Schedulers </a></h1>
       <p class="meta">
         <time datetime="2012-10-18T17:20:00Z" pubdate data-updated="true">Oct 18<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Robert Rati</time>
       </p>
@@ -535,7 +572,7 @@ an HA schedd in your pool.</p>
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/">Advanced Scheduling: Execute Periodically With Cron Jobs</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/">Advanced scheduling: Execute periodically with cron jobs</a></h1>
       <p class="meta">
         <time datetime="2012-10-15T09:55:02Z" pubdate data-updated="true">Oct 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -582,7 +619,7 @@ $ grep ^00 cron.log
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/">Credentials in LDAP URLs When Anonymous Search Is Disabled</a></h1>
+      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/">Credentials in LDAP URLs when Anonymous Search is Disabled</a></h1>
       <p class="meta">
         <time datetime="2012-10-10T20:55:00Z" pubdate data-updated="true">Oct 10<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
       </p>
@@ -642,7 +679,7 @@ $ grep ^00 cron.log
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/">Tip: Notification = Never</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/">Tip: notification = never</a></h1>
       <p class="meta">
         <time datetime="2012-10-08T10:36:25Z" pubdate data-updated="true">Oct 8<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -840,7 +877,7 @@ meta_feed:
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/">Partitionable Slot Utilization</a></h1>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/">Partitionable slot utilization</a></h1>
       <p class="meta">
         <time datetime="2012-10-01T11:07:41Z" pubdate data-updated="true">Oct 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
@@ -850,7 +887,7 @@ meta_feed:
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html">Flocking to the OSG Behind a Restrictive Firewall</a></h1>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html">Flocking to the OSG behind a restrictive Firewall</a></h1>
       <p class="meta">
         <time datetime="2012-09-28T03:28:00Z" pubdate data-updated="true">Sep 28<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
       </p>
@@ -886,7 +923,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/09/24/ldap-auth/">Integrating Cumin With LDAP for Authentication</a></h1>
+      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/09/24/ldap-auth/">Integrating Cumin with LDAP for Authentication</a></h1>
       <p class="meta">
         <time datetime="2012-09-24T16:41:00Z" pubdate data-updated="true">Sep 24<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
       </p>
@@ -897,7 +934,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/09/24/new-post/">So What Is Cumin Anyway?</a></h1>
+      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/09/24/new-post/">So What is Cumin Anyway?</a></h1>
       <p class="meta">
         <time datetime="2012-09-24T16:07:00Z" pubdate data-updated="true">Sep 24<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
       </p>
@@ -908,7 +945,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://www.redhat.com/about/news/archive/2012/9/red-hat-updates-messaging-realtime-and-grid-platform-with-enterprise-mrg-2-2">Red Hat Releases Enterprise MRG 2.2 (September 24, 2012)</a></h1>
+      <h1 class="entry-title"><a href="http://www.redhat.com/about/news/archive/2012/9/red-hat-updates-messaging-realtime-and-grid-platform-with-enterprise-mrg-2-2"> Red Hat releases Enterprise MRG 2.2 (September 24, 2012)</a></h1>
       <p class="meta">
         <time datetime="2012-09-24T05:00:00Z" pubdate data-updated="true">Sep 24<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
       </p>
@@ -919,7 +956,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/09/21/condor-n-overt/">Elastic Grid With Condor and oVirt Integration</a></h1>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/09/21/condor-n-overt/">Elastic Grid with Condor and oVirt Integration</a></h1>
       <p class="meta">
         <time datetime="2012-09-21T08:50:00Z" pubdate data-updated="true">Sep 21<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
       </p>
@@ -940,7 +977,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://getwallaby.com/2012/09/authorization-for-wallaby-clients/">Authorization for Wallaby Clients</a></h1>
+      <h1 class="entry-title"><a href="http://getwallaby.com/2012/09/authorization-for-wallaby-clients/">Authorization for Wallaby clients</a></h1>
       <p class="meta">
         <time datetime="2012-09-12T22:30:00Z" pubdate data-updated="true">Sep 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; William Benton</time>
       </p>
@@ -951,7 +988,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/09/authorization-for-wallaby-clients.html">Authorization for Wallaby Clients</a></h1>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/09/authorization-for-wallaby-clients.html">Authorization for Wallaby clients</a></h1>
       <p class="meta">
         <time datetime="2012-09-12T22:23:18Z" pubdate data-updated="true">Sep 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
@@ -961,7 +998,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit/">Dust Off Nuke It From Orbit</a></h1>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit/">Dust off nuke it from orbit</a></h1>
       <p class="meta">
         <time datetime="2012-09-12T09:12:00Z" pubdate data-updated="true">Sep 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
       </p>
@@ -971,7 +1008,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/08/highly-available-configuration-data-with-wallaby.html">Highly-available Configuration Data With Wallaby</a></h1>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/08/highly-available-configuration-data-with-wallaby.html">Highly-available configuration data with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2012-08-29T21:03:00Z" pubdate data-updated="true">Aug 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
@@ -981,7 +1018,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/07/27/driving-a-condor-job-renice-policy-with-accounting-groups/">Driving a Condor Job Renice Policy With Accounting Groups</a></h1>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/07/27/driving-a-condor-job-renice-policy-with-accounting-groups/">Driving a Condor Job Renice Policy with Accounting Groups</a></h1>
       <p class="meta">
         <time datetime="2012-07-27T20:50:00Z" pubdate data-updated="true">Jul 27<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
@@ -992,7 +1029,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/06/using-wallabys-skeleton-group.html">Using Wallaby's Skeleton Group</a></h1>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/06/using-wallabys-skeleton-group.html">Using Wallaby's skeleton group</a></h1>
       <p class="meta">
         <time datetime="2012-06-15T21:04:21Z" pubdate data-updated="true">Jun 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
@@ -1002,7 +1039,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://getwallaby.com/2012/06/using-the-skeleton-group/">Using the Skeleton Group</a></h1>
+      <h1 class="entry-title"><a href="http://getwallaby.com/2012/06/using-the-skeleton-group/">Using the skeleton group</a></h1>
       <p class="meta">
         <time datetime="2012-06-15T17:46:00Z" pubdate data-updated="true">Jun 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; William Benton</time>
       </p>
@@ -1013,17 +1050,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/06/troubleshooting-condor-with-wallaby.html">Troubleshooting Condor With Wallaby</a></h1>
-      <p class="meta">
-        <time datetime="2012-06-01T20:49:36Z" pubdate data-updated="true">Jun 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
-      </p>
-    </header>
-    <div class="entry-content">Often, if you're trying to reproduce a problem someone else is having with Condor, you'll need their configuration. Likewise, if you're trying to help someone reproduce a problem you're having, you'll want to send along your configuration to aid them...</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://getwallaby.com/2012/06/troubleshooting/">Troubleshooting Condor With Wallaby</a></h1>
+      <h1 class="entry-title"><a href="http://getwallaby.com/2012/06/troubleshooting/">Troubleshooting Condor with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2012-06-01T17:27:00Z" pubdate data-updated="true">Jun 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; William Benton</time>
       </p>
@@ -1034,7 +1061,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://getwallaby.com/2012/03/getwallaby-dot-com-is-now-powered-by-octopress/">Now Powered by OctoPress</a></h1>
+      <h1 class="entry-title"><a href="http://getwallaby.com/2012/03/getwallaby-dot-com-is-now-powered-by-octopress/">Now powered by OctoPress</a></h1>
       <p class="meta">
         <time datetime="2012-03-16T17:27:00Z" pubdate data-updated="true">Mar 16<span>th</span>, 2012  &nbsp; &mdash; &nbsp; William Benton</time>
       </p>
@@ -1044,7 +1071,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/03/resource-isolation-in-condor-using.html">Resource Isolation in Condor Using Cgroups</a></h1>
+      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/03/resource-isolation-in-condor-using.html">Resource Isolation in Condor using cgroups</a></h1>
       <p class="meta">
         <time datetime="2012-03-10T19:28:00Z" pubdate data-updated="true">Mar 10<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
       </p>
@@ -1054,7 +1081,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/improving-file-isolation-with-chroot.html">Improving File Isolation With Chroot</a></h1>
+      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/improving-file-isolation-with-chroot.html">Improving File Isolation with chroot</a></h1>
       <p class="meta">
         <time datetime="2012-02-27T19:33:00Z" pubdate data-updated="true">Feb 27<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
       </p>
@@ -1064,7 +1091,7 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/file-isolation-using-bind-mounts-and.html">File Isolation Using Bind Mounts and Chroots</a></h1>
+      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/file-isolation-using-bind-mounts-and.html">File Isolation using bind mounts and chroots</a></h1>
       <p class="meta">
         <time datetime="2012-02-20T16:03:00Z" pubdate data-updated="true">Feb 20<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
       </p>
@@ -1084,23 +1111,12 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/01/openstack-update.html">Openstack - Update</a></h1>
+      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/01/openstack-update.html">openstack - update</a></h1>
       <p class="meta">
         <time datetime="2012-01-27T18:29:00Z" pubdate data-updated="true">Jan 27<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
       </p>
     </header>
     <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://getwallaby.com/2011/11/exporting-versioned-configurations/">Exporting Versioned Configurations</a></h1>
-      <p class="meta">
-        <time datetime="2011-11-02T22:24:33Z" pubdate data-updated="true">Nov 2<span>nd</span>, 2011  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Wallaby stores versioned configurations in a database.  <a href="http://getwallaby.com/the-wallaby-api/">Wallaby API</a> clients can access older versions of a node&#8217;s configuration by supplying the <code>version</code> option to the <code>Node#getConfig</code> method.  Sometimes, though, we&#8217;d like to inspect individual configurations in greater detail than the API currently allows. [...]</p>
-</div>
   </article>
 
 </div>

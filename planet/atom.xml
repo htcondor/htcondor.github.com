@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2012-11-01T12:21:12-07:00</updated>
+  <updated>2012-11-03T15:50:17-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[BOSCO v1.1 Features: Single Port Usage]]></title>
+      <link href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html"/>
+      <updated>2012-11-01T20:59:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-2355522235500004311</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[Welcome to part 2 of my ongoing series of v1.1 features for BOSCO. &nbsp;Part 1 was on <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">SSH File Transfer</a>.<br /><br />This time, I'll talk about a new feature that we didn't planned on implementing at first, using only a single port for all communication. &nbsp;After a small investigation, it was discovered that using a single port is very simple, and with no interruption to other components. &nbsp;I talked briefly about it in a <a href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html">previous post</a>.<br /><br /><h3>What is it?</h3><div>In 1.0 of BOSCO, the submit host needed a lot of ports open for connections originating from the remote clusters. &nbsp;This was caused by 2 mechanisms:</div><div><ol><li>File transfer from the BOSCO submit host to the cluster login node before issuing the local submit call (qsub, condor_submit...). &nbsp;This opens ports on the submit host because the cluster would call out to the submit host to initiate transfers.</li><li>Connections for control, status, and workflow management between the cluster worker nodes and BOSCO submit host. &nbsp;This is the Campus Factory, which gives BOSCO the traditional Condor look and feel.</li></ol>In order for BOSCO to function, the submit host needs a large swath of ports in order to operate correctly. &nbsp;Also, as you scale, you will need even more ports open.</div><div><br /></div><div>The file transfers from the submit host to the login node are now being transferred using SSH, see my <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">previous post</a>.</div><div><br /></div><div>With the new feature of single port usage, all control, status, and workflow management connections are routed through HTCondor's <a href="http://research.cs.wisc.edu/condor/manual/v7.9/3_7Networking_includes.html#SECTION00472000000000000000">share_port_daemon</a> on port 11000 (which is hardcoded, but I picked at random).</div><div><br /></div><h3>Why should I care?</h3><div>Limiting BOSCO to using only 1 incoming port is very useful for users on systems not managed by them. &nbsp;The node will only need 1 port open in order to run BOSCO, 11000. &nbsp;If the system has a firewall, you only have to request port 11000 be opened, rather than huge swaths. &nbsp;If you manage the system, then you will be happy that only 1 port needs to be opened in order to allow BOSCO submissions.</div><div><br /></div><div>Administrators will like this feature as it is more in line with other applications that they may run. &nbsp;For example, httpd only requires 1 port, 80. &nbsp;Now BOSCO is in the same realm, only requiring 1 port, 11000.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-2355522235500004311?l=derekweitzel.blogspot.com' alt='' /></div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Best practices for Wallaby's default group]]></title>
+      <link href="http://chapeau.freevariable.com/2012/11/best-practices-for-wallabys-default-group.html"/>
+      <updated>2012-11-01T20:14:53Z</updated>
+      <id>tag:chapeau.freevariable.com,2012://1.38</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[
+        <p>Recall that <a href="http://getwallaby.com">Wallaby</a> applies partial configurations to <em>groups</em> of <em>nodes</em>.  Groups can be either <em>explicit</em> &#8212;- that is, a named subset of nodes created by the user, or <em>special</em> groups that are built-in to Wallaby; each node&#8217;s group memberships have a priority ordering, so that an individual node&#8217;s configuration can favor the partial configuration from one group over another.  There are two kinds of special groups:  the <em>default group</em>, which contains every node and a set of <em>identity groups</em>, each of which only contains a single node.  In addition, Wallaby includes a <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/"><em>skeleton group</em></a>, which combines aspects of explicit and special groups:  while it can be managed like an explicit group, all newly-created nodes become members of the skeleton group automatically.  The default group is always the lowest-priority membership for a node and its identity group is always the highest-priority membership; a node&#8217;s skeleton group membership can be reprioritized or removed as necessary.</p>
+
+<p>The default group is an appealing target for common pool configuration, since it is guaranteed to be applied to every node.  However, because Wallaby&#8217;s configuration model is <em>additive</em>, it is likely not the best place for every configured feature or parameter setting that you might initially consider applying to the whole pool.  For example, if a group&#8217;s partial configuration installs a feature, every node that is a member of that group will install that feature (there is no way to say &#8220;this group&#8217;s configuration removes feature <em>F</em>, if it happens to be installed already).  Similarly, if a parameter is set on a group, every node that is a member of that group will have that parameter set; individual node configurations can override the value that the parameter is set to within the group, but there is no way to unset the parameter altogether.  Therefore, if you need to enable a feature on <em>almost every</em> node, the default group is not the right place to install that feature.  (Indeed, the default group is not the right place to put a putatively universal parameter setting or feature installation even if you can imagine a future exception to its universality.)  The default group is also not a great place to put configuration that you expect to take priority over other possible group configurations, since it will always be at the lowest priority.</p>
+
+<p>At this point, you may be asking yourself why you&#8217;d want to put any configuration in the default group.  While I tend towards a minimal default group configuration myself, I absolutely see several use cases for the default group:</p>
+
+<ol>
+<li><strong>Setting configuration parameters that are actually uniform across the whole pool</strong> (and will require a new value, not the absence of a value, if they change).  One such parameter is <code>FILESYSTEM_DOMAIN</code>, which you can set to an arbitrary string in order to identify machines that access the same shared filesystem.  If you were to extend your pool with machines that couldn&#8217;t access that same filesystem, you&#8217;d provide a new value for this parameter.</li>
+<li><strong>Installing Wallaby features that you actually want installed on every node.</strong>  I&#8217;d include features like <code>Master</code>, which ensures that the <code>condor_master</code> daemon is running (since Wallaby&#8217;s configuration daemon runs under the <code>condor_master</code>; a node can&#8217;t be configured if it isn&#8217;t running) and <code>NodeAccess</code>, which controls access to the pool (although the specific policy parameters required by <code>NodeAccess</code> may change in pool subsets).</li>
+<li><strong>Rapidly prototyping configurations for homogeneous or small, experimental pools.</strong>  When you&#8217;re first using Wallaby, the default group is a convenient way to get things running.  Similarly, if most of your nodes are execute nodes with the same policies, you may be able to put most of your configuration in the default group, especially if your submit and central manager configurations are generally a superset of your execute node configuration.  Fortunately, Wallaby makes it straightforward to move configuration from the default group to an explicit group if you should require more flexibility.</li>
+</ol>
+
+<p>I&#8217;m sure there are other cases in which using the default group makes good sense, but in general, you should strongly consider using an explicit group or the skeleton group for almost all of your nearly-universal configuration.  If you haven&#8217;t used the skelton group before, <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/">read more about it</a>!</p>
+
+        
+
+    ]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Using Accounting Groups With Wallaby]]></title>
@@ -326,19 +367,6 @@ Sun Oct 14 18:06:02 UTC 2012
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ "Condor" name changing to "HTCondor" (October 25, 2012)]]></title>
-      <link href="http://www.cs.wisc.edu/condor"/>
-      <updated>2012-10-25T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/condor</uri>
-      </author>
-      <content type="html"><![CDATA[In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[ Condor Security Release: 7.8.6 (October 25, 2012)]]></title>
       <link href="http://research.cs.wisc.edu/condor/security/vulnerabilities/CONDOR-2012-0003.html"/>
       <updated>2012-10-25T05:00:00Z</updated>
@@ -348,6 +376,19 @@ Sun Oct 14 18:06:02 UTC 2012
         <uri>http://research.cs.wisc.edu/condor</uri>
       </author>
       <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.8.6. which contains an important security fix that was incorrectely documented as being in the 7.8.5 release.  This release is otherwise identical to the 7.8.5 release.  Affected users should upgrade as soon as possible.  More details on the security issue can be found here.  Condor binaries and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ "Condor" name changing to "HTCondor" (October 25, 2012)]]></title>
+      <link href="http://www.cs.wisc.edu/condor"/>
+      <updated>2012-10-25T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
 ]]></content>
     </entry>
   
@@ -419,19 +460,6 @@ DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ Condor 7.8.5 Released! (October 22, 2012)]]></title>
-      <link href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000"/>
-      <updated>2012-10-22T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/condor</uri>
-      </author>
-      <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[ Condor 7.9.1 released! (October 22, 2012)]]></title>
       <link href="http://research.cs.wisc.edu/condor/manual/v7.9/9_3Development_Release.html"/>
       <updated>2012-10-22T05:00:00Z</updated>
@@ -441,6 +469,19 @@ DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
         <uri>http://research.cs.wisc.edu/condor</uri>
       </author>
       <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.9.1.  This is a development release which includes many new features, as well as all bug and security fixes from 7.8.5.  See the Version History for a complete list of changes. Condor 7.9.1 binaries and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Condor 7.8.5 Released! (October 22, 2012)]]></title>
+      <link href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000"/>
+      <updated>2012-10-22T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/condor</uri>
+      </author>
+      <content type="html"><![CDATA[The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
 ]]></content>
     </entry>
   
@@ -1019,18 +1060,6 @@ configured but the node needs to be configured to access the shared storage. [..
   
     <entry>
       <title type="html"><![CDATA[Troubleshooting Condor with Wallaby]]></title>
-      <link href="http://chapeau.freevariable.com/2012/06/troubleshooting-condor-with-wallaby.html"/>
-      <updated>2012-06-01T20:49:36Z</updated>
-      <id>tag:chapeau.freevariable.com,2012://1.33</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[Often, if you're trying to reproduce a problem someone else is having with Condor, you'll need their configuration. Likewise, if you're trying to help someone reproduce a problem you're having, you'll want to send along your configuration to aid them...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Troubleshooting Condor with Wallaby]]></title>
       <link href="http://getwallaby.com/2012/06/troubleshooting/"/>
       <updated>2012-06-01T17:27:00Z</updated>
       <id>http://getwallaby.com/2012/06/troubleshooting</id>
@@ -1112,19 +1141,6 @@ configured but the node needs to be configured to access the shared storage. [..
         <uri>http://osgtech.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Exporting versioned configurations]]></title>
-      <link href="http://getwallaby.com/2011/11/exporting-versioned-configurations/"/>
-      <updated>2011-11-02T22:24:33Z</updated>
-      <id>http://getwallaby.com/2011/11/exporting-versioned-configurations</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://getwallaby.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Wallaby stores versioned configurations in a database.  <a href="http://getwallaby.com/the-wallaby-api/">Wallaby API</a> clients can access older versions of a node&#8217;s configuration by supplying the <code>version</code> option to the <code>Node#getConfig</code> method.  Sometimes, though, we&#8217;d like to inspect individual configurations in greater detail than the API currently allows. [...]</p>
-]]></content>
     </entry>
   
 </feed>
