@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Welcome to part 2 of my ongoing series of v1.1 features for BOSCO. &nbsp;Part 1 was on SSH File Transfer.This time, I'll talk about a new feature &hellip;">
+  <meta name="description" content="In my previous post about Rethinking the Semantics of Group Quotas and Slot Weights, I proposed a concept for unifying the semantics of accounting &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,313 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/11/15/rethinking-the-semantics-of-group-quotas-and-slot-weights-claim-capacity-model/">Rethinking the Semantics of Group Quotas and Slot Weights: Claim Capacity Model</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-16T00:22:00Z" pubdate data-updated="true">Nov 16<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In my previous post about <a href="http://erikerlandson.github.com/blog/2012/11/13/rethinking-the-semantics-of-group-quotas-and-slot-weights-for-heterogeneous-and-multidimensional-compute-resources">Rethinking the Semantics of Group Quotas and Slot Weights</a>, I proposed a concept for unifying the semantics of accounting group quotas and slot weights across arbitrary resource allocation strategies.</p>
+
+<p>My initial terminology was that the weight of a slot (i.e. resource ad) is a measure of the <em>maximum</em> number of jobs that might match against that ad, given the currently available resource quantities and the allocation policy.  The cost of a match becomes the amount by which that measure is reduced, after the match's resources are removed from the ad.</p>
+
+<p>In the HTCondor vocabulary, a job acquires a <em>claim</em> on resources to actually run after it has been matched.  It has been proposed that it may be beneficial for HTCondor to evolve toward a model where there are (aggregate) resource ads, and claims against those ads, as a simplification of the current model which involves static, partitionable and dynamic slots, with claims.  With this in mind, a preferable terminology for group quota and weight semantics might be that a resource ad (or slot) has a measure of the maximum number of claims it could dispense: a <em>claim capacity</em> measure.  The cost of a claim (or match) is the corresponding reduction of the resource's claim capacity.</p>
+
+<p>So, this semantic model could be referred to as the Claim Capacity Model of group quotas and slot weights.  With this terminology, the shared 'unit' for group quotas and slot weights would be <em>claims</em> instead of <em>jobs</em>.</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/11/13/rethinking-the-semantics-of-group-quotas-and-slot-weights-for-heterogeneous-and-multidimensional-compute-resources/">Rethinking the Semantics of Group Quotas and Slot Weights for Heterogeneous and Multidimensional Compute Resources</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-13T22:31:00Z" pubdate data-updated="true">Nov 13<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>The HTCondor semantic for accounting group quotas and slot weights is currently cpu-centric.  This is an artifact of the historic primacy of cpu as the most commonly-considered limiting resource in computations.  For example the <code>SlotWeight</code> attribute is currently defaulted to <code>Cpus</code>, and when slot weights are disabled, there is logic activated in matchmaking to sum the available cpus on slots to avoid 'undercounting' total pool quotas.</p>
+
+<p>However, HTCondor slots -- the core model of computational resources in an HTCondor pool -- manage four resources by default: cpu, memory, disk and swap.  Furthermore, slots may now be configured with arbitrary custom resources.  As recently mentioned by <a href="http://spinningmatt.wordpress.com/2012/11/13/no-longer-thinking-in-slots-thinking-in-aggregate-resources-and-consumption-policies">Matthew Farrellee</a>, there is a growing pressure to provide robust support not just for traditional cpu-centric resource presentation, usage and allocation, but also seamlessly mediated with memory-centric, gpu-centric or '*'-centric resource allocation policies and more generally allocation policies that are simultaneously aware of all resource dimensions.</p>
+
+<p>This goal immediately raises some questions for the semantics of accounting groups and slot weights when matching jobs against slots during matchmaking.</p>
+
+<p>Consider a pool where 50% of the slots are 'weighted' in a traditional cpu-centric way, but the other 50% are intended to be allocated in a memory-centric way.  This is currently possible, as the <code>SlotWeight</code> attribute can be configured appropriately to be a function of either <code>Cpus</code> or <code>Memory</code>.</p>
+
+<p>But in a scenario where slots are weighted as functions of heterogeneous resource dimensions, it raises a semantic question:  when we sum these weights to obtain the pool-wide available quota, what 'real world' quantity does this total represent -- if any?   Is it a purely heuristic numeric value with no well defined unit attached?</p>
+
+<p>This question has import.  Understanding what the answer is, or should be, impacts what story we tell to users about what their accounting group configuration actually means.  When I assign a quota to an accounting group in such a heterogeneous environment, what is that quota regulating?   When a job matches a cpu-centric slot, does the cost of that match have a different meaning than when matching against a memory-centric slot?   When the slots are partitionable, a match implies a certain multi-dimensional slice of resources allocated from that slot.  What is the cost of that slice?  Does the sum of costs add up to the original weight on the partitionable slot?  If not, how does that affect our understanding of quota semantics?</p>
+
+<p>It may be possible unify all of these ideas by adopting the perspective that a slot's weight is a measure of the maximum number of jobs that can be matched against it.  The cost of a match is W(S)-W(S'), where W(S) is the weight function evaluated on the slot prior to match, and W(S') is the corresponding weight after the match has extracted its requested resources.  The pool's total quota is just the sum of W(S), over all slots S in the pool.  Note, this implies that the 'unit' attached to both slot weights and accounting group quotas is 'jobs'.</p>
+
+<p>Consider a simple example from the traditional cpu-centric configuration:   A partitionable slot is configured with 8 cpus, and <code>SlotWeight</code> is just its default <code>Cpus</code>.  Using this model, the allocation policy is: 'each match must use >= 1 cpu", and that other resource requests are assumed to be not limiting.  The maximum number of matches is 8 jobs, each requesting 1 cpu.   However, a job might also request 2 cpus.  In this case, note that the cost of the match is 2, since the remaining slot has 6 slots, and so W(S') now evaluates to 6.   So, the cost of the match is how many fewer possible jobs the original slot can support after the match takes its requested resources.</p>
+
+<p>This approach can be applied equally well to a memory-centric strategy, or a disk centric strategy, or a gpu-based strategy, or any combination simultaneously.  All weights evaluate to a value with unit 'jobs'.   All match costs are differences between weights (before and after match), and so their values are also in units of 'jobs'.  Therefore, the semantics of the sum of weights over a pool is always well defined: it is a number of jobs, and spefically a measure of the maximum number of jobs that might match against all the slots in the pool.  When a match acquires resources that reduce this maximum by more than 1 job, that is not in any way inconsistent.  It means the job used resources that might have supported two or more 'smaller' jobs.   This means that accounting group quotas (and submitter shares) also have a well defined unit and semantic, which is 'how many (or what fraction of) the maximum possible jobs is this group guaranteed by my accounting policy'</p>
+
+<p>One implication of this proposed semantic for quotas and weights is that the measure for the maximum number of jobs that may match against any given slot must be some finite number.   It implies that all resource dimensions are quantized in some way by the allocation policy.   This scheme would not support a real-valued resource dimension that had no minimum quantization.  I do not think that this is a very heavy-weight requirement, and in fact we have already been moving in that direction with features such as MODIFY_REQUEST_EXPRS_xxx.</p>
+
+<p>When a slot's resource allocation policy is defined over all its resources, what bounds this measure of maximum possible matches?  In a case where each job match <em>must</em> use at least one non-zero quantum of each resource dimension, then the limit is the resource with the mimimum quantized levels.   In a case where jobs may request a zero amount of resources, then the limit is the resource with the maximum quantized levels.  (note, it is required that each match use at least one quantum of at least one resource, otherwise the maximum is not properly bounded).</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/11/13/no-longer-thinking-in-slots-thinking-in-aggregate-resources-and-consumption-policies/">No longer thinking in slots, thinking in aggregate resources and consumption policies</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-13T11:56:14Z" pubdate data-updated="true">Nov 13<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>The slot model was natural when a machine housed a single core. Though, the slot model did not exist when a machine housed a single core.</p>
+<p>When machines were single core the model was a machine, represented as a MachineAd. A MachineAd had an associated CPU, some nominal amount of RAM and some chunk of disk space. Running a job meant consuming a machine.</p>
+<p>When machines grew multiple cores the machine model was split. A single machine became independent MachineAds, called virtual machines. However, the name didn&#8217;t stick as the term virtual machine became a popular term in hardware virtualization. So a machine became independent MachineAds, called slots. The unifying entity, the machine itself, was lost. Running a job still meant consuming a slot.</p>
+<p>Most recently, slots split into two classes: static and partitionable. Static slots are the slots formerly known as virtual machines. Partitionable slots are a representation of the physical machine itself, and are carved up, on-demand to service jobs. Both types are still MachineAds, but the consumption of partitionable slots is dynamic.</p>
+<p>The slot model has demonstrated great utility but has been stretched.</p>
+<p>In this time workloads have also changed. They have become more memory bound, disk IO bound, and network bound. They have started relying on specialized hardware and even application level services. They have started both spanning and packing into cores. They have grown complex data dependencies, become very short running, and become infrastructure level long running.</p>
+<p>Machines have also grown to include scores of cores, hundreds of gigabytes of RAM, dozens of terabytes of disk, specialized hardware such as GPUs, co-processors, entropy keys, high speed interconnects and a bevy of other attached devices.</p>
+<p>Machines are lumpy, heterogeneous means more than operating system and CPU architecture.</p>
+<p>Furthermore, if it still existed, the machine model itself would fail to cleanly describe available resources. Classes of resources exist that house entire clusters, grids, or life-cycle manageable application services. Resources share addressable memory across operating systems instances, are custom architectures across whole data centers, and even those that don&#8217;t provide an outline of their capacity. Resources may grow and shrink while in use.</p>
+<p>Consumption of these resources is not necessarily straightforward or uniform.</p>
+<p>It&#8217;s time to stop thinking in slots. Its time to start thinking in aggregate resources and their consumption policies.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/817/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/817/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=817&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/11/12/role-enforcement-in-cumin/">Role enforcement in Cumin</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-12T20:20:00Z" pubdate data-updated="true">Nov 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Roles in Cumin scope activities and content in the UI.  There are currently two roles defined in Cumin, <code>admin</code> and <code>user</code>.  The <code>admin</code> role is a superset of the <code>user</code> role, and every new account has the <code>user</code> role by default.</p>
+
+<h3>Differences in the Roles</h3>
+
+<p>The <code>admin</code> role allows a user to see various charts, graphs, and statistics related to performance of the Condor pool.  An admin can also see information about Condor infrastructure components such as schedulers and negotiators and can run certain pool management commands.  Admins are free to manage any job running in the pool regardless of who owns the job, but can also switch to the <code>user</code> view for the admin account.</p>
+
+<p>The <code>user</code> role allows a user to create and manage their own submissions.  They do not have visibility to jobs owned by other users, performance metrics, or pool management commands.</p>
+
+<h3>Enabling Role Enforcement</h3>
+
+<p>Role enforcement is disabled by default in the standard Cumin configuration file, effectively making every user an admin (the default will change in a future revision).  To enable role enforcement, set the <code>auth</code> configuration value to <code>True</code> in the cumin.conf configuration file:</p>
+
+<pre><code>[web]
+authorize: True  
+</code></pre>
+
+<h3>Setting Role Values</h3>
+
+<p>The role value is part of the account metadata along with username and password.  While username and password may optionally be managed in LDAP repositories, role values at this time may only be defined in the local PostgreSQL database.  This restriction will likely be removed in a future version.  You can read more about LDAP authentication in the earlier blog post <em>Cumin Authentication with LDAP</em>, and we&#8217;ll explain how to set roles for external user accounts below.</p>
+
+<p>Roles are managed with the <code>cumin-admin</code> commands <code>add-assignment</code> and <code>remove-assignment</code>:</p>
+
+<pre><code># cumin-admin add-assignment joeuser admin
+# cumin-admin remove-assignment joeuser admin
+</code></pre>
+
+<p>(An account may have the <code>user</code> and <code>admin</code> roles at the same time, but currently this has no real effect since <code>admin</code> is a superset.  It is not necessary to explicitly set the <code>user</code> role.)</p>
+
+<h3>Creating an Entry to Hold the Role for an LDAP Account</h3>
+
+<p>For accounts authenticated against LDAP, an entry must be added to the PostgreSQL database as a placeholder before the role value may be set.  This is done with the <code>cumin-admin</code> command <code>external-user</code>:</p>
+
+<pre><code># cumin-admin external-user myldapuser
+# cumin-admin add-assignment myladpuser admin
+</code></pre>
+
+<h3>More to Come</h3>
+
+<p>A future post may address the relationship of roles to <em>persona</em> and talk about development hooks that allow customization of the UI based on user and site profiles.</p>
+
+<p>The Cumin project wiki can be found <a href="http://fedorahosted.org/grid/wiki/Cumin">here</a></p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/11/12/condor-sudo/">Override HTCondor installation with sudo</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-12T09:00:00Z" pubdate data-updated="true">Nov 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
+      </p>
+    </header>
+    <div class="entry-content"><h2>Background</h2>
+
+<p>As a developer, I often find myself wanting to iterate on a build, and test in a sandboxed environment.  Isolating the environment ensures that your changes work well in a controlled experiment, but it has one fundamental flaw, it&#8217;s not realistic.  In order to truly test a complicated system it&#8217;s best to put it into some production environment.  This is great for testing, but it has been known to give admins a headache, because you are mucking with a known good installation.  So in this post we will set about the task of overriding an installtion of HTCondor using sudo while keeping the following requirements in mind:</p>
+
+<h3>Requirements</h3>
+
+<ul>
+<li>Don&#8217;t alter the existing system installation (binaries or config files).</li>
+<li>Be able to reference any custom developer build.</li>
+<li>Be able to easily change back to the known good installation with little/no effort.</li>
+</ul>
+
+
+<hr />
+
+<h2>Getting Started</h2>
+
+<p>Before you begin you will need a machine which already has HTCondor installed on it, and all the necessary development tools in order to create a custom build.  You will also need to obtain the <a href="https://github.com/htcondor/htcondor">source tree for HTCondor</a>, and follow the instructions on <a href="https://condor-wiki.cs.wisc.edu/index.cgi/wiki?p=BuildModernization">how to build condor.</a>  I typically &#8216;alias cmake&#8217; in my environment with all the clever developer magic to make a sandbox&#8217;d installation out of the gate.</p>
+
+<pre><code>alias cmake='cmake -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release_dir \
+-DBUILDID:STRING=tstclair_local -DWANT_CONTRIB:BOOL=TRUE \
+-DWANT_FULL_DEPLOYMENT:BOOL=FALSE -D_VERBOSE:BOOL=TRUE \
+-DWANT_MAN_PAGES:BOOL=TRUE -D_DEBUG:BOOL=TRUE'
+
+cmake . &amp;&amp; make install 
+</code></pre>
+
+<p>Lastly you will need an account which has sudo privs on the machine where you will be tinkering.</p>
+
+<hr />
+
+<h2>Setting up a Sandbox</h2>
+
+<p>Once you&#8217;ve created build for the target machine that you would like to test, you will need to create a sandbox location which is also accessible by the &#8216;condor&#8217; user, I typically use /tmp.</p>
+
+<pre><code>mkdir /tmp/mycondor
+cp -r release_dir /tmp/mycondor 
+</code></pre>
+
+<p>Next you will want to drop 3 files into your sandbox directory.</p>
+
+<p>The first file is a simple bash script which kicks off your sandbox&#8217;d condor ensuring that all the correct environment variables are passed through sudo so that HTCondor can properly execute out of your sandbox.</p>
+
+<figure class='code'><figcaption><span> (sudo_condor.sh)</span> <a href='http://timothysc.github.com/downloads/code/scripts/sudo_condor.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">foo</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">export </span><span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">foo</span><span class="k">}</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">CONDOR_CONFIG</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/override.sh<span class="se">\|</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">CONDOR</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/release_dir
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/lib:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/bin:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/sbin:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/libexec:<span class="k">${</span><span class="nv">PATH</span><span class="k">}</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/lib:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/libexec
+</span><span class='line'>
+</span><span class='line'><span class="c">#start up new condor</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Starting condor... @${CONDOR} with override ${CONDOR_CONFIG}&quot;</span>
+</span><span class='line'>sudo env <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span> <span class="nv">CONDOR_CONFIG</span><span class="o">=</span><span class="nv">$CONDOR_CONFIG</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span> <span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span> <span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/sbin/condor_master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you are testing your client tools, you will also want to mundge your PATH in your testing shell as seen in the script.</p>
+
+<p>The next file is a script which acts as a piped config script.  In HTCondor, there is a feature which allows admins to generate/mundge the parameters which can be passed in on intialization and reconfig.  It turns out this is useful in meeting our previously mentioned requirement of not mucking with the existing configs while still being able to customize as seen below:</p>
+
+<figure class='code'><figcaption><span> (override.sh)</span> <a href='http://timothysc.github.com/downloads/code/scripts/override.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;$BASE&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Using pwd&quot;</span>
+</span><span class='line'>    <span class="nb">export </span><span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#take the original system config</span>
+</span><span class='line'>cat /etc/condor/condor_config
+</span><span class='line'>
+</span><span class='line'><span class="c"># override the execution locations</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;RELEASE_DIR=${BASE}/release_dir&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;LIB=${BASE}/release_dir/lib&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;INCLUDE=${BASE}/release_dir/include&quot;</span>
+</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;LIBEXEC=${BASE}/release_dir/libexec&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#apply your custom setting overrides</span>
+</span><span class='line'>cat <span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/condor_config.local
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The final file is an optional condor_config.local file, which you can create.  This file is appended to the end of the existing config and allows the developers, or admins, to lay out any configuration that they desire or even override the system to behave the way they would like.</p>
+
+<p>Finally you will need to adjust the access permission so that the &#8216;condor&#8217; user can access the shared location.</p>
+
+<pre><code>sudo chown -R "root:root" /tmp/mycondor
+</code></pre>
+
+<p>Now lets rock N&#8217; roll!</p>
+
+<pre><code>cd /tmp/mycondor
+./sudo_condor.sh
+</code></pre>
+
+<p>You&#8217;ve now taken over a existing machine in your pool using all the configuration settings that were there, while still allowing your own config magic.  You should take heed though, if you are testing any changes to condors internal files, you could possibly corrupt what is there.  To avoid this, you can override the SPOOL and EXECUTE directories in your condor_config.local file.</p>
+
+<hr />
+
+<h2>Verify its correct</h2>
+
+<p>The easiest way to verify correctness is to check that the preamble in the logs(/var/log/condor) contains your BUILDID string, in this case it was &#8216;tstclair_local&#8217;.</p>
+
+<hr />
+
+<h2>Potential Use Cases</h2>
+
+<p>It&#8217;s fairly obvious why a developer would want to do this, but it has many potential use cases outside of just development, which include:</p>
+
+<ul>
+<li>Beta testing a new installation prior to a pool upgrade.</li>
+<li>Testing version compatibility across releases.</li>
+<li>Playing with new shiney condor features in a existing pool.</li>
+</ul>
+
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-os-support.html">BOSCO v1.1 Features: Multi-OS Support</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-06T22:11:00Z" pubdate data-updated="true">Nov 6<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">This is part 3 of my ongoing series describing new features in BOSCO v1.1. &nbsp;Part 1 covered <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">file transfer over SSH</a>, Part 2 covered <a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html">single port usage</a>. &nbsp;This post will cover the Multi-OS Support in BOSCO.<br /><br /><h3>What is it?</h3><div>The Multi-OS feature is intended to allow users to submit to clusters that may not be the same operating system as the submit host. &nbsp;This is especially useful when users are running a submit host on their personal computer that is running Debian, while the supercomputer in the next building is running Red Hat 6, a common&nbsp;occurrence.</div><div><br /></div><div>The Multi-OS components follow a basic process in order to operate:</div><div><ol><li>Detect the remote operating system with the <span style="font-family: Courier New, Courier, monospace;">findplatform</span> script.</li><li>Download (from the cloud?) the appropriate bosco version for the platform.</li><li>Transfer the files needed on the remote cluster. &nbsp;This includes grabbing the libraries and binaries for the campus factory's glideins. &nbsp;The glidein creation takes the most time of this process as it needs to compress the libraries and binaries before transferring.</li><li>When BOSCO detects jobs idle on the submit host, it will start glideins appropriate for the platform to service the jobs.</li></ol><div>The Multi-OS support required modification of the cluster addition and adding both a <span style="font-family: Courier New, Courier, monospace;">findplatform</span> script and a <span style="font-family: Courier New, Courier, monospace;">glidein_creation</span> script. &nbsp;</div></div><div><br /></div><h3>Why do I care?</h3><div>It is becoming increasingly common that what users run on their machines and what is run on supercomputers are different. &nbsp;When this is true, it is difficult to install software from one onto the other. &nbsp;The Multi-OS feature will greatly simplify the installation of BOSCO on clusters.</div><div><br /></div><div>Our goal with the Multi-OS support is that the users may not know it is even working. &nbsp;The users just say: "I want to run on this cluster", and BOSCO makes it happen. &nbsp;No matter what operating system is running on the remote cluster.</div><div><br /></div><div>One of my tests simulated a possible user&nbsp;scenario&nbsp; &nbsp;I was running a updated RHEL 6 machine which I installed BOSCO. &nbsp;I wanted to submit jobs to a RHEL 5 cluster located in our datacenter. &nbsp;If I simply copied over the bosco install from the RHEL 6 submit host, none of the binaries would work. &nbsp;But instead, I used the <span style="font-family: Courier New, Courier, monospace;">bosco_cluster -a</span> to add the RHEL 5 cluster, and jobs ran seamlessly from the RHEL 6 machine to the RHEL 5. &nbsp;</div><br />The Multi-OS support is available in the latest alphas available on the bosco&nbsp;<a href="http://bosco.opensciencegrid.org/download/">download</a>&nbsp;page.<br /><br /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-8516182672952525228?l=derekweitzel.blogspot.com' alt='' /></div></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/11/05/faq-job-resubmission/">FAQ: Job resubmission?</a></h1>
+      <p class="meta">
+        <time datetime="2012-11-05T12:07:43Z" pubdate data-updated="true">Nov 5<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>A question that often arises when approaching Condor from other batch systems is &#8220;How does Condor deal with resubmission of failed/preempted/killed jobs?&#8221;</p>
+<p>The answer requires a slight shift in thinking.</p>
+<p>Condor provides more functionality around the resubmission use case than most other schedulers. And the default policy is setup in such a way that most Condor folks don&#8217;t ever think about &#8220;resubmission.&#8221;</p>
+<p>Condor will keep your job in the queue (condor_schedd managed) until the policy attached to the job says otherwise.</p>
+<p>The default policy says a job will be run as many time as necessary for the job to terminate. So if the machine a job is running on crashes (generally, becomes unavailable), the condor_schedd will automatically try to run the job on another machine.</p>
+<p>When you start changing the default policy you can control things such as: if a job should be removed after a period of time, even if it is running or only if it hasn&#8217;t started running; if a job should run multiple times even if it terminated cleanly; if a termination w/ an error should make the job run again, be held in the queue for inspection, be removed from the queue; if a job held for inspection should be held forever or a specific amount of time; if a job should only start running at a specific time in the future, or be run at repeated intervals.</p>
+<p>The condor_submit manual page can provide specifics.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/812/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/812/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=812&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
 
   <article>
     <header>
@@ -412,28 +719,6 @@ Sun Oct 14 18:06:02 UTC 2012
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/security/vulnerabilities/CONDOR-2012-0003.html"> Condor Security Release: 7.8.6 (October 25, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-25T05:00:00Z" pubdate data-updated="true">Oct 25<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The Condor Team is pleased to announce the release of Condor 7.8.6. which contains an important security fix that was incorrectely documented as being in the 7.8.5 release.  This release is otherwise identical to the 7.8.5 release.  Affected users should upgrade as soon as possible.  More details on the security issue can be found here.  Condor binaries and source code are available from our Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://www.cs.wisc.edu/condor"> "Condor" name changing to "HTCondor" (October 25, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-25T05:00:00Z" pubdate data-updated="true">Oct 25<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">In order to resolve a lawsuit challenging the University of Wisconsin-Madison's use of the "Condor" trademark, the University has agreed to begin referring to its Condor software as "HTCondor" (pronounced "aitch-tee-condor").  The letters at the start of the new name ("HT") derive from the software's primary objective: to enable high throughput computing, often abbreviated as HTC.  Starting in the end of October and through November of this year, you will begin to see this change reflected on our web site, documentation, web URLs, email lists, and wiki. While the name of the software is changing, nothing about the naming or usage of the command-line tools, APIs, environment variables, or source code will change. Portals, procedures, scripts, gateways, and other code built on top of the Condor software should not have to change at all when HTCondor is installed. 
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/10/configuring-high-availability-condor-central-managers-with-wallaby.html">Configuring high-availability Condor central managers with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2012-10-23T04:34:58Z" pubdate data-updated="true">Oct 23<span>rd</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
@@ -497,28 +782,6 @@ DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.9/9_3Development_Release.html"> Condor 7.9.1 released! (October 22, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The Condor Team is pleased to announce the release of Condor 7.9.1.  This is a development release which includes many new features, as well as all bug and security fixes from 7.8.5.  See the Version History for a complete list of changes. Condor 7.9.1 binaries and source code are available from our Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/condor/manual/v7.8/9_3Stable_Release.html#SECTION001031000000000000000"> Condor 7.8.5 Released! (October 22, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The Condor Team is pleased to announce the release of Condor 7.8.5, which includes fixes for several bugs.  Details on obugs fixed can be found here, and Condor binaries and source code are available from our Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/">Using Cluster Suite's GUI to configure High Availability Schedulers </a></h1>
       <p class="meta">
         <time datetime="2012-10-18T17:20:00Z" pubdate data-updated="true">Oct 18<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Robert Rati</time>
@@ -577,44 +840,7 @@ an HA schedd in your pool.</p>
         <time datetime="2012-10-15T09:55:02Z" pubdate data-updated="true">Oct 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content"><p>If you want to run a job periodically you could repeatedly submit jobs, or qedit existing jobs after they run, but both of those options are a kludge. Instead, the condor_schedd provides support for cron-like jobs as a first-class citizen.</p>
-<p>The cron-like feature builds on the ability to <a href="http://spinningmatt.wordpress.com/2012/09/24/advanced-scheduling-execute-in-the-future-with-job-deferral/">defer job execution</a>. However, instead of using <code>deferral_time</code>, commands analogous to <a href="http://crontab.org/">crontab(5)</a> fields are available. <code>cron_month</code>, <code>cron_day_of_month</code>, <code>cron_day_of_week</code>, <code>cron_hour</code>, and <code>cron_minute</code> all behave as you would expect, and default to * when not provided.</p>
-<p>To run a job every two minutes,</p>
-<p><pre class="brush: plain; gutter: false;">
-executable = /bin/date
-log = cron.log
-output = cron.out
-error = cron.err
-
-cron_minute = 0-59/2
-on_exit_remove = false
-
-queue
-</pre></p>
-<p>Note &#8211; <code>on_exit_remove = false</code> is required or the job will only be run once. It is arguable that on_exit_remove should default to false for jobs using cron_* commands.</p>
-<p>After submitting and waiting 10 minutes, results can be found in the cron.log file.</p>
-<p><pre class="brush: plain; gutter: false;">
-$ grep ^00 cron.log
-000 (009.000.000) 09/09 09:22:46 Job submitted from host: &amp;lt;127.0.0.1:56639&amp;gt;
-001 (009.000.000) 09/09 09:24:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
-006 (009.000.000) 09/09 09:24:00 Image size of job updated: 75
-004 (009.000.000) 09/09 09:24:00 Job was evicted.
-001 (009.000.000) 09/09 09:26:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
-004 (009.000.000) 09/09 09:26:00 Job was evicted.
-001 (009.000.000) 09/09 09:28:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
-004 (009.000.000) 09/09 09:28:00 Job was evicted.
-001 (009.000.000) 09/09 09:30:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
-004 (009.000.000) 09/09 09:30:00 Job was evicted.
-001 (009.000.000) 09/09 09:32:00 Job executing on host: &amp;lt;127.0.0.1:45887&amp;gt;
-004 (009.000.000) 09/09 09:32:01 Job was evicted.
-</pre></p>
-<p>Note &#8211; the job appears to be evicted instead of terminated. What really happens is the job remains in the queue on termination. This is arguably a poor choice of wording in the log.</p>
-<p>Just like for <a href="http://spinningmatt.wordpress.com/2012/09/24/advanced-scheduling-execute-in-the-future-with-job-deferral/">job deferral</a>, there is no guarantee resources will be available at exactly the right time to run the job. <code>cron_prep_time</code> and <code>cron_window</code> provide a means to introduce tolerance.</p>
-<p>Common question: What happens when a job takes longer than the time between defined starts, i.e. job takes 30 minutes to complete and is set to be run every 15 minutes?</p>
-<p>Answer: The job will run serially. It will not stack up. The job does not need to serialize itself.</p>
-<p>Note &#8211; a common complication, arguably a bug, which occurs only in pools with little or no new jobs being submitted, is that matchmaking must happen in time for the job dispatch. The Schedd does not publish a new Submitter Ad for the cron job&#8217;s owner when the job completes. This means that submitter ad the Negotiator sees may have zero idle jobs, resulting in no new match being handed out to dispatch the job on the next time it is set to execute.</p>
-<p>Enjoy.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/744/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/744/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=744&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">If you want to run a job periodically you could repeatedly submit jobs, or qedit existing jobs after they run, but both of those options are a kludge. Instead, the condor_schedd provides support for cron-like jobs as a first-class citizen. The cron-like feature builds on the ability to defer job execution. However, instead of using [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=744&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -624,92 +850,8 @@ $ grep ^00 cron.log
         <time datetime="2012-10-10T20:55:00Z" pubdate data-updated="true">Oct 10<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
       </p>
     </header>
-    <div class="entry-content"><p>Cumin authenticates logins against LDAP using a two step process:</p>
-
-<ul>
-<li>Search for LDAP entries based on the login name and the search filter in the LDAP URL</li>
-<li>Attempt a simple bind operation using the distinguished names (dn) in returned entries and the password</li>
-</ul>
-
-
-<p>If anonymous access is disabled by the LDAP server, the first step will fail.  In this case, Cumin needs to bind to the server with credentials before doing the search for user records.  Happily, the URL syntax allows for credentials in the URL and Cumin will use them if provided to bind before the search.</p>
-
-<h3>Extra Attributes</h3>
-
-<p>The credentials for an initial bind can be set using LDAP extensions supported by the ldapurl module.  There are two additional attributes:</p>
-
-<ul>
-<li>bindname (a formal dn corresponding to an LDAP entry)</li>
-<li>X-BINDPW (a password that will work for that entry)</li>
-</ul>
-
-
-<p>These attributes follow the filter specification and are separated by a comma.  Any comma (,) characters present in the bindname value must be html-escaped because the URL parser will see them as attribute separators.  Futhermore, the % character in the escape code for a comma must be escaped itself to prevent Python from seeing it as a string substituion sequence.  Simple, right?</p>
-
-<h3>An Example</h3>
-
-<p>Let&#8217;s assume the following:</p>
-
-<ul>
-<li>The LDAP server is at example.com:389</li>
-<li>The search dn is ou=People,dc=example,dc=com</li>
-<li>The search scope is sub</li>
-<li>The filter compares uid to username (this is actually the default)</li>
-<li>The dn for an initial bind is uid=joeuser,ou=People,dc=example,dc=com</li>
-<li>The password for the initial bind is joepassword</li>
-</ul>
-
-
-<p>The LDAP URL in the Cumin configuration file would like like this:</p>
-
-<pre><code>auth: ldap://example.com:389/ou=People,dc=example,dc=com??sub?(&amp;(uid=%%s))?bindname=uid=joeuser%%2cou=People%%2cdc=example%%2cdc=com,X-BINDPW=joespassword  
-</code></pre>
-
-<p>Note in particular the %%2c substrings in the URL.  These are the commas in the bindname value.  In the interest of full disclosure, let me  be the first to say &#8220;yuck&#8221;.  But it works!</p>
-
-<h3>Caution!</h3>
-
-<p>LDAP credentials specified as part of a URL in the cumin configuration file will be visible to anyone who has access to the configuration file.  When Cumin is installed as a package the configuration file will be located at <code>/etc/cumin/cumin.conf</code> and will only be readable by the <code>cumin</code> user.  This should be adequate to protect the credentials as long as the permissions on that file are not changed.</p>
-
-<p>However, if Cumin is run from sources in a development instance, alternate configuration files are possible.  Care should be taken to protect those configuration files if they contain credentials.</p>
-
-<p>The Cumin project wiki can be found <a href="http://fedorahosted.org/grid/wiki/Cumin">here</a></p>
+    <div class="entry-content"><p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/08/tip-notification-never/">Tip: notification = never</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-08T10:36:25Z" pubdate data-updated="true">Oct 8<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>By default, the condor_schedd will notify you, via email, when your job completes. This is a handy feature when running a few jobs, but can become overwhelming if you are running many jobs.</p>
-<p>It can even turn into a problem if you are being notified at a mailbox you do not monitor.</p>
-<p><pre class="brush: plain; gutter: false;">
-# df /var
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/...             233747128 215868920   5813032  98% /
-
-# du -a /var | sort -n -r | head -n 4
-150436072       /var
-111752396       /var/spool
-111706452       /var/spool/mail
-108702404       /var/spool/mail/matt
-</pre></p>
-<p>Yes, that&#8217;s ~105GB of job completion notification emails. All ignored. Oops.</p>
-<p>The email notification feature is controlled on a per job basis by the <code>notification</code> command in a job&#8217;s submit file. See man condor_submit. To not get email notification, set it to <code>NEVER</code>, e.g.</p>
-<p><pre class="brush: plain; gutter: false;">
-$ echo queue | condor_submit -a cmd=/bin/hostname -a notification=never
-</pre></p>
-<p>If you are a pool administrator and want to change the default from <code>COMPLETE</code> to <code>NEVER</code> use the <code>SUBMIT_EXPRS</code> configuration parameter.</p>
-<p><pre class="brush: plain; gutter: false;">
-Notification = NEVER
-SUBMIT_EXPRS = $(SUBMIT_EXPRS) Notification
-</pre></p>
-<p>Users will still be able to override the configured default by putting <code>notification = complete|always|error</code> in their submit files.</p>
-<p>Keep those disks clean.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/784/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/784/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=784&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -719,170 +861,8 @@ SUBMIT_EXPRS = $(SUBMIT_EXPRS) Notification
         <time datetime="2012-10-05T19:52:00Z" pubdate data-updated="true">Oct 5<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>I have written an Octopress plugin to allow turnkey support for hosting a blog feed aggregator, in Octopress idiomatic style.  I will describe the steps to install it and use it below.  Some of its current features are:</p>
-
-<ul>
-<li>Easy configuration and deployment, providing all feed aggregator parameters as yaml front-matter</li>
-<li>Turn-key generation of feed aggregator pages, in the configured site style</li>
-<li>Optional generation of a 'meta-feed' in atom.xml format, from aggregated feed entries</li>
-<li>Automatic removal of duplicate feed list urls, and automatic removal of duplicate posts (e.g. if multiple category feeds from the same author are listed)</li>
-<li>Automatic generation of feed author list as an Octopress 'aside'</li>
-<li>Inclusion/exclusion of posts based on number of posts and/or post age</li>
-<li>Display of full or summary content based on number of posts and/or post age</li>
-</ul>
-
-
-<h3>Install the feed_aggregator.rb plugin</h3>
-
-<p>Currently, you can obtain a copy of "feed_aggregator.rb" here:</p>
-
-<p><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/plugins/feed_aggregator.rb">feed_aggregator.rb</a></p>
-
-<p>Simply copy this file into the plugins directory for your octopress repo:</p>
-
-<pre><code>$ cp feed_aggregator.rb /path/to/your/octopress/repo/plugins
-</code></pre>
-
-<h3>Install feed aggregator layout files</h3>
-
-<p>You can obtain a copy of the layout files here:</p>
-
-<ul>
-<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator.html">feed_aggregator.html</a></li>
-<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator_page.html">feed_aggregator_page.html</a></li>
-<li><a href="https://github.com/erikerlandson/octopress/blob/feed_aggregator/.themes/classic/source/_layouts/feed_aggregator_meta.xml">feed_aggregator_meta.xml</a></li>
-</ul>
-
-
-<p>Copy the layouts files to your '_layouts' directory:</p>
-
-<pre><code>$ cp feed_aggregator.html /path/to/your/octopress/repo/source/_layouts
-$ cp feed_aggregator_page.html /path/to/your/octopress/repo/source/_layouts
-$ cp feed_aggregator_meta.xml /path/to/your/octopress/repo/source/_layouts
-</code></pre>
-
-<h3>Add feedzirra dependency to the Octopress Gemfile</h3>
-
-<p>Octopress wants its dependencies bundled, so you will want to add this dependency to /path/to/your/octopress/repo/Gemfile:</p>
-
-<pre><code>gem 'feedzirra', '~&gt; 0.1.3'
-</code></pre>
-
-<p>Then update the bundles:</p>
-
-<pre><code>$ bundle update
-</code></pre>
-
-<h3>Create a page for your feed aggregator</h3>
-
-<p>Here is an example feed aggregator:</p>
-
-<pre><code>---
-# use the 'feed_aggregator' layout to generate a feed aggregator page
-layout: feed_aggregator
-
-# Title to display for the feed
-title: My Blog Feed Aggregator
-
-# maximum number of entries from each feed url to display (defaults to 5)
-# use '0' for 'no limit'
-post_limit: 5
-
-# limit on total posts for feed (defaults to 100)
-# use 0 for 'no limit'
-post_total_limit: 50
-
-# maximum post age to include: &lt;N&gt; { seconds | minutes | hours | days | weeks | months | years }
-# abbreviations and plurals are supported, e.g.  w, week, weeks
-# defaults to '1 year'
-# use '0 &lt;any-unit&gt;' for 'no limit'
-post_age_limit: 6 months
-
-# only render full content for the first &lt;N&gt; posts 
-# (default is 'full content for all posts')
-# use a limit of 0 to use all summaries
-full_post_limit: 10
-
-# use summaries for all posts older than this 
-# (default is 'no maximum age')
-# works like post_age_limit
-full_post_age_limit: 1 month
-
-# generate a 'meta-feed' atom file, with the given name 'atom.xml' (meta feeds are optional)
-# (with no directory, generates in same directory as the feed aggregator page)
-meta_feed: atom.xml
-
-# list all urls to aggregate here
-# You can either specify a single feed url, or explicitly specify 'url', 'author' 
-# and/or 'author_url' params for the feed aggregator to use.
-# feed_aggregator does its best to supply these values automatically otherwise.
-feed_list:
-  - http://blog_site_1.com/atom.xml
-  - http://blog_site_2.com/atom.xml
-  - url: http://www.john_doe.com/feed/feed.rss
-    author: John Doe
-    author_url: http://www.john_doe.com
----
-</code></pre>
-
-<p>As you can see, you only need to supply some yaml front-matter.  Page formatting/rendering is performed automatically from the information in the header.  You must use <code>layout: feed_aggregator</code>, and include the standard <code>title</code> to use for the aggregator title, and the <code>feed_list</code> to supply the individual feeds to aggregate.  Other parameters have default values and behaviors, which are described above.  Various <code>meta_feed</code> path behaviors are described in their own section below.</p>
-
-<p>Once you've created the page, you can publish as usual:</p>
-
-<pre><code>$ rake generate
-$ rake deploy
-</code></pre>
-
-<p>If you want to update your feed automatically, you can set up a cron job:</p>
-
-<pre><code>cd /path/to/octopress/repo
-rake generate
-rake deploy
-</code></pre>
-
-<h3>Screen Shot</h3>
-
-<p>Here is a screen shot of a feed aggregator.  It respects whatever style theme is configured for the site.  The aggregator title is at the top, and a list of contributing authors is automatically generated as an 'aside'.  Each author name links to the parent blog of the author's feed.  In addition to the standard date, the author's name is also included.  Post titles link back to the original post url.</p>
-
-<p><img src="/assets/feed_aggregator/screen1.png" alt="Aggregator Screen Shot" /></p>
-
-<h3>Meta feed generation</h3>
-
-<p>You may optionally request that a meta feed, created from the aggregated posts, be generated.  The meta feed is created in atom format.  Following are some examples of specifying meta feed files</p>
-
-<pre><code># Generate a meta feed called 'atom.xml' in the same directory as the feed aggregator page
-# e.g. if the url for the feed aggregator page is  http://blog.site.com/aggregator/index.html, 
-# then the path to the meta-feed will be: http://blog.site.com/aggregator/atom.xml
-meta_feed: atom.xml
-
-# Generate a meta feed called 'wilma.xml' in subdirectory 'flintstones' of the website.
-# the url for this file will be:   http://blog.site.com/flintstones/wilma.xml
-meta_feed: /flintstones/wilma.xml
-
-# url for this will be http://blog.site.com/metafeed.xml
-meta_feed: /metafeed.xml
-
-# Supplying no file name is equivalent to 'meta_feed: atom.xml'
-meta_feed:
-</code></pre>
-
-<h3>To Do</h3>
-
-<ul>
-<li>It might be nice to support the display of an avatar/icon for authors</li>
-</ul>
-
+    <div class="entry-content"><p>I have written an Octopress plugin to allow turnkey support for hosting a blog feed aggregator, in Octopress idiomatic style.  I will describe the steps to install it and use it below.  Some of its current features are: [...]</p>
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/10/01/partitionable-slot-utilization/">Partitionable slot utilization</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-01T11:07:41Z" pubdate data-updated="true">Oct 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content">There are already ways to get pool utilization information on a macro level. Until Condor 7.8 and the introduction of TotalSlot{Cpus,Memory,Disk}, there were no good ways to get utilization on a micro level. At least not with only the standard command-line tools. Resource data is available per slot. Getting macro, pool utilization always requires aggregating [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=764&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -912,17 +892,6 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/09/26/improved-parse-checking-for-classad-log-files-in-condor/">Improved Parse Checking for ClassAd Log Files in Condor</a></h1>
-      <p class="meta">
-        <time datetime="2012-09-26T17:06:00Z" pubdate data-updated="true">Sep 26<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Condor maintains certain key transactional information using the ClassAd Log system.  For example, both the negotiator's accountant log ("Accountantnew.log") and the scheduler's job queue log ("job_queue.log") are maintained in ClassAd Log format. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/09/24/ldap-auth/">Integrating Cumin with LDAP for Authentication</a></h1>
       <p class="meta">
         <time datetime="2012-09-24T16:41:00Z" pubdate data-updated="true">Sep 24<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
@@ -940,17 +909,6 @@ configured but the node needs to be configured to access the shared storage. [..
       </p>
     </header>
     <div class="entry-content"><p>Cumin is a Python web UI developed in the Fedora community for managing Condor pools and Qpid messaging brokers.  It is packaged for Fedora but may be run from sources and would probably be easy to port to other Linux distributions (or just run Fedora on a node or two in a heterogeneous environment!)  The current development focus for Cumin is on expanding the Condor management facilities. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://www.redhat.com/about/news/archive/2012/9/red-hat-updates-messaging-realtime-and-grid-platform-with-enterprise-mrg-2-2"> Red Hat releases Enterprise MRG 2.2 (September 24, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-09-24T05:00:00Z" pubdate data-updated="true">Sep 24<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">This Red Hat press release describes updates in the new 2.2 release.  New features increase security and expand cloud readiness with jobs that can be submitted to use the Condor Deltacloud API. 
 </div>
   </article>
 
@@ -1014,17 +972,6 @@ configured but the node needs to be configured to access the shared storage. [..
       </p>
     </header>
     <div class="entry-content">Many Condor users are interested in high-availability (HA) services: they don't want their compute resources to become unavailable due to the failure of a single machine that is running an important Condor daemon. (See this talk that Rob Rati and...</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/07/27/driving-a-condor-job-renice-policy-with-accounting-groups/">Driving a Condor Job Renice Policy with Accounting Groups</a></h1>
-      <p class="meta">
-        <time datetime="2012-07-27T20:50:00Z" pubdate data-updated="true">Jul 27<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Condor can run its jobs with a renice priority level specified by <code>JOB_RENICE_INCREMENT</code>, which defaults simply to 10, but can in fact be any ClassAd expression, and is evaluated in the context of the job ad corresponding to the job being run. [...]</p>
-</div>
   </article>
 
   <article>
@@ -1139,8 +1086,6 @@ configured but the node needs to be configured to access the shared storage. [..
       <a href="http://rrati.github.com/"> Robert Rati</a><br>
     
       <a href="http://timothysc.github.com/"> Timothy St. Clair</a><br>
-    
-      <a href="http://research.cs.wisc.edu/condor"> HTCondor Team</a><br>
     
       <a href="http://htcondor.github.com/"> HTCondor Team GitHub</a><br>
     
