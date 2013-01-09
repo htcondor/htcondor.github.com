@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2012-11-16T09:58:29-07:00</updated>
+  <updated>2013-01-09T09:45:04-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,154 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Bosco 1.1 Release]]></title>
+      <link href="http://derekweitzel.blogspot.com/2013/01/bosco-11-release.html"/>
+      <updated>2013-01-08T23:01:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-2171189043756995217</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[<div class="separator" style="clear: both; text-align: center;"><a href="http://bosco.opensciencegrid.org/"><img border="0" src="http://bosco.opensciencegrid.org/wp-content/uploads/2012/12/BOSCO1.png" /></a></div>In the last few months, I have outlined the new features of Bosco 1.1.<br /><ul><li><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-cluster-support.html">Mutli-Cluster Support</a></li><li><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-os-support.html">Multi-OS Support</a></li><li><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html">Single Port Usage</a></li><li><a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">SSH File Transfer</a></li></ul><div>I am happy to announce that today we are releasing Bosco 1.1. &nbsp;The official Release notes are available on the <a href="https://twiki.grid.iu.edu/bin/view/CampusGrids/Bosco1p1ReleaseNotes">OSG Twiki</a>. &nbsp;It includes all of the features given above. &nbsp;<a href="http://bosco.opensciencegrid.org/download/">Try it out!</a></div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Web design complexity]]></title>
+      <link href="https://spinningmatt.wordpress.com/2013/01/07/web-design-complexity/"/>
+      <updated>2013-01-07T12:27:36Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=860</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>One thing that has always impressed me is the ability of web designers to deal with browser idiosyncrasies.</p>
+<p>For instance, knowing why this happens in firefox-17.0.1-1.fc17.x86_64 -</p>
+<div id="attachment_861" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=861" rel="attachment wp-att-861"><img src="http://spinningmatt.files.wordpress.com/2012/12/0-0-0-0-btn-primary.png?w=450&#038;h=92" alt="A bootstrap btn-primary viewed from 0.0.0.0" width="450" height="92" class="size-full wp-image-861" /></a><p class="wp-caption-text">A bootstrap btn-primary viewed from 0.0.0.0</p></div>
+<div id="attachment_862" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=862" rel="attachment wp-att-862"><img src="http://spinningmatt.files.wordpress.com/2012/12/localhost-btn-primary.png?w=450&#038;h=92" alt="A bootstrap btn-primary viewed from localhost" width="450" height="92" class="size-full wp-image-862" /></a><p class="wp-caption-text">A bootstrap btn-primary viewed from localhost</p></div>
+<div id="attachment_863" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=863" rel="attachment wp-att-863"><img src="http://spinningmatt.files.wordpress.com/2012/12/firebug-btn-primary.png?w=450&#038;h=227" alt="A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost" width="450" height="227" class="size-full wp-image-863" /></a><p class="wp-caption-text">A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost</p></div>
+<p>Needless to say, the web is littered with questions about why btn-primary background color is not always white. Most have answers, some with varying degrees of complex css. Others involve changing versions of software. All the while it might just be the URL used to view the page.</p>
+<p>Test in a production environment.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/860/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/860/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Fun with ClassAds]]></title>
+      <link href="http://osgtech.blogspot.com/2013/01/fun-with-classads.html"/>
+      <updated>2013-01-05T22:58:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-1674994974092153801</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[One of the new technologies the OSG Technology area is working on is the <i>HTCondor-CE</i>. &nbsp;While that is a topic for a different post, it led me on a surprising journey over my Christmas break.<br /><br />Working with the <i>HTCondor-CE</i>, I found that creating a <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/4_4Hooks.html">job hook</a> to be surprisingly difficult. &nbsp;A job hook for HTCondor is an external script, invoked by HTCondor in lieu of running internal logic. This allows a sysadmin to add custom logic to HTCondor internals without resorting to writing C++ code. &nbsp;The hook in question is the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/4_4Hooks.html#SECTION00542000000000000000">job transformation step</a> for the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/5_6HTCondor_Job.html">JobRouter</a>.<br /><br />The problem with hooks is they are surprisingly difficult to write. &nbsp;For the transform hook, a job's ClassAd is written to the script's stdin and the JobRouter expects to read the transformed ClassAd from stdout. &nbsp;[Actually, it's a touch more complicated than that, but this simplification will do for our discussion.] &nbsp;ClassAds are an expressive and powerful language - but a language difficult to parse via Unix scripting! &nbsp;There are complex quoting and attribute evaluation rules.<br /><br />Sysadmins are left with a decision - either spend quite some time implementing a ClassAd parser or only do the bare minimum and hope no one submits a complex ClassAd. &nbsp;I found <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3380">the situation</a> unsatisfactory and decided to write python bindings for the ClassAd library.<br /><br />I found the&nbsp;endeavor&nbsp;fairly straightforward using the <a href="http://www.boost.org/doc/libs/1_52_0/libs/python/doc/">Boost.Python library</a>, and ended up with a new <a href="https://github.com/bbockelm/python-classad">GitHub project</a>. &nbsp;Now, a job transform hook is as simple as this:<br /><blockquote style="background-color: white;"><div class="verbatim"><pre>#!/usr/bin/python<br /><br />import sys<br />import classad<br /><br />route_ad = classad.ClassAd(sys.stdin.readline())<br />separator_line = sys.stdin.readline()<br />assert separator_line == "------\n"<br />ad = classad.parseOld(sys.stdin)<br /><br />ad["Universe"] = 5<br />ad["GridResource"] = "condor localhost localhost"<br />if "x509UserProxyFirstFQAN" in ad and "/cms" in ad.eval("x509UserProxyFirstFQAN"):<br />    ad["AccountingGroup"] = "cms.%s" % ad.eval("Owner")<br />else:<br />    ad["AccountingGroup"] = "other.%s" % ad.eval("Owner")<br /><br />print ad.printOld(),</pre></div></blockquote>The above script will read the ad from stdin and change the&nbsp;AccountingGroup<br />attribute based on the contents of the&nbsp;x509UserProxyFirstFQAN&nbsp;attribute.<br /><br />Note ClassAds can be constructed from a string or a file object. &nbsp;Each ad can be treated like a python dictionary. &nbsp;Literals are converted to the equivalent python objects; expressions are exposed as objects. &nbsp;For example:<br /><blockquote style="background-color: white;"><div class="verbatim"><pre>&gt;&gt;&gt; import classad<br />&gt;&gt;&gt; ad = classad.ClassAd()<br />&gt;&gt;&gt; expr = classad.ExprTree("2+2")<br />&gt;&gt;&gt; ad["foo"] = expr<br />&gt;&gt;&gt; print ad["foo"]<br />2 + 2<br />&gt;&gt;&gt; print ad["foo"].eval()<br />4<br /></pre></div></blockquote><div>Most of the functionality is exposed; see the <a href="https://github.com/bbockelm/python-classad">GitHub project for examples and unit tests</a>. &nbsp;To make the C++ library safe to export to python, some minor semantics have been changed. &nbsp;Sub-ClassAds and Lists are not yet available via python, but shouldn't be too hard to add.<br /><br />ClassAd Python bindings - maybe not the most life-changing software project in the world. &nbsp;However, they have potential to become one of life's little pleasures for those of us who deal with HTCondor every day!</div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Mean of the Modulus Does Not Equal the Modulus of the Mean]]></title>
+      <link href="http://erikerlandson.github.com/blog/2013/01/02/the-mean-of-the-modulus-does-not-equal-the-modulus-of-the-mean/"/>
+      <updated>2013-01-02T15:55:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2013/01/02/the-mean-of-the-modulus-does-not-equal-the-modulus-of-the-mean</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts.</p>
+
+<p>When you take the modulus of a random variable, X, the corresponding expected value E[X mod m] is not equal to E[X] mod m.  Consider the following example:</p>
+
+<p><img src="/assets/images/rv_modulus_mean.png" title="An example demonstrating that E[X mod m] != E[X] mod m" alt="Random Variable Images" /></p>
+
+<p>As we see from the example above, the random variables X and Y have the same mean:  E[X] = E[Y] = 0.75, however E[X mod 1] = 0.75 while E[Y mod 1] = 0.5.  One implication is that computing the moments of the modulus of random variables must be on a per-distribution basis, perhaps via monte carlo methods.</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Configuration and policy evaluation]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/12/10/configuration-and-policy-evaluation/"/>
+      <updated>2012-12-10T12:47:21Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=854</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[Figuring out how evaluation happens in configuration and policy is a common problem. The confusion is justified. Configuration provides substitution with $() syntax, while policy is full ClassAd language evaluation without $() syntax. Configuration is all the parameters listed in files discoverable with condor_config_val -config. Policy is the ClassAd expression found on the right-hand side [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=854&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[A Demonstration of Negotiator-Side Resource Consumption]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/12/03/a-demonstration-of-negotiator-side-resource-consumption/"/>
+      <updated>2012-12-03T15:25:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/12/03/a-demonstration-of-negotiator-side-resource-consumption</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>HTCondor supports a notion of aggregate compute resources known as partitionable slots (p-slots), which may be consumed by multiple jobs.   Historically, at most one job could be matched against such a slot in a single negotiation cycle, which limited the rate at which partitionable slot resources could be utilized.  More recently, the scheduler has been enhanced with logic to allow it to acquire multiple claims against a partitionable slot, which increases the p-slot utilization rate. However, as this potentially bypasses the negotiator's accounting of global pool resources such as accounting group quotas and concurrency limits, it places some contraints on what jobs can can safely acquire multiple claims against any particular p-slot: for example, only other jobs on the same scheduler can be considered.  Additionally, candidate job requirements must match the requirements of the job that originally matched in the negotiator.  Another significant impact is that the negotiator is still forced to match an entire p-slot, which may have a large match cost (weight): these large match costs cause <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3013">accounting difficulties</a> when submitter shares and/or group quotas drop below the cost of a slot.  This particular problem is growing steadily larger, as machines with ever-larger numbers of cores and other resources appear in HTCondor pools. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Tail your logs, for fun and profit]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/12/03/tail-your-logs-for-fun-and-profit/"/>
+      <updated>2012-12-03T14:29:39Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=842</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[If you don&#8217;t run tail -F on your logs periodically, you should. It&#8217;s illuminating. Try, I ran that over the weekend and learned a few things - 0) ERROR WriteUserLog Failed to grab global event log lock means that the EVENT_LOG is lossy in unexpected ways. We know the EVENT_LOG rotates and if you&#8217;re watching [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=842&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[BOSCO v1.1 Features: Multi-Cluster Support]]></title>
+      <link href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-cluster-support.html"/>
+      <updated>2012-11-29T06:33:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1512416798236467341</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Rethinking the Semantics of Group Quotas and Slot Weights: Computing Claim Capacity from Consumption Policy]]></title>
+      <link href="http://erikerlandson.github.com/blog/2012/11/26/rethinking-the-semantics-of-group-quotas-and-slot-weights-computing-claim-capacity-from-consumption-policy/"/>
+      <updated>2012-11-26T20:52:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2012/11/26/rethinking-the-semantics-of-group-quotas-and-slot-weights-computing-claim-capacity-from-consumption-policy</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In two previous posts, I made a case to motivate the need for a better definition of slot weights and group quotas that could accommodate use cases involving aggregate resources (partitionable slots) with heterogeneous consumption policies and also provide a principled unit analysis for weights and quotas.  These previous posts can be viewed here: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Social scheduling]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/11/26/social-scheduling/"/>
+      <updated>2012-11-26T11:57:12Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=836</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[As a thought experiment. There are always multiple users and limited resources. Users have work, which takes time and resources to complete. The top resource users are visible to all. A user can relinquish resources she is using. A relinquished resource, either by work completing or by user action, is reassigned randomly. How would this [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=836&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Extensible machine resources]]></title>
+      <link href="https://spinningmatt.wordpress.com/2012/11/19/extensible-machine-resources/"/>
+      <updated>2012-11-19T11:36:21Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=822</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>https://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[Physical machines are home to many types of resources these days. The traditional cores, memory, disk, now share space with gpus, co-processors or even protein sequence analysis accelerators. To facilitate use and management of these resources, a new feature is available in HTCondor for extending machine resources. Analogous to concurrency limits, which operate on a [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=822&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Rethinking the Semantics of Group Quotas and Slot Weights: Claim Capacity Model]]></title>
@@ -21,13 +169,7 @@
         <name><![CDATA[Erik Erlandson]]></name>
         <uri>http://erikerlandson.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>In my previous post about <a href="http://erikerlandson.github.com/blog/2012/11/13/rethinking-the-semantics-of-group-quotas-and-slot-weights-for-heterogeneous-and-multidimensional-compute-resources">Rethinking the Semantics of Group Quotas and Slot Weights</a>, I proposed a concept for unifying the semantics of accounting group quotas and slot weights across arbitrary resource allocation strategies.</p>
-
-<p>My initial terminology was that the weight of a slot (i.e. resource ad) is a measure of the <em>maximum</em> number of jobs that might match against that ad, given the currently available resource quantities and the allocation policy.  The cost of a match becomes the amount by which that measure is reduced, after the match's resources are removed from the ad.</p>
-
-<p>In the HTCondor vocabulary, a job acquires a <em>claim</em> on resources to actually run after it has been matched.  It has been proposed that it may be beneficial for HTCondor to evolve toward a model where there are (aggregate) resource ads, and claims against those ads, as a simplification of the current model which involves static, partitionable and dynamic slots, with claims.  With this in mind, a preferable terminology for group quota and weight semantics might be that a resource ad (or slot) has a measure of the maximum number of claims it could dispense: a <em>claim capacity</em> measure.  The cost of a claim (or match) is the corresponding reduction of the resource's claim capacity.</p>
-
-<p>So, this semantic model could be referred to as the Claim Capacity Model of group quotas and slot weights.  With this terminology, the shared 'unit' for group quotas and slot weights would be <em>claims</em> instead of <em>jobs</em>.</p>
+      <content type="html"><![CDATA[<p>In my previous post about <a href="http://erikerlandson.github.com/blog/2012/11/13/rethinking-the-semantics-of-group-quotas-and-slot-weights-for-heterogeneous-and-multidimensional-compute-resources">Rethinking the Semantics of Group Quotas and Slot Weights</a>, I proposed a concept for unifying the semantics of accounting group quotas and slot weights across arbitrary resource allocation strategies. [...]</p>
 ]]></content>
     </entry>
   
@@ -40,51 +182,8 @@
         <name><![CDATA[Erik Erlandson]]></name>
         <uri>http://erikerlandson.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>The HTCondor semantic for accounting group quotas and slot weights is currently cpu-centric.  This is an artifact of the historic primacy of cpu as the most commonly-considered limiting resource in computations.  For example the <code>SlotWeight</code> attribute is currently defaulted to <code>Cpus</code>, and when slot weights are disabled, there is logic activated in matchmaking to sum the available cpus on slots to avoid 'undercounting' total pool quotas.</p>
-
-<p>However, HTCondor slots -- the core model of computational resources in an HTCondor pool -- manage four resources by default: cpu, memory, disk and swap.  Furthermore, slots may now be configured with arbitrary custom resources.  As recently mentioned by <a href="http://spinningmatt.wordpress.com/2012/11/13/no-longer-thinking-in-slots-thinking-in-aggregate-resources-and-consumption-policies">Matthew Farrellee</a>, there is a growing pressure to provide robust support not just for traditional cpu-centric resource presentation, usage and allocation, but also seamlessly mediated with memory-centric, gpu-centric or '*'-centric resource allocation policies and more generally allocation policies that are simultaneously aware of all resource dimensions.</p>
-
-<p>This goal immediately raises some questions for the semantics of accounting groups and slot weights when matching jobs against slots during matchmaking.</p>
-
-<p>Consider a pool where 50% of the slots are 'weighted' in a traditional cpu-centric way, but the other 50% are intended to be allocated in a memory-centric way.  This is currently possible, as the <code>SlotWeight</code> attribute can be configured appropriately to be a function of either <code>Cpus</code> or <code>Memory</code>.</p>
-
-<p>But in a scenario where slots are weighted as functions of heterogeneous resource dimensions, it raises a semantic question:  when we sum these weights to obtain the pool-wide available quota, what 'real world' quantity does this total represent -- if any?   Is it a purely heuristic numeric value with no well defined unit attached?</p>
-
-<p>This question has import.  Understanding what the answer is, or should be, impacts what story we tell to users about what their accounting group configuration actually means.  When I assign a quota to an accounting group in such a heterogeneous environment, what is that quota regulating?   When a job matches a cpu-centric slot, does the cost of that match have a different meaning than when matching against a memory-centric slot?   When the slots are partitionable, a match implies a certain multi-dimensional slice of resources allocated from that slot.  What is the cost of that slice?  Does the sum of costs add up to the original weight on the partitionable slot?  If not, how does that affect our understanding of quota semantics?</p>
-
-<p>It may be possible unify all of these ideas by adopting the perspective that a slot's weight is a measure of the maximum number of jobs that can be matched against it.  The cost of a match is W(S)-W(S'), where W(S) is the weight function evaluated on the slot prior to match, and W(S') is the corresponding weight after the match has extracted its requested resources.  The pool's total quota is just the sum of W(S), over all slots S in the pool.  Note, this implies that the 'unit' attached to both slot weights and accounting group quotas is 'jobs'.</p>
-
-<p>Consider a simple example from the traditional cpu-centric configuration:   A partitionable slot is configured with 8 cpus, and <code>SlotWeight</code> is just its default <code>Cpus</code>.  Using this model, the allocation policy is: 'each match must use >= 1 cpu", and that other resource requests are assumed to be not limiting.  The maximum number of matches is 8 jobs, each requesting 1 cpu.   However, a job might also request 2 cpus.  In this case, note that the cost of the match is 2, since the remaining slot has 6 slots, and so W(S') now evaluates to 6.   So, the cost of the match is how many fewer possible jobs the original slot can support after the match takes its requested resources.</p>
-
-<p>This approach can be applied equally well to a memory-centric strategy, or a disk centric strategy, or a gpu-based strategy, or any combination simultaneously.  All weights evaluate to a value with unit 'jobs'.   All match costs are differences between weights (before and after match), and so their values are also in units of 'jobs'.  Therefore, the semantics of the sum of weights over a pool is always well defined: it is a number of jobs, and spefically a measure of the maximum number of jobs that might match against all the slots in the pool.  When a match acquires resources that reduce this maximum by more than 1 job, that is not in any way inconsistent.  It means the job used resources that might have supported two or more 'smaller' jobs.   This means that accounting group quotas (and submitter shares) also have a well defined unit and semantic, which is 'how many (or what fraction of) the maximum possible jobs is this group guaranteed by my accounting policy'</p>
-
-<p>One implication of this proposed semantic for quotas and weights is that the measure for the maximum number of jobs that may match against any given slot must be some finite number.   It implies that all resource dimensions are quantized in some way by the allocation policy.   This scheme would not support a real-valued resource dimension that had no minimum quantization.  I do not think that this is a very heavy-weight requirement, and in fact we have already been moving in that direction with features such as MODIFY_REQUEST_EXPRS_xxx.</p>
-
-<p>When a slot's resource allocation policy is defined over all its resources, what bounds this measure of maximum possible matches?  In a case where each job match <em>must</em> use at least one non-zero quantum of each resource dimension, then the limit is the resource with the mimimum quantized levels.   In a case where jobs may request a zero amount of resources, then the limit is the resource with the maximum quantized levels.  (note, it is required that each match use at least one quantum of at least one resource, otherwise the maximum is not properly bounded).</p>
+      <content type="html"><![CDATA[<p>The HTCondor semantic for accounting group quotas and slot weights is currently cpu-centric.  This is an artifact of the historic primacy of cpu as the most commonly-considered limiting resource in computations.  For example the <code>SlotWeight</code> attribute is currently defaulted to <code>Cpus</code>, and when slot weights are disabled, there is logic activated in matchmaking to sum the available cpus on slots to avoid 'undercounting' total pool quotas. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[No longer thinking in slots, thinking in aggregate resources and consumption policies]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/11/13/no-longer-thinking-in-slots-thinking-in-aggregate-resources-and-consumption-policies/"/>
-      <updated>2012-11-13T11:56:14Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=817</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[<p>The slot model was natural when a machine housed a single core. Though, the slot model did not exist when a machine housed a single core.</p>
-<p>When machines were single core the model was a machine, represented as a MachineAd. A MachineAd had an associated CPU, some nominal amount of RAM and some chunk of disk space. Running a job meant consuming a machine.</p>
-<p>When machines grew multiple cores the machine model was split. A single machine became independent MachineAds, called virtual machines. However, the name didn&#8217;t stick as the term virtual machine became a popular term in hardware virtualization. So a machine became independent MachineAds, called slots. The unifying entity, the machine itself, was lost. Running a job still meant consuming a slot.</p>
-<p>Most recently, slots split into two classes: static and partitionable. Static slots are the slots formerly known as virtual machines. Partitionable slots are a representation of the physical machine itself, and are carved up, on-demand to service jobs. Both types are still MachineAds, but the consumption of partitionable slots is dynamic.</p>
-<p>The slot model has demonstrated great utility but has been stretched.</p>
-<p>In this time workloads have also changed. They have become more memory bound, disk IO bound, and network bound. They have started relying on specialized hardware and even application level services. They have started both spanning and packing into cores. They have grown complex data dependencies, become very short running, and become infrastructure level long running.</p>
-<p>Machines have also grown to include scores of cores, hundreds of gigabytes of RAM, dozens of terabytes of disk, specialized hardware such as GPUs, co-processors, entropy keys, high speed interconnects and a bevy of other attached devices.</p>
-<p>Machines are lumpy, heterogeneous means more than operating system and CPU architecture.</p>
-<p>Furthermore, if it still existed, the machine model itself would fail to cleanly describe available resources. Classes of resources exist that house entire clusters, grids, or life-cycle manageable application services. Resources share addressable memory across operating systems instances, are custom architectures across whole data centers, and even those that don&#8217;t provide an outline of their capacity. Resources may grow and shrink while in use.</p>
-<p>Consumption of these resources is not necessarily straightforward or uniform.</p>
-<p>It&#8217;s time to stop thinking in slots. Its time to start thinking in aggregate resources and their consumption policies.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/817/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/817/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=817&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -96,47 +195,7 @@
         <name><![CDATA[Trevor McKay]]></name>
         <uri>http://tmckayus.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>Roles in Cumin scope activities and content in the UI.  There are currently two roles defined in Cumin, <code>admin</code> and <code>user</code>.  The <code>admin</code> role is a superset of the <code>user</code> role, and every new account has the <code>user</code> role by default.</p>
-
-<h3>Differences in the Roles</h3>
-
-<p>The <code>admin</code> role allows a user to see various charts, graphs, and statistics related to performance of the Condor pool.  An admin can also see information about Condor infrastructure components such as schedulers and negotiators and can run certain pool management commands.  Admins are free to manage any job running in the pool regardless of who owns the job, but can also switch to the <code>user</code> view for the admin account.</p>
-
-<p>The <code>user</code> role allows a user to create and manage their own submissions.  They do not have visibility to jobs owned by other users, performance metrics, or pool management commands.</p>
-
-<h3>Enabling Role Enforcement</h3>
-
-<p>Role enforcement is disabled by default in the standard Cumin configuration file, effectively making every user an admin (the default will change in a future revision).  To enable role enforcement, set the <code>auth</code> configuration value to <code>True</code> in the cumin.conf configuration file:</p>
-
-<pre><code>[web]
-authorize: True  
-</code></pre>
-
-<h3>Setting Role Values</h3>
-
-<p>The role value is part of the account metadata along with username and password.  While username and password may optionally be managed in LDAP repositories, role values at this time may only be defined in the local PostgreSQL database.  This restriction will likely be removed in a future version.  You can read more about LDAP authentication in the earlier blog post <em>Cumin Authentication with LDAP</em>, and we&#8217;ll explain how to set roles for external user accounts below.</p>
-
-<p>Roles are managed with the <code>cumin-admin</code> commands <code>add-assignment</code> and <code>remove-assignment</code>:</p>
-
-<pre><code># cumin-admin add-assignment joeuser admin
-# cumin-admin remove-assignment joeuser admin
-</code></pre>
-
-<p>(An account may have the <code>user</code> and <code>admin</code> roles at the same time, but currently this has no real effect since <code>admin</code> is a superset.  It is not necessary to explicitly set the <code>user</code> role.)</p>
-
-<h3>Creating an Entry to Hold the Role for an LDAP Account</h3>
-
-<p>For accounts authenticated against LDAP, an entry must be added to the PostgreSQL database as a placeholder before the role value may be set.  This is done with the <code>cumin-admin</code> command <code>external-user</code>:</p>
-
-<pre><code># cumin-admin external-user myldapuser
-# cumin-admin add-assignment myladpuser admin
-</code></pre>
-
-<h3>More to Come</h3>
-
-<p>A future post may address the relationship of roles to <em>persona</em> and talk about development hooks that allow customization of the UI based on user and site profiles.</p>
-
-<p>The Cumin project wiki can be found <a href="http://fedorahosted.org/grid/wiki/Cumin">here</a></p>
+      <content type="html"><![CDATA[<p>Roles in Cumin scope activities and content in the UI.  There are currently two roles defined in Cumin, <code>admin</code> and <code>user</code>.  The <code>admin</code> role is a superset of the <code>user</code> role, and every new account has the <code>user</code> role by default. [...]</p>
 ]]></content>
     </entry>
   
@@ -149,156 +208,7 @@ authorize: True
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2>Background</h2>
-
-<p>As a developer, I often find myself wanting to iterate on a build, and test in a sandboxed environment.  Isolating the environment ensures that your changes work well in a controlled experiment, but it has one fundamental flaw, it&#8217;s not realistic.  In order to truly test a complicated system it&#8217;s best to put it into some production environment.  This is great for testing, but it has been known to give admins a headache, because you are mucking with a known good installation.  So in this post we will set about the task of overriding an installtion of HTCondor using sudo while keeping the following requirements in mind:</p>
-
-<h3>Requirements</h3>
-
-<ul>
-<li>Don&#8217;t alter the existing system installation (binaries or config files).</li>
-<li>Be able to reference any custom developer build.</li>
-<li>Be able to easily change back to the known good installation with little/no effort.</li>
-</ul>
-
-
-<hr />
-
-<h2>Getting Started</h2>
-
-<p>Before you begin you will need a machine which already has HTCondor installed on it, and all the necessary development tools in order to create a custom build.  You will also need to obtain the <a href="https://github.com/htcondor/htcondor">source tree for HTCondor</a>, and follow the instructions on <a href="https://condor-wiki.cs.wisc.edu/index.cgi/wiki?p=BuildModernization">how to build condor.</a>  I typically &#8216;alias cmake&#8217; in my environment with all the clever developer magic to make a sandbox&#8217;d installation out of the gate.</p>
-
-<pre><code>alias cmake='cmake -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release_dir \
--DBUILDID:STRING=tstclair_local -DWANT_CONTRIB:BOOL=TRUE \
--DWANT_FULL_DEPLOYMENT:BOOL=FALSE -D_VERBOSE:BOOL=TRUE \
--DWANT_MAN_PAGES:BOOL=TRUE -D_DEBUG:BOOL=TRUE'
-
-cmake . &amp;&amp; make install 
-</code></pre>
-
-<p>Lastly you will need an account which has sudo privs on the machine where you will be tinkering.</p>
-
-<hr />
-
-<h2>Setting up a Sandbox</h2>
-
-<p>Once you&#8217;ve created build for the target machine that you would like to test, you will need to create a sandbox location which is also accessible by the &#8216;condor&#8217; user, I typically use /tmp.</p>
-
-<pre><code>mkdir /tmp/mycondor
-cp -r release_dir /tmp/mycondor 
-</code></pre>
-
-<p>Next you will want to drop 3 files into your sandbox directory.</p>
-
-<p>The first file is a simple bash script which kicks off your sandbox&#8217;d condor ensuring that all the correct environment variables are passed through sudo so that HTCondor can properly execute out of your sandbox.</p>
-
-<figure class='code'><figcaption><span> (sudo_condor.sh)</span> <a href='http://timothysc.github.com/downloads/code/scripts/sudo_condor.sh'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">foo</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">export </span><span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">foo</span><span class="k">}</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">CONDOR_CONFIG</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/override.sh<span class="se">\|</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">CONDOR</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/release_dir
-</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/lib:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/bin:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/sbin:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/libexec:<span class="k">${</span><span class="nv">PATH</span><span class="k">}</span>
-</span><span class='line'><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/lib:<span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/libexec
-</span><span class='line'>
-</span><span class='line'><span class="c">#start up new condor</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;Starting condor... @${CONDOR} with override ${CONDOR_CONFIG}&quot;</span>
-</span><span class='line'>sudo env <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span> <span class="nv">CONDOR_CONFIG</span><span class="o">=</span><span class="nv">$CONDOR_CONFIG</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span> <span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE</span><span class="k">}</span> <span class="k">${</span><span class="nv">CONDOR</span><span class="k">}</span>/sbin/condor_master
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you are testing your client tools, you will also want to mundge your PATH in your testing shell as seen in the script.</p>
-
-<p>The next file is a script which acts as a piped config script.  In HTCondor, there is a feature which allows admins to generate/mundge the parameters which can be passed in on intialization and reconfig.  It turns out this is useful in meeting our previously mentioned requirement of not mucking with the existing configs while still being able to customize as seen below:</p>
-
-<figure class='code'><figcaption><span> (override.sh)</span> <a href='http://timothysc.github.com/downloads/code/scripts/override.sh'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;$BASE&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-</span><span class='line'><span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Using pwd&quot;</span>
-</span><span class='line'>    <span class="nb">export </span><span class="nv">BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span>
-</span><span class='line'><span class="k">fi</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#take the original system config</span>
-</span><span class='line'>cat /etc/condor/condor_config
-</span><span class='line'>
-</span><span class='line'><span class="c"># override the execution locations</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;RELEASE_DIR=${BASE}/release_dir&quot;</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;LIB=${BASE}/release_dir/lib&quot;</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;INCLUDE=${BASE}/release_dir/include&quot;</span>
-</span><span class='line'><span class="nb">echo</span> <span class="s2">&quot;LIBEXEC=${BASE}/release_dir/libexec&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#apply your custom setting overrides</span>
-</span><span class='line'>cat <span class="k">${</span><span class="nv">BASE</span><span class="k">}</span>/condor_config.local
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The final file is an optional condor_config.local file, which you can create.  This file is appended to the end of the existing config and allows the developers, or admins, to lay out any configuration that they desire or even override the system to behave the way they would like.</p>
-
-<p>Finally you will need to adjust the access permission so that the &#8216;condor&#8217; user can access the shared location.</p>
-
-<pre><code>sudo chown -R "root:root" /tmp/mycondor
-</code></pre>
-
-<p>Now lets rock N&#8217; roll!</p>
-
-<pre><code>cd /tmp/mycondor
-./sudo_condor.sh
-</code></pre>
-
-<p>You&#8217;ve now taken over a existing machine in your pool using all the configuration settings that were there, while still allowing your own config magic.  You should take heed though, if you are testing any changes to condors internal files, you could possibly corrupt what is there.  To avoid this, you can override the SPOOL and EXECUTE directories in your condor_config.local file.</p>
-
-<hr />
-
-<h2>Verify its correct</h2>
-
-<p>The easiest way to verify correctness is to check that the preamble in the logs(/var/log/condor) contains your BUILDID string, in this case it was &#8216;tstclair_local&#8217;.</p>
-
-<hr />
-
-<h2>Potential Use Cases</h2>
-
-<p>It&#8217;s fairly obvious why a developer would want to do this, but it has many potential use cases outside of just development, which include:</p>
-
-<ul>
-<li>Beta testing a new installation prior to a pool upgrade.</li>
-<li>Testing version compatibility across releases.</li>
-<li>Playing with new shiney condor features in a existing pool.</li>
-</ul>
-
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -311,26 +221,7 @@ cp -r release_dir /tmp/mycondor
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[This is part 3 of my ongoing series describing new features in BOSCO v1.1. &nbsp;Part 1 covered <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">file transfer over SSH</a>, Part 2 covered <a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html">single port usage</a>. &nbsp;This post will cover the Multi-OS Support in BOSCO.<br /><br /><h3>What is it?</h3><div>The Multi-OS feature is intended to allow users to submit to clusters that may not be the same operating system as the submit host. &nbsp;This is especially useful when users are running a submit host on their personal computer that is running Debian, while the supercomputer in the next building is running Red Hat 6, a common&nbsp;occurrence.</div><div><br /></div><div>The Multi-OS components follow a basic process in order to operate:</div><div><ol><li>Detect the remote operating system with the <span style="font-family: Courier New, Courier, monospace;">findplatform</span> script.</li><li>Download (from the cloud?) the appropriate bosco version for the platform.</li><li>Transfer the files needed on the remote cluster. &nbsp;This includes grabbing the libraries and binaries for the campus factory's glideins. &nbsp;The glidein creation takes the most time of this process as it needs to compress the libraries and binaries before transferring.</li><li>When BOSCO detects jobs idle on the submit host, it will start glideins appropriate for the platform to service the jobs.</li></ol><div>The Multi-OS support required modification of the cluster addition and adding both a <span style="font-family: Courier New, Courier, monospace;">findplatform</span> script and a <span style="font-family: Courier New, Courier, monospace;">glidein_creation</span> script. &nbsp;</div></div><div><br /></div><h3>Why do I care?</h3><div>It is becoming increasingly common that what users run on their machines and what is run on supercomputers are different. &nbsp;When this is true, it is difficult to install software from one onto the other. &nbsp;The Multi-OS feature will greatly simplify the installation of BOSCO on clusters.</div><div><br /></div><div>Our goal with the Multi-OS support is that the users may not know it is even working. &nbsp;The users just say: "I want to run on this cluster", and BOSCO makes it happen. &nbsp;No matter what operating system is running on the remote cluster.</div><div><br /></div><div>One of my tests simulated a possible user&nbsp;scenario&nbsp; &nbsp;I was running a updated RHEL 6 machine which I installed BOSCO. &nbsp;I wanted to submit jobs to a RHEL 5 cluster located in our datacenter. &nbsp;If I simply copied over the bosco install from the RHEL 6 submit host, none of the binaries would work. &nbsp;But instead, I used the <span style="font-family: Courier New, Courier, monospace;">bosco_cluster -a</span> to add the RHEL 5 cluster, and jobs ran seamlessly from the RHEL 6 machine to the RHEL 5. &nbsp;</div><br />The Multi-OS support is available in the latest alphas available on the bosco&nbsp;<a href="http://bosco.opensciencegrid.org/download/">download</a>&nbsp;page.<br /><br /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-8516182672952525228?l=derekweitzel.blogspot.com' alt='' /></div>]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[FAQ: Job resubmission?]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/11/05/faq-job-resubmission/"/>
-      <updated>2012-11-05T12:07:43Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=812</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[<p>A question that often arises when approaching Condor from other batch systems is &#8220;How does Condor deal with resubmission of failed/preempted/killed jobs?&#8221;</p>
-<p>The answer requires a slight shift in thinking.</p>
-<p>Condor provides more functionality around the resubmission use case than most other schedulers. And the default policy is setup in such a way that most Condor folks don&#8217;t ever think about &#8220;resubmission.&#8221;</p>
-<p>Condor will keep your job in the queue (condor_schedd managed) until the policy attached to the job says otherwise.</p>
-<p>The default policy says a job will be run as many time as necessary for the job to terminate. So if the machine a job is running on crashes (generally, becomes unavailable), the condor_schedd will automatically try to run the job on another machine.</p>
-<p>When you start changing the default policy you can control things such as: if a job should be removed after a period of time, even if it is running or only if it hasn&#8217;t started running; if a job should run multiple times even if it terminated cleanly; if a termination w/ an error should make the job run again, be held in the queue for inspection, be removed from the queue; if a job held for inspection should be held forever or a specific amount of time; if a job should only start running at a specific time in the future, or be run at repeated intervals.</p>
-<p>The condor_submit manual page can provide specifics.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/812/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/812/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=812&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -342,7 +233,7 @@ cp -r release_dir /tmp/mycondor
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[Welcome to part 2 of my ongoing series of v1.1 features for BOSCO. &nbsp;Part 1 was on <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">SSH File Transfer</a>.<br /><br />This time, I'll talk about a new feature that we didn't planned on implementing at first, using only a single port for all communication. &nbsp;After a small investigation, it was discovered that using a single port is very simple, and with no interruption to other components. &nbsp;I talked briefly about it in a <a href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html">previous post</a>.<br /><br /><h3>What is it?</h3><div>In 1.0 of BOSCO, the submit host needed a lot of ports open for connections originating from the remote clusters. &nbsp;This was caused by 2 mechanisms:</div><div><ol><li>File transfer from the BOSCO submit host to the cluster login node before issuing the local submit call (qsub, condor_submit...). &nbsp;This opens ports on the submit host because the cluster would call out to the submit host to initiate transfers.</li><li>Connections for control, status, and workflow management between the cluster worker nodes and BOSCO submit host. &nbsp;This is the Campus Factory, which gives BOSCO the traditional Condor look and feel.</li></ol>In order for BOSCO to function, the submit host needs a large swath of ports in order to operate correctly. &nbsp;Also, as you scale, you will need even more ports open.</div><div><br /></div><div>The file transfers from the submit host to the login node are now being transferred using SSH, see my <a href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html">previous post</a>.</div><div><br /></div><div>With the new feature of single port usage, all control, status, and workflow management connections are routed through HTCondor's <a href="http://research.cs.wisc.edu/condor/manual/v7.9/3_7Networking_includes.html#SECTION00472000000000000000">share_port_daemon</a> on port 11000 (which is hardcoded, but I picked at random).</div><div><br /></div><h3>Why should I care?</h3><div>Limiting BOSCO to using only 1 incoming port is very useful for users on systems not managed by them. &nbsp;The node will only need 1 port open in order to run BOSCO, 11000. &nbsp;If the system has a firewall, you only have to request port 11000 be opened, rather than huge swaths. &nbsp;If you manage the system, then you will be happy that only 1 port needs to be opened in order to allow BOSCO submissions.</div><div><br /></div><div>Administrators will like this feature as it is more in line with other applications that they may run. &nbsp;For example, httpd only requires 1 port, 80. &nbsp;Now BOSCO is in the same realm, only requiring 1 port, 11000.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-2355522235500004311?l=derekweitzel.blogspot.com' alt='' /></div>]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -354,243 +245,7 @@ cp -r release_dir /tmp/mycondor
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <p>Recall that <a href="http://getwallaby.com">Wallaby</a> applies partial configurations to <em>groups</em> of <em>nodes</em>.  Groups can be either <em>explicit</em> &#8212;- that is, a named subset of nodes created by the user, or <em>special</em> groups that are built-in to Wallaby; each node&#8217;s group memberships have a priority ordering, so that an individual node&#8217;s configuration can favor the partial configuration from one group over another.  There are two kinds of special groups:  the <em>default group</em>, which contains every node and a set of <em>identity groups</em>, each of which only contains a single node.  In addition, Wallaby includes a <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/"><em>skeleton group</em></a>, which combines aspects of explicit and special groups:  while it can be managed like an explicit group, all newly-created nodes become members of the skeleton group automatically.  The default group is always the lowest-priority membership for a node and its identity group is always the highest-priority membership; a node&#8217;s skeleton group membership can be reprioritized or removed as necessary.</p>
-
-<p>The default group is an appealing target for common pool configuration, since it is guaranteed to be applied to every node.  However, because Wallaby&#8217;s configuration model is <em>additive</em>, it is likely not the best place for every configured feature or parameter setting that you might initially consider applying to the whole pool.  For example, if a group&#8217;s partial configuration installs a feature, every node that is a member of that group will install that feature (there is no way to say &#8220;this group&#8217;s configuration removes feature <em>F</em>, if it happens to be installed already).  Similarly, if a parameter is set on a group, every node that is a member of that group will have that parameter set; individual node configurations can override the value that the parameter is set to within the group, but there is no way to unset the parameter altogether.  Therefore, if you need to enable a feature on <em>almost every</em> node, the default group is not the right place to install that feature.  (Indeed, the default group is not the right place to put a putatively universal parameter setting or feature installation even if you can imagine a future exception to its universality.)  The default group is also not a great place to put configuration that you expect to take priority over other possible group configurations, since it will always be at the lowest priority.</p>
-
-<p>At this point, you may be asking yourself why you&#8217;d want to put any configuration in the default group.  While I tend towards a minimal default group configuration myself, I absolutely see several use cases for the default group:</p>
-
-<ol>
-<li><strong>Setting configuration parameters that are actually uniform across the whole pool</strong> (and will require a new value, not the absence of a value, if they change).  One such parameter is <code>FILESYSTEM_DOMAIN</code>, which you can set to an arbitrary string in order to identify machines that access the same shared filesystem.  If you were to extend your pool with machines that couldn&#8217;t access that same filesystem, you&#8217;d provide a new value for this parameter.</li>
-<li><strong>Installing Wallaby features that you actually want installed on every node.</strong>  I&#8217;d include features like <code>Master</code>, which ensures that the <code>condor_master</code> daemon is running (since Wallaby&#8217;s configuration daemon runs under the <code>condor_master</code>; a node can&#8217;t be configured if it isn&#8217;t running) and <code>NodeAccess</code>, which controls access to the pool (although the specific policy parameters required by <code>NodeAccess</code> may change in pool subsets).</li>
-<li><strong>Rapidly prototyping configurations for homogeneous or small, experimental pools.</strong>  When you&#8217;re first using Wallaby, the default group is a convenient way to get things running.  Similarly, if most of your nodes are execute nodes with the same policies, you may be able to put most of your configuration in the default group, especially if your submit and central manager configurations are generally a superset of your execute node configuration.  Fortunately, Wallaby makes it straightforward to move configuration from the default group to an explicit group if you should require more flexibility.</li>
-</ol>
-
-<p>I&#8217;m sure there are other cases in which using the default group makes good sense, but in general, you should strongly consider using an explicit group or the skeleton group for almost all of your nearly-universal configuration.  If you haven&#8217;t used the skelton group before, <a href="http://getwallaby.com/2012/06/using-the-skeleton-group/">read more about it</a>!</p>
-
-        
-
-    ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Using Accounting Groups With Wallaby]]></title>
-      <link href="http://erikerlandson.github.com/blog/2012/11/01/using-accounting-groups-with-wallaby/"/>
-      <updated>2012-11-01T14:41:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2012/11/01/using-accounting-groups-with-wallaby</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>In this post I will describe how to use HTCondor accounting groups with <a href="http://getwallaby.com">Wallaby</a>.  I will begin by walking through an accounting group configuration on a pool managed by wallaby.  Following, I will demonstrate the configuration in action.</p>
-
-<p>The gist of this demo will be to create a simple accounting group hierarchy:  A top-level group called <code>Demo</code>, and three child groups <code>Demo.A, Demo.B, Demo.C</code>.  <code>Demo</code> will be given a <em>static</em> quota to simulate the behavior of a pool with a particular number of slots available.  The child groups will use <em>dynamic</em> quotas to express their quota shares from the parent as ratios.</p>
-
-<p>First, it is good practice to snapshot current wallaby configuration for reference:</p>
-
-<pre><code>$ wallaby make-snapshot "pre demo state"
-</code></pre>
-
-<p>We will be constructing a wallaby feature called <code>AccountingGroups</code> to hold our accounting group configurations.  This creates the feature:</p>
-
-<pre><code>$ wallaby add-feature AccountingGroups
-</code></pre>
-
-<p>Wallaby wants to know about features that are used in configurations, so begin by declaring them to the wallaby store:</p>
-
-<pre><code>$ wallaby add-param GROUP_NAMES
-$ wallaby add-param GROUP_QUOTA_Demo
-$ wallaby add-param GROUP_QUOTA_DYNAMIC_Demo.A
-$ wallaby add-param GROUP_QUOTA_DYNAMIC_Demo.B
-$ wallaby add-param GROUP_QUOTA_DYNAMIC_Demo.C
-$ wallaby add-param GROUP_ACCEPT_SURPLUS_Demo
-$ wallaby add-param NEGOTIATOR_ALLOW_QUOTA_OVERSUBSCRIPTION
-$ wallaby add-param NEGOTIATOR_CONSIDER_PREEMPTION
-$ wallaby add-param CLAIM_WORKLIFE
-</code></pre>
-
-<p>Here we disable the "claim worklife" feature by setting claims to expire immediately.   This prevents jobs under one accounting group from acquiring surplus quota and holding on to it when new jobs arrive under a different group:</p>
-
-<pre><code>$ wallaby add-params-to-feature ExecuteNode CLAIM_WORKLIFE=0
-$ wallaby add-params-to-subsystem startd CLAIM_WORKLIFE
-$ wallaby add-params-to-feature Scheduler CLAIM_WORKLIFE=0
-$ wallaby add-params-to-subsystem scheduler CLAIM_WORKLIFE
-</code></pre>
-
-<p>If you alter the configuration parameters, you will want the negotiator to reconfigure itself when you activate.  Here we declare the accounting group features as part of the negotiator subsystem:</p>
-
-<pre><code>$ wallaby add-params-to-subsystem negotiator \
-GROUP_NAMES \
-GROUP_QUOTA_Demo \
-GROUP_QUOTA_DYNAMIC_Demo.A \
-GROUP_QUOTA_DYNAMIC_Demo.B \
-GROUP_QUOTA_DYNAMIC_Demo.C \
-NEGOTIATOR_ALLOW_QUOTA_OVERSUBSCRIPTION \
-NEGOTIATOR_CONSIDER_PREEMPTION
-</code></pre>
-
-<p>Activate the configuration so far to tell subsystems about new parameters for reconfig</p>
-
-<pre><code>$ wallaby activate
-</code></pre>
-
-<p>Now we construct the actual configuration as the <code>AccountingGroups</code> wallaby feature.  Here we are constructing a group <code>Demo</code> with three subgroups <code>Demo.{A|B|C}</code>.  In a multi-node pool with several cores, it is often easiest to play with group behavior by creating a sub-hierarchy such as this <code>Demo</code> sub-hierarchy, and configuring <code>GROUP_ACCEPT_SURPLUS_Demo=False</code>, so that the sub-hierarchy behaves with a well-defined total slot quota (in this case 15).  The sub-groups A,B and C each take 1/3 of the parent's quota, so in this example each will receive 5 slots.</p>
-
-<pre><code>$ wallaby add-params-to-feature AccountingGroups \
-NEGOTIATOR_ALLOW_QUOTA_OVERSUBSCRIPTION=False \
-NEGOTIATOR_CONSIDER_PREEMPTION=False \
-GROUP_NAMES='Demo, Demo.A, Demo.B, Demo.C' \
-GROUP_ACCEPT_SURPLUS=True \
-GROUP_QUOTA_Demo=15 \
-GROUP_ACCEPT_SURPLUS_Demo=False \
-GROUP_QUOTA_DYNAMIC_Demo.A=0.333 \
-GROUP_QUOTA_DYNAMIC_Demo.B=0.333 \
-GROUP_QUOTA_DYNAMIC_Demo.C=0.333
-</code></pre>
-
-<p>With our accounting group feature created, we can apply it to the machine our negotiator daemon is running on.  Then snapshot our configuration modifications for reference, and activate the new configuration:</p>
-
-<pre><code>$ wallaby add-features-to-node negotiator.node.com AccountingGroups
-$ wallaby make-snapshot 'new acct group config'
-$ wallaby activate
-</code></pre>
-
-<p>Now we will demonstrate the new feature in action.  Submit the following file to your pool, which submits 100 jobs each to groups <code>Demo.A</code> with durations randomly chosen between 25 and 35 seconds:</p>
-
-<pre><code>universe = vanilla
-cmd = /bin/sleep
-args = $$([25 + random(11)])
-transfer_executable = false
-should_transfer_files = if_needed
-when_to_transfer_output = on_exit
-+AccountingGroup="Demo.A.user1"
-queue 100
-</code></pre>
-
-<p>Once you make this submission, allow the jobs to negotiate, and you can check to see what accounting groups are running on slots by inspecting the value of <code>RemoteNegotiatingGroup</code> on slot ads.   You should see that subgroup <code>Demo.A</code> has acquired surplus and is running 15 jobs, as there are no jobs under groups <code>Demo.B</code> or <code>Demo.C</code> that need slots.  Note, due to jobs completing between negotiation cycles, these numbers can be less than the maximum possible at certain times.  If you have any other slots in the pool, they will show up in the output below as having either <code>undefined</code> negotiating group or possibly <code>&lt;none&gt;</code> if any other jobs are running.</p>
-
-<pre><code>$ condor_status -format "%s\n" 'ifThenElse(RemoteNegotiatingGroup isnt undefined, string(RemoteNegotiatingGroup), "undefined")' -constraint 'True' | sort | uniq -c | awk '{ print $0; t += $1 } END { printf("%7d total\n",t) }'
- 15 Demo.A
- 50 &lt;none&gt;
- 50 undefined
-115 total
-</code></pre>
-
-<p>Now submit some jobs against <code>Demo.B</code> and <code>Demo.C</code>, like so:</p>
-
-<pre><code>universe = vanilla
-cmd = /bin/sleep
-args = $$([25 + random(11)])
-transfer_executable = false
-should_transfer_files = if_needed
-when_to_transfer_output = on_exit
-+AccountingGroup="Demo.B.user1"
-queue 100
-+AccountingGroup="Demo.C.user1"
-queue 100
-</code></pre>
-
-<p>Once these jobs begin to negotiate, we expect to see the jobs balanced between the three groups evenly, as we gave each group 1/3 of the quota:</p>
-
-<pre><code>$ condor_status -format "%s\n" 'ifThenElse(RemoteNegotiatingGroup isnt undefined, string(RemoteNegotiatingGroup), "undefined")' -constraint 'True' | sort | uniq -c | awk '{ print $0; t += $1 } END { printf("%7d total\n",t) }'
-  5 Demo.A
-  5 Demo.B
-  5 Demo.C
- 50 &lt;none&gt;
- 50 undefined
-115 total
-</code></pre>
-
-<p>Finally, we see what happens if we remove jobs under <code>Demo.B</code>:</p>
-
-<pre><code>$ condor_rm -constraint 'AccountingGroup =?= "Demo.B.user1"'
-</code></pre>
-
-<p>Now we should see quota start to share between <code>Demo.A</code> and <code>Demo.C</code>:</p>
-
-<pre><code>$ condor_status -format "%s\n" 'ifThenElse(RemoteNegotiatingGroup isnt undefined, string(RemoteNegotiatingGroup), "undefined")' -constraint 'True' | sort | uniq -c | awk '{ print $0; t += $1 } END { printf("%7d total\n",t) }'
-  7 Demo.A
-  8 Demo.C
- 50 &lt;none&gt;
- 50 undefined
-115 total
-</code></pre>
-
-<p>With this accounting group configuration in place, you can play with changing quotas for the accounting groups and observe the numbers of running jobs change in response.</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Randomized Sleep Jobs in HTCondor Using Delayed Evaluation]]></title>
-      <link href="http://erikerlandson.github.com/blog/2012/10/31/randomized-sleep-jobs-in-htcondor-using-delayed-evaluation/"/>
-      <updated>2012-10-31T21:17:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2012/10/31/randomized-sleep-jobs-in-htcondor-using-delayed-evaluation</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>In some cases, when testing or demonstrating the performance of an HTCondor pool, it is useful to submit a plug of jobs with randomized running times.  The standard technique for controlling run times is to submit a classic 'sleep' job.  However, randomizing the argument to sleep is another matter.  Luckily there is an easy way to do this with a single submit file, using delayed evaluation syntax.</p>
-
-<p>A classad expression placed inside of a special enclosure, like this: <code>$$([ &lt;expr&gt; ])</code>, causes <code>&lt;expr&gt;</code> to be evaluated at the time the job ad is matched with a slot.  You can read more about delayed evaluation <a href="http://research.cs.wisc.edu/condor/manual/v7.8/condor_submit.html#78367">here</a>.  Consider the following example submit file:</p>
-
-<pre><code>universe = vanilla
-executable = /bin/sleep
-
-# generate a random sleep duration when job is matched
-args = $$([25 + random(11)])
-
-# boilerplate to avoid file transfers and notifications
-transfer_executable = false
-should_transfer_files = no
-when_to_transfer_output = on_exit
-notification = never
-
-# generate 100 copies of this job - each will evaluate the
-# randomizing expression independently
-queue 100
-</code></pre>
-
-<p>As you can see in the example above, the value of <code>args</code> is set to the delayed evaluation expression <code>$$([25 + random(11)])</code>, which will evaluate the classad expression <code>25 + random(11)</code> when each job ad matches a slot to run.  The <code>queue 100</code> command generates 100 separate job ads, and so the net effect is 100 jobs, which will each run a sleep job with a duration <em>randomly chosen</em> between 25 and 35.</p>
-
-<p>If we submit this file to a condor pool, and let the jobs run to completion, we can check the pool history file to see how the <code>Args</code> attribute was set on the job ad using the special generative attribute <code>MATCH_EXP_Args</code>, and the <a href="http://erikerlandson.github.com/blog/2012/06/29/easy-histograms-and-tables-from-condor-jobs-and-slots/">cchist tool</a>:</p>
-
-<pre><code>$ cchist condor_history 'MATCH_EXP_Args'
-     11 25
-      7 26
-     10 27
-      9 28
-      7 29
-     13 30
-      8 31
-      7 32
-      8 33
-      9 34
-     11 35
-    100 total
-</code></pre>
-
-<p>We can also sanity check our measure of actual run time, to see that those values are close to our values of <code>Args</code>:</p>
-
-<pre><code>$ cchist condor_history 'CompletionDate-JobCurrentStartDate'
-      1 25
-     11 26
-      9 27
-      8 28
-      9 29
-      9 30
-     12 31
-      4 32
-      8 33
-     10 34
-     12 35
-      6 36
-      1 37
-    100 total
-</code></pre>
-
-<p>Have fun with easy random sleep jobs!</p>
-]]></content>
+      <content type="html"><![CDATA[Recall that Wallaby applies partial configurations to groups of nodes. Groups can be either explicit —- that is, a named subset of nodes created by the user, or special groups that are built-in to Wallaby; each node’s group memberships have...]]></content>
     </entry>
   
     <entry>
@@ -602,7 +257,7 @@ queue 100
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[I am hoping to write about a few of the new features of BOSCO 1.1 before it comes out in December or January. &nbsp;This is part 1 of that series:<br /><br /><h3>BOSCO v1.1 Feature: SSH File Transfer</h3><div><b>What is it?</b></div><div>SSH File Transfer feature improves the method of staging input and output files to the remote cluster. &nbsp;In 1.0, files are transferred by starting a daemon on the remote cluster that connects back to the submit host over a random port. &nbsp;This required a lot of open ports on the submit host. &nbsp;</div><div><br /></div><div>The new SSH File Transfer will limit the number of ports required on the submit host. &nbsp;BOSCO will now transfer files over a port that is forwarded over the SSH connection that BOSCO maintains with the remote cluster. &nbsp;The transfers are&nbsp;inherently&nbsp;secure as they are over the SSH connection, as well as they are authenticated by the Condor daemons on either end of the connection (remote cluster and submit host). &nbsp;&nbsp;</div><div><br /></div><div>This fits into the BOSCO team's goal of lowering the amount of ports used by Condor. &nbsp;Our eventual goal is using the Shared Port Daemon to limit the required ports to 1 for BOSCO on the submit host.</div><div><br /></div><div><b>Why should I care?</b></div><div>This will greatly reduce the number of ports required if you are only using the <span style="font-family: Courier New, Courier, monospace;">universe=grid</span><span style="font-family: inherit;">&nbsp;method of submitting jobs. &nbsp;In fact, it will reduce the open ports on the submit host to 0. &nbsp;That means no more configuring firewalls for BOSCO (no campus factory support, see below). &nbsp;Additionally, there is no new configuration required for this feature, it 'just works' (famous last words?)</span></div><div><span style="font-family: inherit;"><br /></span></div><div><span style="font-family: inherit;">The Campus Factory, which adds features such as fault tolerant Condor file transfer and transparent multi-cluster support, still requires multiple open ports in the firewall. &nbsp;Additional effort will be required to change the Campus Factory configuration and daemons to support the single port. &nbsp;I hope that a single port will be all that is needed for v1.2. &nbsp;</span></div><div><span style="font-family: inherit;"><br /></span></div><h3><span style="font-family: inherit;">What's Next</span></h3><div><span style="font-family: inherit;">Over the next couple weeks, I hope to write more about upcoming features such as:</span></div><div><ul><li>Multi-Platform support (ie cluster and submit host are different platforms)</li><li>Mac OSX Support</li><li>Improved Multi-User support</li></ul></div><div><span style="font-family: inherit;"><br /></span></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/3007054864987759910-3237281153809597870?l=derekweitzel.blogspot.com' alt='' /></div>]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -614,77 +269,8 @@ queue 100
         <name><![CDATA[HTCondor Team GitHub]]></name>
         <uri>http://htcondor.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project.</p>
-
-<p>We will also be hosting the Planet HTCondor feed aggregator for blog entries from HTCondor community members, which you can see <a href="http://htcondor.github.com/planet">here</a>.  You can subscribe to the meta-feed for Planet HTCondor at <a href="http://htcondor.github.com/planet/atom.xml">this link</a>.</p>
+      <content type="html"><![CDATA[<p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Pre and Post job scripts]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/10/29/pre-and-post-job-scripts/"/>
-      <updated>2012-10-29T11:07:05Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=801</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[<p><a href="http://cs.wisc.edu/condor">Condor</a> has a few ways to run programs associated with a job, beyond the job itself. If you&#8217;re an administrator, you can use the USER_JOB_WRAPPER. If you&#8217;re a user who is friends with your administrator, you can use Job Hooks. If you are ambitious, you can wrap all your jobs in a script that runs programs before and after your actual job.</p>
-<p>Or, you can use the PreCmd and PostCmd attributes on your job. They specify programs to run before and after your job executes. By example,</p>
-<p><pre class="brush: plain; gutter: false;">
-$ cat prepost.job
-cmd = /bin/sleep
-args = 1
-
-log = prepost.log
-output = prepost.out
-error = prepost.err
-
-+PreCmd = &amp;quot;pre_script&amp;quot;
-+PostCmd = &amp;quot;post_script&amp;quot;
-
-transfer_input_files = pre_script, post_script
-should_transfer_files = always
-
-queue
-</pre></p>
-<p><pre class="brush: bash; gutter: false;">
-$ cat pre_script
-#!/bin/sh
-date &amp;gt; prepost.pre
-
-$ cat post_script
-#!/bin/sh
-date &amp;gt; prepost.post
-</pre></p>
-<p>Running,</p>
-<p><pre class="brush: plain; gutter: false;">
-$ condor_submit prepost.job
-Submitting job(s)
-.
-1 job(s) submitted to cluster 1.
-
-...wait a few seconds, or 259...
-
-$ cat prepost.pre
-Sun Oct 14 18:06:00 UTC 2012
-
-$ cat prepost.post
-Sun Oct 14 18:06:02 UTC 2012
-</pre></p>
-<p>That&#8217;s about it, except for some gotchas.</p>
-<ul>
-<li>transfer_input_files is manual and required</li>
-<li>The scripts are run from Iwd, you can&#8217;t use +PreCmd=&#8221;/bin/blah&#8221;, instead +PreCmd=&#8221;blah&#8221; and transfer_input_files=/bin/blah</li>
-<li>should_transfer_files = always, scripts are run from Iwd, if run local to the Schedd Iwd will be in the EXECUTE directory but the scripts won&#8217;t be</li>
-<li>Script stdout/err and exit code are ignored</li>
-<li>You must use +Attr=&#8221;" syntax, +PreCmd=pre_script won&#8217;t work</li>
-<li>There is no option of arguments for the scripts</li>
-<li>There is no starter environment, thus no $_CONDOR_JOB_AD/$_CONDOR_MACHINE_AD, but you can find .job_ad and .machine_ad in $_CONDOR_SCRATCH_DIR</li>
-<li>Make sure the scripts are executable, otherwise the job will be put on hold with a reason similar to: Error from 127-0-0-1.NO_DNS: Failed to execute &#8216;&#8230;/dir_30626/pre_script&#8217;: Permission denied </li>
-<li>PostCmd is broken in condor 7.6, but works in 7.8</li>
-</ul>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/801/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/801/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=801&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -696,62 +282,7 @@ Sun Oct 14 18:06:02 UTC 2012
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <p>Rob Rati and I gave a tutorial on <a href="http://research.cs.wisc.edu/condor/CondorWeek2012/presentations/rati-benton-condor-ha.pdf">highly-available job queues at Condor Week this year</a>.  While it was not a <a href="http://getwallaby.com">Wallaby</a>-specific tutorial, we did point out that configuring highly-available job queues is easier for users who manage and deploy their configurations with Wallaby; compare the manual and automated approaches in the following slides:</p>
-
-<p><img src="http://chapeau.freevariable.com//haschedd.png" alt="Haschedd" title="haschedd.png" border="0" width="398" height="600" /></p>
-
-<p>Configuring <a href="http://research.cs.wisc.edu/condor/manual/v7.6/3_11High_Availability.html#SECTION004112000000000000000">highly-available central managers</a> (HA CMs) is rather more involved than configuring highly-available job queues.  Here&#8217;s what a successful HA CM setup requires:</p>
-
-<ul>
-<li>all hosts that serve as candidate central managers (CMs) must be included in the <code>CONDOR_HOST</code> variable across the pool</li>
-<li>the <code>had</code> and <code>replication</code> daemons must be set up to run on candidate CMs</li>
-<li>the <code>HAD_LIST</code> and <code>REPLICATION_LIST</code> configuration variables must include a list of candidate CMs and the ports on which the <code>had</code> and <code>replication</code> daemons are running on these hosts</li>
-<li>various tunable settings related to shared-state and failure detection must be set</li>
-</ul>
-
-<p>Wallaby includes <code>HACentralManager</code>, a ready-to-install feature that has sensible defaults for setting up a candidate CM.  The tedious work of constructing lists of hostnames and ports &#8212; and ensuring that these are set everywhere that they must be &#8212; can take great advantage of Wallaby&#8217;s scriptability.  At the bottom of this post is a simple Wallaby shell command that sets up a highly-available central manager with several nodes serving as candidate CMs.  To use it, download it and place it in your <code>WALLABY_COMMAND_DIR</code> (<a href="http://getwallaby.com/2010/10/extending-the-wallaby-shell/">review how to install Wallaby shell command extensions if necessary</a>).  Then invoke it with </p>
-
-<pre><code>wallaby setup-ha-cms fred barney wilma betty
-</code></pre>
-
-<p>The above invocation will set up <code>fred</code>, <code>barney</code>, <code>wilma</code>, and <code>betty</code> as candidate CMs, place the candidate CMs in the <code>PotentialCMs</code> group (creating this group if necessary), and configure Wallaby&#8217;s default group to use the highly-available CM cluster.  (The <code>setup-ha-cms</code> command takes options to put candidate CMs in a different group or apply this configuration to some subset of the pool; invoke it with <code>--help</code> for more information.)</p>
-
-<p>Once you&#8217;ve set up your candidate CMs, be sure to activate the new configuration:</p>
-
-<pre><code>wallaby activate
-</code></pre>
-
-<p>Of course, <code>wallaby activate</code> will alert you to any problems that prevent your configuration from taking effect.  Correct any errors that come up and activate again, if necessary.  The <code>setup-ha-cms</code> command is a pretty simple example of automating configuration, but it saves a lot of repetitive and error-prone effort!</p>
-
-<p><strong>UPDATE</strong>:  The command will now remove all nodes from the candidate CM group before adding any nodes to it.  This ensures that if the command is run multiple times with different candidate CM node sets, only the most recent set will receive the candidate CM configuration.  (The command as initially posted would apply the candidate CM configuration to every node that was in the candidate CM group at invocation time, but only those nodes that were named in its most recent invocation would actually become candidate CMs.)  Thanks to <a href="http://rrati.github.com">Rob Rati</a> for the observation.</p>
-
-<p><script src="https://gist.github.com/3936568.js"> </script><noscript>View this post in your browser to see the embedded script.</noscript></p>
-
-        
-
-    ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Tip: ISO8601 dates in your logs]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/10/22/tip-iso8601-dates-in-your-logs/"/>
-      <updated>2012-10-22T11:37:21Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=757</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Condor produces internal data in both structured and unstructured forms.</p>
-<p>The structured forms are just that and designed to be processed by external programs. These are the event logs (UserLog or EVENT_LOG), the HISTORY file and PER_JOB_HISTORY_DIR and POOL_HISTORY_DIR, and the job_queue.log and Accountantnew.log transaction logs.</p>
-<p>The unstructured forms are for debugging and designed to be read by a person, often an experienced person. They are often called trace, or debug, logs and are the files in the LOG directory, or the extra output seen when passing -debug to command-line tools, i.e. condor_q -debug.</p>
-<p>Consuming and processing the unstructured forms with external programs is increasingly important. Consider tracing incidents through a deployment of 50,000 geographically distributed, physical and virtual systems. Or, even 100 local systems.</p>
-<p>More and more tools that provide the ability to aggregate unstructured logs are emerging and they all need to do some basic parsing of the logs. Help make their integration simpler and use a well defined format for timestamps.</p>
-<p>For instance, ISO8601 -</p>
-<pre>
-DEBUG_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z "
-</pre>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/757/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/757/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=757&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Rob Rati and I gave a tutorial on highly-available job queues at Condor Week this year. While it was not a Wallaby-specific tutorial, we did point out that configuring highly-available job queues is easier for users who manage and deploy...]]></content>
     </entry>
   
     <entry>
@@ -768,57 +299,8 @@ to manage high availability schedulers and referenced the command line tools
 available perform the configuration.  I'd like to focus on using the GUI that
 is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
 process but does require you run a wallaby shell command to complete the
-configuration.</p>
-
-<p>The first thing you need to do is create or import your cluster in the GUI.
-If you already have a cluster in the GUI then make sure the nodes you want to
-be part of a HA schedd configuration are part of the cluster.</p>
-
-<p>The next step is to create a restricted Failover Domain.  Nodes in this domain
-will run the schedd service you create, and making it restricted ensures that
-no nodes outside the Failover Domain will run the service.  If a node in the
-Failover Domain isn't available then the service won't run.</p>
-
-<p>The third step is to create a service that will comprise your schedd. Make
-sure that the relocation policy on the service is Relocate and that it is
-configured to use whatever Failover Domain you have already setup.  The
-service will contain 2 resources in a parent-child configuration.  The parent
-service is the NFS Mount and the child service is a condor instance resource.
-This is what sets up the dependency between the NFS Mount being required for
-the condor instance to run.  When the resources are configured like this it
-means the parent must be functioning for the child to operate.</p>
-
-<p>Finally, you need to sync the cluster configuration with wallaby.  This is
-easily accomplished by logging into a machine in the cluster and running:</p>
-
-<pre><code>wallaby cluster-sync-to-store
-</code></pre>
-
-<p>That wallaby shell command will inspect the cluster configuration and
-configure wallaby to match it.  It can handle any number of schedd
-configurations so you don't need to run it once per setup.  However, until
-the cluster-sync-to-store command is executed, the schedd service you created
-can't and won't run.</p>
-
-<p>Start your service or wait for Cluster Suite to do it for you and you'll find
-an HA schedd in your pool.</p>
-
-<p>You can get a video of the process as <a href="http://rrati.fedorapeople.org/videos/cs_gui_schedd.ogv">ogv</a> or <a href="http://rrati.fedorapeople.org/videos/cs_gui_schedd.mp4">mp4</a> if the inline video doesn't work.</p>
-
-<p><video width='800' height='600' preload='none' controls poster=''><source src='http://rrati.fedorapeople.org/videos/cs_gui_schedd.mp4' type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/></video></p>
+configuration. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Advanced scheduling: Execute periodically with cron jobs]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/10/15/advanced-scheduling-execute-periodically-with-cron-jobs/"/>
-      <updated>2012-10-15T09:55:02Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=744</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[If you want to run a job periodically you could repeatedly submit jobs, or qedit existing jobs after they run, but both of those options are a kludge. Instead, the condor_schedd provides support for cron-like jobs as a first-class citizen. The cron-like feature builds on the ability to defer job execution. However, instead of using [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=744&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -832,31 +314,6 @@ an HA schedd in your pool.</p>
       </author>
       <content type="html"><![CDATA[<p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Hosting a Blog Feed Aggregator With Octopress]]></title>
-      <link href="http://erikerlandson.github.com/blog/2012/10/05/hosting-a-blog-feed-aggregator-with-octopress/"/>
-      <updated>2012-10-05T19:52:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2012/10/05/hosting-a-blog-feed-aggregator-with-octopress</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>I have written an Octopress plugin to allow turnkey support for hosting a blog feed aggregator, in Octopress idiomatic style.  I will describe the steps to install it and use it below.  Some of its current features are: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Flocking to the OSG behind a restrictive Firewall]]></title>
-      <link href="http://derekweitzel.blogspot.com/2012/09/flocking-to-osg-behind-restrictive.html"/>
-      <updated>2012-09-28T03:28:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-8114678098805193097</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -1067,18 +524,6 @@ configured but the node needs to be configured to access the shared storage. [..
       <link href="http://osgtech.blogspot.com/2012/02/job-isolation-in-condor.html"/>
       <updated>2012-02-14T17:46:00Z</updated>
       <id>tag:blogger.com,1999:blog-8803173202887660937.post-864451098144380179</id>
-      <author>
-        <name><![CDATA[Brian Bockelman]]></name>
-        <uri>http://osgtech.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[openstack - update]]></title>
-      <link href="http://osgtech.blogspot.com/2012/01/openstack-update.html"/>
-      <updated>2012-01-27T18:29:00Z</updated>
-      <id>tag:blogger.com,1999:blog-8803173202887660937.post-1284219792325627410</id>
       <author>
         <name><![CDATA[Brian Bockelman]]></name>
         <uri>http://osgtech.blogspot.com</uri>
