@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="In the last few months, I have outlined the new features of Bosco 1.1.Mutli-Cluster SupportMulti-OS SupportSingle Port UsageSSH File TransferI am &hellip;">
+  <meta name="description" content="So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,35 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/">Your API is a feature, give it real resource management</a></h1>
+      <p class="meta">
+        <time datetime="2013-01-14T12:17:29Z" pubdate data-updated="true">Jan 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1].</p>
+<div id="attachment_873" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png"><img src="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png?w=450&#038;h=370" alt="EC2 instance creation without idempotent RunInstance" width="450" height="370" class="size-full wp-image-873" /></a><p class="wp-caption-text">EC2 instance creation without idempotent RunInstance</p></div>
+<p>Above is a state machine required to ensure that resources created in AWS EC2 are not lost, i.e. do not have to be manually cleaned up. The green arrows represent error free flow. The rest is about error handling or external state changes, e.g. user terminated operation. This is from before EC2 supported <a href="http://aws.typepad.com/aws/2010/09/new-amazon-ec2-feature-idempotent-instance-creation.html">idempotent instance creation</a>.</p>
+<p>The state machine rewritten to use idempotent instance creation,</p>
+<div id="attachment_874" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.files.wordpress.com/2013/01/ec2job-idempotent.png"><img src="http://spinningmatt.files.wordpress.com/2013/01/ec2job-idempotent.png?w=450&#038;h=435" alt="EC2 instance creation with idempotent RunInstance" width="450" height="435" class="size-full wp-image-874" /></a><p class="wp-caption-text">EC2 instance creation with idempotent RunInstance</p></div>
+<p>What&#8217;s going on here? Handling failure during resource creation.</p>
+<p>The important failure to consider as a client is what happens if you ask your resource provider to create something and you never hear back. This is a distributed system, there are numerous reasons why you may not hear back. For simplicity, consider the client code crashed between sending the request and receiving the response.</p>
+<p>The solution is to construct a transaction for resource creation[2]. To construct a transaction, you need to atomically associate a piece of information with the resource at creation time. We&#8217;ll call that piece of information an anima.</p>
+<p>In the old EC2 API, the only way to construct an anima was through controlling a security group or keypair. Since neither is tied to a real economy, both are reasonable options. The non-idempotent state machine above uses the keypair as it is less resource intensive for EC2.</p>
+<p>On creation failure and with the anima in hand[3], the client must search the remote system for the anima before reattempting creation. This is handled by the <code>GM_CHECK_VM</code> state above.</p>
+<p>Unfortunately, without explicit support in the API, i.e. lookup by anima, the search can be unnatural and expensive. For example, EC2 instances are not indexed on keypair. Searching requires a client side scan of all instances.</p>
+<p>With the introduction of idempotent RunInstances, the portion of the state machine for constructing and locating the anima is reduced to the <code>GM_SAVE_CLIENT_TOKEN</code> state, an entirely local operation. The reduction in complexity is clear.</p>
+<p>After two years, EC2 appears to be the only API providing idempotent instance creation[4]. Though APIs are starting to provide atomic anima association, often through metadata or instance attributes, and some even provide lookup.</p>
+<p>You should provide an idempotent resource creation operation in your API too!</p>
+<p>[0] &#8220;in the cloud&#8221; &#8211; really anywhere in any distributed system!<br />
+[1] Making money from forgotten or misplaced resources is a short term play.<br />
+[2] Alternatively, you can choose an architecture with a janitor process, which will bring its own complexities.<br />
+[3] &#8220;in hand&#8221; &#8211; so long as your hand is reliable storage.<br />
+[4] After a quick survey, I&#8217;m looking at you Rackspace, RimuHosting, vCloud, OpenNebula, OpenStack, Eucalyptus, GoGrid, Deltacloud, Google Compute Engine and Gandi.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/872/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/872/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
 
   <article>
     <header>
@@ -184,16 +213,6 @@
       </p>
     </header>
     <div class="entry-content">As a thought experiment. There are always multiple users and limited resources. Users have work, which takes time and resources to complete. The top resource users are visible to all. A user can relinquish resources she is using. A relinquished resource, either by work completing or by user action, is reassigned randomly. How would this [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=836&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/11/19/extensible-machine-resources/">Extensible machine resources</a></h1>
-      <p class="meta">
-        <time datetime="2012-11-19T11:36:21Z" pubdate data-updated="true">Nov 19<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content">Physical machines are home to many types of resources these days. The traditional cores, memory, disk, now share space with gpus, co-processors or even protein sequence analysis accelerators. To facilitate use and management of these resources, a new feature is available in HTCondor for extending machine resources. Analogous to concurrency limits, which operate on a [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=822&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
