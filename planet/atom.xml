@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-01-14T10:59:42-07:00</updated>
+  <updated>2013-01-14T15:54:31-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,18 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Bosco 1.1.1 Release]]></title>
+      <link href="http://derekweitzel.blogspot.com/2013/01/bosco-111-release.html"/>
+      <updated>2013-01-14T18:59:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1926902995750303001</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[Today I am pleased to announce that Bosco version 1.1.1 has been released. This is a patch fix for the 1.1 to address 2 issues that where affecting users.<br /><br />Release notes for the 1.1.1 release are available on the <a href="https://twiki.grid.iu.edu/bin/view/CampusGrids/Bosco1p1p1ReleaseNotes">OSG Twiki</a>.<br /><br />Bosco 1.1 was a major release with many new features. The 1.1 release notes are also available on the <a href="https://twiki.grid.iu.edu/bin/view/CampusGrids/Bosco1p1ReleaseNotes">OSG Twiki</a>.<br /><br />On behalf of the Bosco Team,<br />Derek Weitzel<br />Dan Fraser<br />Marco Mambelli<br />Jaime Frey<br />Brooklin Gore<br />Miha Ahronovitz]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Your API is a feature, give it real resource management]]></title>
@@ -278,18 +290,6 @@
       </author>
       <content type="html"><![CDATA[<p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[BOSCO v1.1 Features: SSH File Transfer]]></title>
-      <link href="http://derekweitzel.blogspot.com/2012/10/bosco-v11-features-ssh-file-transfer.html"/>
-      <updated>2012-10-29T19:30:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-3237281153809597870</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
