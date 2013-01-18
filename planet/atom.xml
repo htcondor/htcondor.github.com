@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-01-16T14:15:50-07:00</updated>
+  <updated>2013-01-18T09:34:43-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -26,12 +26,12 @@
   
     <entry>
       <title type="html"><![CDATA[Your API is a feature, give it real resource management]]></title>
-      <link href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
+      <link href="https://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
       <updated>2013-01-14T12:17:29Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=872</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
+        <uri>https://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1].</p>
 <div id="attachment_873" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png"><img src="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png?w=450&#038;h=370" alt="EC2 instance creation without idempotent RunInstance" width="450" height="370" class="size-full wp-image-873" /></a><p class="wp-caption-text">EC2 instance creation without idempotent RunInstance</p></div>
@@ -52,7 +52,7 @@
 [2] Alternatively, you can choose an architecture with a janitor process, which will bring its own complexities.<br />
 [3] &#8220;in hand&#8221; &#8211; so long as your hand is reliable storage.<br />
 [4] After a quick survey, I&#8217;m looking at you Rackspace, RimuHosting, vCloud, OpenNebula, OpenStack, Eucalyptus, GoGrid, Deltacloud, Google Compute Engine and Gandi.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/872/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/872/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/872/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/872/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -69,12 +69,12 @@
   
     <entry>
       <title type="html"><![CDATA[Web design complexity]]></title>
-      <link href="http://spinningmatt.wordpress.com/2013/01/07/web-design-complexity/"/>
+      <link href="https://spinningmatt.wordpress.com/2013/01/07/web-design-complexity/"/>
       <updated>2013-01-07T12:27:36Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=860</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
+        <uri>https://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>One thing that has always impressed me is the ability of web designers to deal with browser idiosyncrasies.</p>
 <p>For instance, knowing why this happens in firefox-17.0.1-1.fc17.x86_64 -</p>
@@ -83,7 +83,7 @@
 <div id="attachment_863" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=863" rel="attachment wp-att-863"><img src="http://spinningmatt.files.wordpress.com/2012/12/firebug-btn-primary.png?w=450&#038;h=227" alt="A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost" width="450" height="227" class="size-full wp-image-863" /></a><p class="wp-caption-text">A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost</p></div>
 <p>Needless to say, the web is littered with questions about why btn-primary background color is not always white. Most have answers, some with varying degrees of complex css. Others involve changing versions of software. All the while it might just be the URL used to view the page.</p>
 <p>Test in a production environment.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/860/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/860/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/860/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/860/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -119,14 +119,14 @@
   
     <entry>
       <title type="html"><![CDATA[Configuration and policy evaluation]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/12/10/configuration-and-policy-evaluation/"/>
+      <link href="https://spinningmatt.wordpress.com/2012/12/10/configuration-and-policy-evaluation/"/>
       <updated>2012-12-10T12:47:21Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=854</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
+        <uri>https://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Figuring out how evaluation happens in configuration and policy is a common problem. The confusion is justified. Configuration provides substitution with $() syntax, while policy is full ClassAd language evaluation without $() syntax. Configuration is all the parameters listed in files discoverable with condor_config_val -config. Policy is the ClassAd expression found on the right-hand side [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=854&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Figuring out how evaluation happens in configuration and policy is a common problem. The confusion is justified. Configuration provides substitution with $() syntax, while policy is full ClassAd language evaluation without $() syntax. Configuration is all the parameters listed in files discoverable with condor_config_val -config. Policy is the ClassAd expression found on the right-hand side [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=854&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -144,14 +144,14 @@
   
     <entry>
       <title type="html"><![CDATA[Tail your logs, for fun and profit]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/12/03/tail-your-logs-for-fun-and-profit/"/>
+      <link href="https://spinningmatt.wordpress.com/2012/12/03/tail-your-logs-for-fun-and-profit/"/>
       <updated>2012-12-03T14:29:39Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=842</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
+        <uri>https://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[If you don&#8217;t run tail -F on your logs periodically, you should. It&#8217;s illuminating. Try, I ran that over the weekend and learned a few things - 0) ERROR WriteUserLog Failed to grab global event log lock means that the EVENT_LOG is lossy in unexpected ways. We know the EVENT_LOG rotates and if you&#8217;re watching [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=842&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[If you don&#8217;t run tail -F on your logs periodically, you should. It&#8217;s illuminating. Try, I ran that over the weekend and learned a few things - 0) ERROR WriteUserLog Failed to grab global event log lock means that the EVENT_LOG is lossy in unexpected ways. We know the EVENT_LOG rotates and if you&#8217;re watching [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=842&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -181,14 +181,14 @@
   
     <entry>
       <title type="html"><![CDATA[Social scheduling]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/11/26/social-scheduling/"/>
+      <link href="https://spinningmatt.wordpress.com/2012/11/26/social-scheduling/"/>
       <updated>2012-11-26T11:57:12Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=836</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
+        <uri>https://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[As a thought experiment. There are always multiple users and limited resources. Users have work, which takes time and resources to complete. The top resource users are visible to all. A user can relinquish resources she is using. A relinquished resource, either by work completing or by user action, is reassigned randomly. How would this [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=836&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[As a thought experiment. There are always multiple users and limited resources. Users have work, which takes time and resources to complete. The top resource users are visible to all. A user can relinquish resources she is using. A relinquished resource, either by work completing or by user action, is reassigned randomly. How would this [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=836&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -282,7 +282,7 @@
     <entry>
       <title type="html"><![CDATA[Welcome To The HTCondor Project Github Site]]></title>
       <link href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/"/>
-      <updated>2012-10-29T17:15:00Z</updated>
+      <updated>2012-10-29T20:15:00Z</updated>
       <id>http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site</id>
       <author>
         <name><![CDATA[HTCondor Team GitHub]]></name>
