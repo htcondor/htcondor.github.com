@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time &hellip;">
+  <meta name="description" content="A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time.
+I installed a handful of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,37 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/">Some htcondor-wiki stats</a></h1>
+      <p class="meta">
+        <time datetime="2013-01-29T11:36:06Z" pubdate data-updated="true">Jan 29<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>A few years ago I discovered <a href="http://webnumbr.com">Web Numbr</a>, a service that will monitor a web page for a number and graph that number over time.</p>
+<p>I installed a handful of webnumbrs to track things at <a href="http://condor-wiki.cs.wisc.edu">HTCondor&#8217;s gittrac instance</a>.</p>
+<p><a href="http://webnumbr.com/search?query=condor">http://webnumbr.com/search?query=condor</a></p>
+<p>Thing such as -</p>
+<ul>
+<li><a href="http://webnumbr.com/condor-resolved-tickets-with-no-destination">Tickets resolved with no destination:</a> tickets that don&#8217;t indicate what version they were fixed in. Anyone wanting to know if a bug is fixed or feature was added to their version of HTCodnor and encounters one of these will have to go spelunking in the repository for their answer.</li>
+<li><a href="http://webnumbr.com/condor-resolved-and-unassigned-tickets">Tickets resolved but not assigned:</a> tickets that were worked on, completed, but whomever worked on them never claimed ownership.</li>
+<li><a href="http://webnumbr.com/condor-action-items-with-commits">Action items with commits:</a> tickets that are marked as Todo/Incident, yet have associated code changes. Once there is a code change the ticket is either a bug fix (ticket type: defect) or feature addition (ticket type: enhancement). Extra work is imposed on whomever comes after the ticket owner who wants to understand what they are looking at. Additionally, these tickets skew information about bugs and features in releases.</li>
+<li><a href="http://webnumbr.com/condor-tickets-with-invalid-version-field">Tickets with invalid version fields:</a> tickets that do not follow the, somewhat strict, version field syntax &#8211; vXXYYZZ, e.g. v070901. All the extra 0s are necessary and the v must be lowercase.</li>
+</ul>
+<p>I wanted to embed the numbers here, but javascript is needed and wordpress.com filters javascript from posts.</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/903/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/903/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2013/01/introducing-htcondor-ce.html">Introducing the HTCondor-CE</a></h1>
+      <p class="meta">
+        <time datetime="2013-01-28T15:33:00Z" pubdate data-updated="true">Jan 28<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
+      </p>
+    </header>
+    <div class="entry-content">At the heart of the OSG Compute Element (CE) is the gatekeeper software. &nbsp;The gatekeeper software anchors three core pieces of functionality:<br /><ol><li><b>Remote access</b>: The gatekeeper provides a network service that remote clients can contact and interact with.</li><li><b>Authentication and authorization</b>: The gatekeeper is responsible for authenticating the client and deciding on what actions it is authorized to perform.</li><li><b>Resource allocation</b>: The gatekeeper accepts an abstract description of a resource to allocate and actualizes the resource request within the local environment.</li></ol><div>The existing software, Globus GRAM, provides a HTTP-like interface over TLS for remote access. &nbsp;The authentication is done using the Grid Security Infrastructure (GSI), using special client certificates. &nbsp;It does authorization by performing a callout to map the client certificate to a Unix account, then performing all further operations as that Unix user. &nbsp;The resource allocation provides an interface which accepts requests in Globus RSL (a job description language) and interact with a local batch system on the CE to run the job.</div><div><br /></div><div>With the HTCondor team, the OSG has been working to provide an alternate gatekeeper implementation, the <i style="font-weight: bold;">HTCondor-CE</i>. &nbsp;The HTCondor-CE is a special configuration of the HTCondor software which provides the three core pieces of functionality described above.</div><div><br /></div><div>HTCondor provides remote access using a custom communication protocol and called CEDAR. &nbsp;CEDAR provides a RPC and messaging mechanism over UDP or TCP, and can provide various levels of integrity or encryption based upon the session parameters. &nbsp;While the HTCondor-CE will ship with the same GSI authentication and authorization as Globus GRAM, it can be reconfigured to provide alternate authentication mechanisms such as Kerberos, SSL, shared secret, or even IP-based authentication.</div><div><br /></div><div>The HTCondor-CE allocates resources via having the client submit HTCondor jobs to a scheduler running on the CE (the schedd daemon). &nbsp;We refer to this as the "<i>grid job</i>". &nbsp;A separate daemon, the JobRouter, is responsible for transforming the <i>grid job</i>&nbsp;to a resource allocation for site. &nbsp;For a site with a HTCondor batch system, it will transform and mirror the <i>grid job</i>&nbsp;into the <i>routed job</i>&nbsp;in the site's batch system. &nbsp;The process is illustrated below:</div><div><br /></div><div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-UbMFNUvwsVs/UQaP3f6n4jI/AAAAAAAACl4/OqW79vo6g4I/s1600/HTCondorCE_Condor.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="306" src="http://2.bp.blogspot.com/-UbMFNUvwsVs/UQaP3f6n4jI/AAAAAAAACl4/OqW79vo6g4I/s320/HTCondorCE_Condor.png" width="320" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">The submit workflow for the HTCondor-CE running on a site with the HTCondor batch system. &nbsp;Notice the JobRouter copies the job directly into the site's batch system.</td></tr></tbody></table><span id="goog_33533915"></span><span id="goog_33533916"></span>For sites with the PBS batch system, the <i>routed job</i>&nbsp;stays in the HTCondor-CE schedd (as the JobRouter does not know how to submit directly into the PBS queue), and the job is submitted into PBS using the blahp daemon. &nbsp;See the illustration below:<br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://3.bp.blogspot.com/-IagX60Tm5WQ/UQaQd7aZNkI/AAAAAAAACmA/OKNIpiTEQ-4/s1600/CondorCE_PBS.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="292" src="http://3.bp.blogspot.com/-IagX60Tm5WQ/UQaQd7aZNkI/AAAAAAAACmA/OKNIpiTEQ-4/s320/CondorCE_PBS.png" width="320" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">The HTCondor-CE submit workflow for a PBS site. &nbsp;Notice the blahp, not the JobRouter, does the submission to PBS in this case.</td></tr></tbody></table>The blahp daemon is a common piece of software for interacting with batch systems - in addition to being integrated in the HTCondor grid universe, it also is used by the BOSCO project and the CREAM CE.<br /><br />Note there is no requirement that the job be routed into a batch system - given the appropriate transform logic. the JobRouter could also transform the grid job into VM running in Amazon EC2, an OpenStack instance, or a job for another HTCondor-CE!<br /><br />The CE is quite flexible; it is a configuration of the HTCondor software and leverages all the features available in HTCondor. &nbsp;As another example, we benefit from the fact that HTCondor's security uses sessions; clients do not re-authenticate for each status update. &nbsp;Future features, such as the sandbox size limits in the upcoming 7.9.4, can be used immediately by the CE through a configuration file change.<br /><br />The HTCondor-CE is currently under development, although functionality has been demonstrated using glideinWMS for up to 5,000 running pilots. &nbsp;It requires HTCondor 7.9.2 or later, so we are waiting for the next stable release (due late April) before starting to release the CE more widely. &nbsp;As we near release, I am planning on doing additional updates on specific pieces of this technology.<br /><br />We're looking forward to see how users will put it into action!<br /><br /></div></div>
+  </article>
 
   <article>
     <header>
@@ -230,16 +262,6 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
     </header>
     <div class="entry-content"><p>HTCondor supports a notion of aggregate compute resources known as partitionable slots (p-slots), which may be consumed by multiple jobs.   Historically, at most one job could be matched against such a slot in a single negotiation cycle, which limited the rate at which partitionable slot resources could be utilized.  More recently, the scheduler has been enhanced with logic to allow it to acquire multiple claims against a partitionable slot, which increases the p-slot utilization rate. However, as this potentially bypasses the negotiator's accounting of global pool resources such as accounting group quotas and concurrency limits, it places some contraints on what jobs can can safely acquire multiple claims against any particular p-slot: for example, only other jobs on the same scheduler can be considered.  Additionally, candidate job requirements must match the requirements of the job that originally matched in the negotiator.  Another significant impact is that the negotiator is still forced to match an entire p-slot, which may have a large match cost (weight): these large match costs cause <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3013">accounting difficulties</a> when submitter shares and/or group quotas drop below the cost of a slot.  This particular problem is growing steadily larger, as machines with ever-larger numbers of cores and other resources appear in HTCondor pools. [...]</p>
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2012/12/03/tail-your-logs-for-fun-and-profit/">Tail your logs, for fun and profit</a></h1>
-      <p class="meta">
-        <time datetime="2012-12-03T14:29:39Z" pubdate data-updated="true">Dec 3<span>rd</span>, 2012  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content">If you don&#8217;t run tail -F on your logs periodically, you should. It&#8217;s illuminating. Try, I ran that over the weekend and learned a few things - 0) ERROR WriteUserLog Failed to grab global event log lock means that the EVENT_LOG is lossy in unexpected ways. We know the EVENT_LOG rotates and if you&#8217;re watching [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=842&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -486,6 +508,17 @@ configured but the node needs to be configured to access the shared storage. [..
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="http://getwallaby.com/2012/08/live-backup/">Highly-available configuration data with Wallaby</a></h1>
+      <p class="meta">
+        <time datetime="2012-08-29T14:40:00Z" pubdate data-updated="true">Aug 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Many Condor users are interested in <em>high-availability</em> (HA) services:  they don&#8217;t want their compute resources to become unavailable due to the failure of a single machine that is running an important Condor daemon.  (See <a href="http://research.cs.wisc.edu/condor/CondorWeek2012/presentations/rati-benton-condor-ha.pdf">this talk</a> that Rob Rati and I gave at Condor Week this year for a couple of solutions to HA with the Condor <code>schedd</code>.)  So it&#8217;s only natural that Condor users who are interested in configuring their pools with <a href="http://getwallaby.com">Wallaby</a> might wonder how Wallaby responds in the face of failure. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/06/using-wallabys-skeleton-group.html">Using Wallaby's skeleton group</a></h1>
       <p class="meta">
         <time datetime="2012-06-15T21:04:21Z" pubdate data-updated="true">Jun 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
@@ -551,16 +584,6 @@ configured but the node needs to be configured to access the shared storage. [..
       <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/file-isolation-using-bind-mounts-and.html">File Isolation using bind mounts and chroots</a></h1>
       <p class="meta">
         <time datetime="2012-02-20T16:03:00Z" pubdate data-updated="true">Feb 20<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/02/job-isolation-in-condor.html">Job Isolation in Condor</a></h1>
-      <p class="meta">
-        <time datetime="2012-02-14T17:46:00Z" pubdate data-updated="true">Feb 14<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
       </p>
     </header>
     <div class="entry-content"></div>
