@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-01-30T10:31:15-07:00</updated>
+  <updated>2013-02-06T16:26:47-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Using Bosco to submit to Amazon EC2]]></title>
+      <link href="http://derekweitzel.blogspot.com/2013/02/using-bosco-to-submit-to-amazon-ec2.html"/>
+      <updated>2013-02-06T04:27:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-4538100752405939638</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[A homework assignment for my storage class required running ~30 hours of benchmarks of the btrfs and ext4 filesystems. &nbsp;I thought this would be an excellent time to test Bosco's ability to submit to Amazon EC2 to parallelize the benchmarks.<br /><br /><h3>Preparing Submission</h3><div>In order to start instances on Amazon EC2, you first need to sign up. &nbsp;Go to&nbsp;<a href="https://aws.amazon.com/">https://aws.amazon.com/</a>&nbsp;and sign up in the top right. &nbsp;After you sign up, you will need the access and secret key. &nbsp;These can be found in the 'Security Credentials' from the account drop down box. &nbsp;They are in the 'Access Keys' tab under the&nbsp;'Access Key ID' and&nbsp;'Secret Access Key'. &nbsp;Write those values in 2 files, you will need them when you submit EC2 instances.</div><div><br /></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://1.bp.blogspot.com/-0l_ddtj9fXc/URHJOTsFD8I/AAAAAAAAB2o/lAp3Yn_RVS8/s1600/amazoncred.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="441" src="http://1.bp.blogspot.com/-0l_ddtj9fXc/URHJOTsFD8I/AAAAAAAAB2o/lAp3Yn_RVS8/s640/amazoncred.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">Screenshot of Amazon Security credentials site</td></tr></tbody></table><div><br /></div><div><br /></div><div>Next, you will need a script to run at startup of the Amazon instance. &nbsp;When the instance starts up, a service named <a href="https://help.ubuntu.com/community/CloudInit">CloudInit</a>&nbsp;also start on the instance. &nbsp;It will&nbsp;interpret&nbsp;the user data file as a shell script which can setup and start any other services you would like. &nbsp;My shell script is provided below.</div><div><div class="gistLoad" data-id="4719948" id="gist-4719948">Loading ....</div></div><div><br /></div><div>This shell script will install python-boto (python bindings for S3 storage and ec2) and git onto the instance. &nbsp;Next, it will download the filebenchrunner (Benchmark runner for the homework), and start it. &nbsp;Most people will probably want to shut down the instance after you are done with processing, in that case you can just add to the bottom a 'poweroff'. <br /><br /><h3>Running the Instance</h3></div><div>Running an Amazon instance is as easy as running a Bosco job. &nbsp;First, you must create a Bosco submit file. &nbsp;Below is the one I used:</div><div><div class="gistLoad" data-id="4720141" id="gist-4720141"><br /></div><div><br />Some important things to note. &nbsp;I specified ec2_spot_price, which is the amount I am willing to pay for my m1.medium instance to run per hour. &nbsp;I said $0.04 an hour, which is pretty low, but reasonable for a medium instance. &nbsp;You can find all of the current spot prices either in the AWS console, or on the EC2 <a href="https://aws.amazon.com/ec2/spot-instances/#7">website</a>. &nbsp;As you can see, the spot prices are much, much smaller than the on-demand price of an instance. &nbsp;For example, for the m1.medium instance, which has 1.7 GB of ram and 1 core, the spot price currently is $0.013 per hour. &nbsp;The on-demand price is $0.120 per hour. &nbsp;That's a 90% discount on a m1.medium. &nbsp;Of course, you should always read the <a href="https://aws.amazon.com/ec2/spot-instances/#4">downsides</a> of using a spot instance, such as it can be terminated at any time, without warning, by Amazon. &nbsp;For my benchmarks, I can always re-run benchmarks if my instance is terminated. &nbsp;I needed to run 10 - 10 minute benchmarks, therefore after every benchmark, I uploaded the resulting data to S3&nbsp;immediately so I wouldn't lose any work if the instance was terminated.<br /><br />Also, I used the regular Amazon Linux AMI. &nbsp;They are listed on the Amazon <a href="https://aws.amazon.com/amazon-linux-ami/">website</a>. &nbsp;I could have very well used a CentOS, Ubuntu, or any other linux image for my instance. &nbsp;But, I prefer the official Linux AMI since it provides a very up to date OS which is very similar to the feel of a CentOS 6 instance. &nbsp;For example, it uses yum for repository management, and RPM's to install. &nbsp;And has versions (except for the kernel) similar to CentOS 6.<br /><br />I also added a special command, periodic_remove, in order to terminate the instance if something went wrong inside the instance. &nbsp;Sometimes yum can hang, or the instance may not start up properly. &nbsp;In those cases, amazon will not notify you of the problem, and Bosco will not be able to determine there is an issue. &nbsp;Since my benchmarks should not last longer than 100 minutes, I automatically remove the instance after 150 minutes (a little breathing room) of running.<br /><br />You may submit the instance with the normal 'condor_submit' command. &nbsp;The job will move to the <b>R</b>unning state when the instance has begun running.<br /><br />Once the instance has started, you may ssh into the instance by using the unique ssh key that Bosco generates for you. &nbsp;It is specified in the submit file as&nbsp;ec2_keypair_file. &nbsp;You also need the DNS name for the instance, which is available in the job's classad. <br /><pre>condor_q -format '%s\n' EC2RemoteVirtualMachineName</pre><br />The command will be, replacing the XXXX with the job number, and EC2RemoteVirtualMachineName with the address you get from the above command:<br /><pre>$ ssh -i keyfile.XXXXX ec2-user@<span style="color: red;">EC2RemoteVirtualMachineName</span></pre><br /><h3>Summary</h3><div>Pros of using Bosco to submit Amazon EC2 Jobs:</div><div><ul><li>Simple management of Amazon instance <b>from your workstation</b>.</li><li>Specify spot price right inside of the job description.</li><li>Ability to bootstrap the instance easily with user data scripts.</li><li>Ability to use HTCondor policies in order to manage the instances, such as periodic remove statement above.</li></ul>Cons:</div><div><ul><li>The EC2 universe is only available on Linux builds of Bosco. &nbsp;You cannot manage EC2 instances on the Mac version of Bosco.</li><li>Amazon EC2 has hundreds and hundreds of features, Bosco only allows you to use the simple submit EC2 instances and spot pricing. &nbsp;You will not be able to use the vast majority when you are using Bosco to manage your instances. &nbsp;But if all you need is to run some processing, Bosco is great!</li></ul></div><br /></div><script src="https://raw.github.com/moski/gist-Blogger/master/public/gistLoader.js" type="text/javascript"></script></div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[How accounting group configuration could work with Wallaby]]></title>
+      <link href="http://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
+      <updated>2013-02-05T11:46:28Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=917</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>http://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools.</p>
+<p>Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration.</p>
+<p>Quick background, <a href="http://getwallaby.com/">Wallaby</a> provides semantic configuration for HTCondor. It models a pool as parameters aggregated into features and nodes aggregated in groups, with features and individual parameters associated with nodes and groups. It provides semantic validation of configuration before it is distributed, and has expert knowledge for minimal impact configuration changes.</p>
+<p>And, accounting group configuration in HTCondor is spread across seven fixed parameters (GROUP_NAMES, GROUP_ACCEPT_SURPLUS, GROUP_SORT_EXPR, GROUP_NAMES, GROUP_QUOTA_ROUND_ROBIN_RATE, GROUP_AUTOREGROUP, GROUP_QUOTA_MAX_ALLOCATION_ROUNDS), and another five dynamic parameters (GROUP_ACCEPT_SURPLUS_groupname, GROUP_AUTOREGROUP_groupname, GROUP_PRIO_FACTOR_groupname, GROUP_QUOTA_groupname, GROUP_QUOTA_DYNAMIC_groupname). These are dynamic because the &#8220;groupname&#8221; in the parameter is any name listed in the GROUP_NAMES parameter.</p>
+<p>In addition to its other features, Wallaby has an <a href="http://getwallaby.com/2010/10/extending-the-wallaby-shell/">extensible shell mechanism</a>, which can be used to create task specific porcelain.</p>
+<p>For instance, agree that tools and administrators will store accounting group configuration on a feature called AccountingGroups, and the tools can use Wallaby&#8217;s API to manipulate the configuration while the following porcelain can simplify the task for managing that configuration by administrators.</p>
+<p>See &#8211; <a href="https://gist.github.com/4074465">wallaby_accounting_group_porcelain.txt</a><br />
+<small>(embedding content requires javascript, which is not available on wordpress.com)</small></p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/917/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/917/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Some htcondor-wiki stats]]></title>
@@ -161,14 +193,7 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[<p>One thing that has always impressed me is the ability of web designers to deal with browser idiosyncrasies.</p>
-<p>For instance, knowing why this happens in firefox-17.0.1-1.fc17.x86_64 -</p>
-<div id="attachment_861" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=861" rel="attachment wp-att-861"><img src="http://spinningmatt.files.wordpress.com/2012/12/0-0-0-0-btn-primary.png?w=450&#038;h=92" alt="A bootstrap btn-primary viewed from 0.0.0.0" width="450" height="92" class="size-full wp-image-861" /></a><p class="wp-caption-text">A bootstrap btn-primary viewed from 0.0.0.0</p></div>
-<div id="attachment_862" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=862" rel="attachment wp-att-862"><img src="http://spinningmatt.files.wordpress.com/2012/12/localhost-btn-primary.png?w=450&#038;h=92" alt="A bootstrap btn-primary viewed from localhost" width="450" height="92" class="size-full wp-image-862" /></a><p class="wp-caption-text">A bootstrap btn-primary viewed from localhost</p></div>
-<div id="attachment_863" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.wordpress.com/?attachment_id=863" rel="attachment wp-att-863"><img src="http://spinningmatt.files.wordpress.com/2012/12/firebug-btn-primary.png?w=450&#038;h=227" alt="A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost" width="450" height="227" class="size-full wp-image-863" /></a><p class="wp-caption-text">A bootstrap btn-primary firebug computed color from 0.0.0.0 and localhost</p></div>
-<p>Needless to say, the web is littered with questions about why btn-primary background color is not always white. Most have answers, some with varying degrees of complex css. Others involve changing versions of software. All the while it might just be the URL used to view the page.</p>
-<p>Test in a production environment.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/860/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/860/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[One thing that has always impressed me is the ability of web designers to deal with browser idiosyncrasies. For instance, knowing why this happens in firefox-17.0.1-1.fc17.x86_64 - Needless to say, the web is littered with questions about why btn-primary background color is not always white. Most have answers, some with varying degrees of complex css. [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -180,7 +205,7 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
         <name><![CDATA[Brian Bockelman]]></name>
         <uri>http://osgtech.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[One of the new technologies the OSG Technology area is working on is the <i>HTCondor-CE</i>. &nbsp;While that is a topic for a different post, it led me on a surprising journey over my Christmas break.<br /><br />Working with the <i>HTCondor-CE</i>, I found that creating a <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/4_4Hooks.html">job hook</a> to be surprisingly difficult. &nbsp;A job hook for HTCondor is an external script, invoked by HTCondor in lieu of running internal logic. This allows a sysadmin to add custom logic to HTCondor internals without resorting to writing C++ code. &nbsp;The hook in question is the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/4_4Hooks.html#SECTION00542000000000000000">job transformation step</a> for the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.9/5_6HTCondor_Job.html">JobRouter</a>.<br /><br />The problem with hooks is they are surprisingly difficult to write. &nbsp;For the transform hook, a job's ClassAd is written to the script's stdin and the JobRouter expects to read the transformed ClassAd from stdout. &nbsp;[Actually, it's a touch more complicated than that, but this simplification will do for our discussion.] &nbsp;ClassAds are an expressive and powerful language - but a language difficult to parse via Unix scripting! &nbsp;There are complex quoting and attribute evaluation rules.<br /><br />Sysadmins are left with a decision - either spend quite some time implementing a ClassAd parser or only do the bare minimum and hope no one submits a complex ClassAd. &nbsp;I found <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3380">the situation</a> unsatisfactory and decided to write python bindings for the ClassAd library.<br /><br />I found the&nbsp;endeavor&nbsp;fairly straightforward using the <a href="http://www.boost.org/doc/libs/1_52_0/libs/python/doc/">Boost.Python library</a>, and ended up with a new <a href="https://github.com/bbockelm/python-classad">GitHub project</a>. &nbsp;Now, a job transform hook is as simple as this:<br /><blockquote style="background-color: white;"><div class="verbatim"><pre>#!/usr/bin/python<br /><br />import sys<br />import classad<br /><br />route_ad = classad.ClassAd(sys.stdin.readline())<br />separator_line = sys.stdin.readline()<br />assert separator_line == "------\n"<br />ad = classad.parseOld(sys.stdin)<br /><br />ad["Universe"] = 5<br />ad["GridResource"] = "condor localhost localhost"<br />if "x509UserProxyFirstFQAN" in ad and "/cms" in ad.eval("x509UserProxyFirstFQAN"):<br />    ad["AccountingGroup"] = "cms.%s" % ad.eval("Owner")<br />else:<br />    ad["AccountingGroup"] = "other.%s" % ad.eval("Owner")<br /><br />print ad.printOld(),</pre></div></blockquote>The above script will read the ad from stdin and change the&nbsp;AccountingGroup<br />attribute based on the contents of the&nbsp;x509UserProxyFirstFQAN&nbsp;attribute.<br /><br />Note ClassAds can be constructed from a string or a file object. &nbsp;Each ad can be treated like a python dictionary. &nbsp;Literals are converted to the equivalent python objects; expressions are exposed as objects. &nbsp;For example:<br /><blockquote style="background-color: white;"><div class="verbatim"><pre>&gt;&gt;&gt; import classad<br />&gt;&gt;&gt; ad = classad.ClassAd()<br />&gt;&gt;&gt; expr = classad.ExprTree("2+2")<br />&gt;&gt;&gt; ad["foo"] = expr<br />&gt;&gt;&gt; print ad["foo"]<br />2 + 2<br />&gt;&gt;&gt; print ad["foo"].eval()<br />4<br /></pre></div></blockquote><div>Most of the functionality is exposed; see the <a href="https://github.com/bbockelm/python-classad">GitHub project for examples and unit tests</a>. &nbsp;To make the C++ library safe to export to python, some minor semantics have been changed. &nbsp;Sub-ClassAds and Lists are not yet available via python, but shouldn't be too hard to add.<br /><br />ClassAd Python bindings - maybe not the most life-changing software project in the world. &nbsp;However, they have potential to become one of life's little pleasures for those of us who deal with HTCondor every day!</div>]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -192,26 +217,8 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
         <name><![CDATA[Erik Erlandson]]></name>
         <uri>http://erikerlandson.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts.</p>
-
-<p>When you take the modulus of a random variable, X, the corresponding expected value E[X mod m] is not equal to E[X] mod m.  Consider the following example:</p>
-
-<p><img src="/assets/images/rv_modulus_mean.png" title="An example demonstrating that E[X mod m] != E[X] mod m" alt="Random Variable Images" /></p>
-
-<p>As we see from the example above, the random variables X and Y have the same mean:  E[X] = E[Y] = 0.75, however E[X mod 1] = 0.75 while E[Y mod 1] = 0.5.  One implication is that computing the moments of the modulus of random variables must be on a per-distribution basis, perhaps via monte carlo methods.</p>
+      <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Configuration and policy evaluation]]></title>
-      <link href="http://spinningmatt.wordpress.com/2012/12/10/configuration-and-policy-evaluation/"/>
-      <updated>2012-12-10T12:47:21Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=854</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[Figuring out how evaluation happens in configuration and policy is a common problem. The confusion is justified. Configuration provides substitution with $() syntax, while policy is full ClassAd language evaluation without $() syntax. Configuration is all the parameters listed in files discoverable with condor_config_val -config. Policy is the ClassAd expression found on the right-hand side [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=854&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -309,18 +316,6 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
       <link href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-os-support.html"/>
       <updated>2012-11-06T22:11:00Z</updated>
       <id>tag:blogger.com,1999:blog-3007054864987759910.post-8516182672952525228</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[BOSCO v1.1 Features: Single Port Usage]]></title>
-      <link href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-single-port-usage.html"/>
-      <updated>2012-11-01T20:59:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-2355522235500004311</id>
       <author>
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
