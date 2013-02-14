@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-02-10T15:59:11-07:00</updated>
+  <updated>2013-02-14T07:19:29-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Statistic changes in HTCondor 7.7]]></title>
+      <link href="http://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/"/>
+      <updated>2013-02-12T11:56:04Z</updated>
+      <id>http://spinningmatt.wordpress.com/?p=925</id>
+      <author>
+        <name><![CDATA[Matthew Farrellee]]></name>
+        <uri>http://spinningmatt.wordpress.com</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Notice to HTCondor 7.8 users -</p>
+<p>Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column).</p>
+<p>See – <a href="https://gist.github.com/3911872">7.6 -&gt; 7.8 schedd stats</a><br />
+<small>(embedding content requires javascript, which is not available on wordpress.com)</small></p>
+<p>Note: The *Rate and Mean* attributes require math, and UpdateTime requires memory</p>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/925/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/925/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Using Bosco to submit to Amazon EC2]]></title>
@@ -26,12 +43,12 @@
   
     <entry>
       <title type="html"><![CDATA[How accounting group configuration could work with Wallaby]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
       <updated>2013-02-05T11:46:28Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=917</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools.</p>
 <p>Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration.</p>
@@ -41,17 +58,17 @@
 <p>For instance, agree that tools and administrators will store accounting group configuration on a feature called AccountingGroups, and the tools can use Wallaby&#8217;s API to manipulate the configuration while the following porcelain can simplify the task for managing that configuration by administrators.</p>
 <p>See &#8211; <a href="https://gist.github.com/4074465">wallaby_accounting_group_porcelain.txt</a><br />
 <small>(embedding content requires javascript, which is not available on wordpress.com)</small></p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/917/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/917/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/917/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/917/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
       <title type="html"><![CDATA[Some htcondor-wiki stats]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
       <updated>2013-01-29T11:36:06Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=903</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p>A few years ago I discovered <a href="http://webnumbr.com">Web Numbr</a>, a service that will monitor a web page for a number and graph that number over time.</p>
 <p>I installed a handful of webnumbrs to track things at <a href="http://condor-wiki.cs.wisc.edu">HTCondor&#8217;s gittrac instance</a>.</p>
@@ -64,7 +81,7 @@
 <li><a href="http://webnumbr.com/condor-tickets-with-invalid-version-field">Tickets with invalid version fields:</a> tickets that do not follow the, somewhat strict, version field syntax &#8211; vXXYYZZ, e.g. v070901. All the extra 0s are necessary and the v must be lowercase.</li>
 </ul>
 <p>I wanted to embed the numbers here, but javascript is needed and wordpress.com filters javascript from posts.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/903/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/903/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/903/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/903/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -81,12 +98,12 @@
   
     <entry>
       <title type="html"><![CDATA[Concurrency Limits: Group defaults]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/"/>
       <updated>2013-01-21T12:47:07Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=895</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[<p><a href="http://spinningmatt.wordpress.com/2011/06/27/concurrency-limits-protecting-shared-resources/">Concurrency limits</a> allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time.</p>
 <p>For instance, limit licenses and filer access at four regional data centers.</p>
@@ -126,7 +143,7 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
      75 filer.west
     150 filer.south
 </pre></p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/895/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/895/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/895/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/895/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -138,38 +155,19 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[Today I am pleased to announce that Bosco version 1.1.1 has been released. This is a patch fix for the 1.1 to address 2 issues that where affecting users. &nbsp;The release is available on the <a href="http://bosco.opensciencegrid.org/download/">Bosco Download Page</a>.<br /><br />Release notes for the 1.1.1 release are available on the <a href="https://twiki.grid.iu.edu/bin/view/CampusGrids/Bosco1p1p1ReleaseNotes">OSG Twiki</a>.<br /><br />Bosco 1.1 was a major release with many new features. The 1.1 release notes are also available on the <a href="https://twiki.grid.iu.edu/bin/view/CampusGrids/Bosco1p1ReleaseNotes">OSG Twiki</a>.<br /><br />On behalf of the Bosco Team,<br />Derek Weitzel<br />Dan Fraser<br />Marco Mambelli<br />Jaime Frey<br />Brooklin Gore<br />Miha Ahronovitz <br /> <center><a href="http://bosco.opensciencegrid.org/download/">     <img src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png"       alt="Bosco Download"      style="border-width: 0;"/> </a></center>]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
       <title type="html"><![CDATA[Your API is a feature, give it real resource management]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
       <updated>2013-01-14T12:17:29Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=872</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[<p>So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1].</p>
-<div id="attachment_873" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png"><img src="http://spinningmatt.files.wordpress.com/2013/01/ec2job.png?w=450&#038;h=370" alt="EC2 instance creation without idempotent RunInstance" width="450" height="370" class="size-full wp-image-873" /></a><p class="wp-caption-text">EC2 instance creation without idempotent RunInstance</p></div>
-<p>Above is a state machine required to ensure that resources created in AWS EC2 are not lost, i.e. do not have to be manually cleaned up. The green arrows represent error free flow. The rest is about error handling or external state changes, e.g. user terminated operation. This is from before EC2 supported <a href="http://aws.typepad.com/aws/2010/09/new-amazon-ec2-feature-idempotent-instance-creation.html">idempotent instance creation</a>.</p>
-<p>The state machine rewritten to use idempotent instance creation,</p>
-<div id="attachment_874" class="wp-caption alignnone" style="width: 460px"><a href="http://spinningmatt.files.wordpress.com/2013/01/ec2job-idempotent.png"><img src="http://spinningmatt.files.wordpress.com/2013/01/ec2job-idempotent.png?w=450&#038;h=435" alt="EC2 instance creation with idempotent RunInstance" width="450" height="435" class="size-full wp-image-874" /></a><p class="wp-caption-text">EC2 instance creation with idempotent RunInstance</p></div>
-<p>What&#8217;s going on here? Handling failure during resource creation.</p>
-<p>The important failure to consider as a client is what happens if you ask your resource provider to create something and you never hear back. This is a distributed system, there are numerous reasons why you may not hear back. For simplicity, consider the client code crashed between sending the request and receiving the response.</p>
-<p>The solution is to construct a transaction for resource creation[2]. To construct a transaction, you need to atomically associate a piece of information with the resource at creation time. We&#8217;ll call that piece of information an anima.</p>
-<p>In the old EC2 API, the only way to construct an anima was through controlling a security group or keypair. Since neither is tied to a real economy, both are reasonable options. The non-idempotent state machine above uses the keypair as it is less resource intensive for EC2.</p>
-<p>On creation failure and with the anima in hand[3], the client must search the remote system for the anima before reattempting creation. This is handled by the <code>GM_CHECK_VM</code> state above.</p>
-<p>Unfortunately, without explicit support in the API, i.e. lookup by anima, the search can be unnatural and expensive. For example, EC2 instances are not indexed on keypair. Searching requires a client side scan of all instances.</p>
-<p>With the introduction of idempotent RunInstances, the portion of the state machine for constructing and locating the anima is reduced to the <code>GM_SAVE_CLIENT_TOKEN</code> state, an entirely local operation. The reduction in complexity is clear.</p>
-<p>After two years, EC2 appears to be the only API providing idempotent instance creation[4]. Though APIs are starting to provide atomic anima association, often through metadata or instance attributes, and some even provide lookup.</p>
-<p>You should provide an idempotent resource creation operation in your API too!</p>
-<p>[0] &#8220;in the cloud&#8221; &#8211; really anywhere in any distributed system!<br />
-[1] Making money from forgotten or misplaced resources is a short term play.<br />
-[2] Alternatively, you can choose an architecture with a janitor process, which will bring its own complexities.<br />
-[3] &#8220;in hand&#8221; &#8211; so long as your hand is reliable storage.<br />
-[4] After a quick survey, I&#8217;m looking at you Rackspace, RimuHosting, vCloud, OpenNebula, OpenStack, Eucalyptus, GoGrid, Deltacloud, Google Compute Engine and Gandi.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/872/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/872/" /></a> <img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -182,18 +180,6 @@ $ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uni
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Web design complexity]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/07/web-design-complexity/"/>
-      <updated>2013-01-07T12:27:36Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=860</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[One thing that has always impressed me is the ability of web designers to deal with browser idiosyncrasies. For instance, knowing why this happens in firefox-17.0.1-1.fc17.x86_64 - Needless to say, the web is littered with questions about why btn-primary background color is not always white. Most have answers, some with varying degrees of complex css. [...]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=860&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
