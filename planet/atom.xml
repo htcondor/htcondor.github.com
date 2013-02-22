@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-02-16T09:56:52-07:00</updated>
+  <updated>2013-02-22T14:13:45-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Per-Process Mount Namespaces]]></title>
+      <link href="http://timothysc.github.com/blog/2013/02/22/perprocess/"/>
+      <updated>2013-02-22T16:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/02/22/perprocess</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2>
+
+<p>&#8220;Isolation&#8221; in modern computing comes in many flavors and functions.  Virtual machines, c-groups, chroots/jails,
+sanboxing, and namespaces all have a role to play.  In this post we will review process mount namespace isolation, which allows a process to isolate
+its mount points from the outside world.  Furthermore, it enables cleanup of that namespace, which is highly useful in grid applications.</p>
+
+<hr />
+
+<h2>References</h2>
+
+<p>Before you dive too deep into the code below it&#8217;s important to read up on some kernel goodies:</p>
+
+<ul>
+<li> <a href="http://lwn.net/Articles/159077/">http://lwn.net/Articles/159077/</a></li>
+<li> <a href="http://lwn.net/Articles/159092/">http://lwn.net/Articles/159092/</a></li>
+<li> <a href="http://www.freedesktop.org/software/systemd/man/systemd.exec.html">http://www.freedesktop.org/software/systemd/man/systemd.exec.html</a></li>
+<li> <a href="http://www.ibm.com/developerworks/linux/library/l-mount-namespaces/index.html">http://www.ibm.com/developerworks/linux/library/l-mount-namespaces/index.html</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Deep Thoughts</h2>
+
+<p>It may take some time to digest all of the reading and figure out how to apply namespaces to your application.  I recommend
+re-reading the use cases outlined kernel documentation on shared subtrees.  The nugget of goodness that we wish to apply here is under
+section 4B.</p>
+
+<pre><code>A process wants its mounts invisible to any other process, but
+still be able to see the other system mounts.
+
+Solution:
+
+To begin with, the administrator can mark the entire mount tree
+as shareable.
+
+mount --make-rshared /
+
+A new process can clone off a new namespace. And mark some part
+of its namespace as slave
+
+mount --make-rslave /myprivatetree
+
+Hence forth any mounts within the /myprivatetree done by the
+process will not show up in any other namespace. However mounts
+done in the parent namespace under /myprivatetree still shows
+up in the process's namespace.
+</code></pre>
+
+<p>In summary, you will want your parent process to recursively slave mount /your/loc, as not to pollute the inherited namespace especially
+in cases where the mount points have shared propagation enabled (Default in Fedora).</p>
+
+<hr />
+
+<h2>Testing</h2>
+
+<p>So I&#8217;ve created a simple test application which shows how you to hide subprocess mount points.</p>
+
+<div><script src='https://gist.github.com/5015879.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>For more details, please checkout my <a href="http://github.com/timothysc/tests/tree/master/per_process_mounts">tests repo.</a></p>
+
+<hr />
+
+<h2>Applications</h2>
+
+<ul>
+<li>Cleaning condor job mounts ;-)</li>
+<li>Application security</li>
+<li>User security</li>
+</ul>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Statistic changes in HTCondor 7.7]]></title>
@@ -105,45 +191,7 @@
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[<p><a href="http://spinningmatt.wordpress.com/2011/06/27/concurrency-limits-protecting-shared-resources/">Concurrency limits</a> allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time.</p>
-<p>For instance, limit licenses and filer access at four regional data centers.</p>
-<p><pre class="brush: plain; gutter: false;">
-CONCURRENCY_LIMIT_DEFAULT = 15
-license.north_LIMIT = 30
-license.south_LIMIT = 30
-license.east_LIMIT = 30
-license.west_LIMIT = 45
-filer.north_LIMIT = 75
-filer.south_LIMIT = 150
-filer.east_LIMIT = 75
-filer.west_LIMIT = 75
-</pre></p>
-<p>Notice the repetition.</p>
-<p>In addition to the repetition, every license.* and filer.* must be known and recorded in configuration. The set may be small in this example, but imagine imposing a limit on each user or each submission. The set of users is board, dynamic and may differ by region. The set of submissions is a more extreme version of the users case, yet it is still realistic.</p>
-<p>To simplify the configuration management for groups of limits, a new feature to <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=2863">provide group defaults</a> to limit was added for the Condor 7.8 series.</p>
-<p>The feature requires that only the exception to a rule be called out explicitly in configuration. For instance, license.west and filer.south are the exceptions in the configuration above. Simplified configuration available in 7.8,</p>
-<p><pre class="brush: plain; gutter: false;">
-CONCURRENCY_LIMIT_DEFAULT = 15
-CONCURRENCY_LIMIT_DEFAULT_license = 30
-CONCURRENCY_LIMIT_DEFAULT_filer = 75
-license.west_LIMIT = 45
-filer.south_LIMIT = 150
-</pre></p>
-<p>In action,</p>
-<p><pre class="brush: plain; gutter: false;">
-$ for limit in license.north license.south license.east license.west filer.north filer.south filer.east filer.west; do echo queue 1000 | condor_submit -a cmd=/bin/sleep -a args=1d -a concurrency_limits=$limit; done
-
-$ condor_q -format '%s\n' ConcurrencyLimits -const 'JobStatus == 2' | sort | uniq -c | sort -n
-     30 license.east
-     30 license.north
-     30 license.south
-     45 license.west
-     75 filer.east
-     75 filer.north
-     75 filer.west
-    150 filer.south
-</pre></p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/895/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/895/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -574,18 +622,6 @@ configured but the node needs to be configured to access the shared storage. [..
       <link href="http://osgtech.blogspot.com/2012/02/improving-file-isolation-with-chroot.html"/>
       <updated>2012-02-27T19:33:00Z</updated>
       <id>tag:blogger.com,1999:blog-8803173202887660937.post-4833728643726960817</id>
-      <author>
-        <name><![CDATA[Brian Bockelman]]></name>
-        <uri>http://osgtech.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[File Isolation using bind mounts and chroots]]></title>
-      <link href="http://osgtech.blogspot.com/2012/02/file-isolation-using-bind-mounts-and.html"/>
-      <updated>2012-02-20T16:03:00Z</updated>
-      <id>tag:blogger.com,1999:blog-8803173202887660937.post-5734694593802146494</id>
       <author>
         <name><![CDATA[Brian Bockelman]]></name>
         <uri>http://osgtech.blogspot.com</uri>
