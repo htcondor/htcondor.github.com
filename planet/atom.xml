@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-02-26T11:02:56-07:00</updated>
+  <updated>2013-02-27T11:09:37-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Per-Process Mount Namespaces]]></title>
+      <link href="http://timothysc.github.com/blog/2013/02/22/perprocess/"/>
+      <updated>2013-02-22T16:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/02/22/perprocess</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2>
+
+<p>&#8220;Isolation&#8221; in modern computing comes in many flavors and functions.  Virtual machines, c-groups, chroots/jails,
+sanboxing, and namespaces all have a role to play.  In this post we will review process mount namespace isolation, which allows a process to isolate
+its mount points from the outside world.  Furthermore, it enables cleanup of that namespace, which is highly useful in grid applications.</p>
+
+<hr />
+
+<h2>References</h2>
+
+<p>Before you dive too deep into the code below it&#8217;s important to read up on some kernel goodies:</p>
+
+<ul>
+<li> <a href="http://lwn.net/Articles/159077/">http://lwn.net/Articles/159077/</a></li>
+<li> <a href="http://lwn.net/Articles/159092/">http://lwn.net/Articles/159092/</a></li>
+<li> <a href="http://www.freedesktop.org/software/systemd/man/systemd.exec.html">http://www.freedesktop.org/software/systemd/man/systemd.exec.html</a></li>
+<li> <a href="http://www.ibm.com/developerworks/linux/library/l-mount-namespaces/index.html">http://www.ibm.com/developerworks/linux/library/l-mount-namespaces/index.html</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Deep Thoughts</h2>
+
+<p>It may take some time to digest all of the reading and figure out how to apply namespaces to your application.  I recommend
+re-reading the use cases outlined kernel documentation on shared subtrees.  The nugget of goodness that we wish to apply here is under
+section 4B.</p>
+
+<pre><code>A process wants its mounts invisible to any other process, but
+still be able to see the other system mounts.
+
+Solution:
+
+To begin with, the administrator can mark the entire mount tree
+as shareable.
+
+mount --make-rshared /
+
+A new process can clone off a new namespace. And mark some part
+of its namespace as slave
+
+mount --make-rslave /myprivatetree
+
+Hence forth any mounts within the /myprivatetree done by the
+process will not show up in any other namespace. However mounts
+done in the parent namespace under /myprivatetree still shows
+up in the process's namespace.
+</code></pre>
+
+<p>In summary, you will want your parent process to recursively slave mount /your/loc, as not to pollute the inherited namespace especially
+in cases where the mount points have shared propagation enabled (Default in Fedora).</p>
+
+<hr />
+
+<h2>Testing</h2>
+
+<p>So I&#8217;ve created a simple test application which shows how you to hide subprocess mount points.</p>
+
+<div><script src='https://gist.github.com/5015879.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>For more details, please checkout my <a href="http://github.com/timothysc/tests/tree/master/per_process_mounts">tests repo.</a></p>
+
+<hr />
+
+<h2>Applications</h2>
+
+<ul>
+<li>Cleaning condor job mounts ;-)</li>
+<li>Application security</li>
+<li>User security</li>
+</ul>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Statistic changes in HTCondor 7.7]]></title>
@@ -93,7 +179,7 @@
         <name><![CDATA[Brian Bockelman]]></name>
         <uri>http://osgtech.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[At the heart of the OSG Compute Element (CE) is the gatekeeper software. &nbsp;The gatekeeper software anchors three core pieces of functionality:<br /><ol><li><b>Remote access</b>: The gatekeeper provides a network service that remote clients can contact and interact with.</li><li><b>Authentication and authorization</b>: The gatekeeper is responsible for authenticating the client and deciding on what actions it is authorized to perform.</li><li><b>Resource allocation</b>: The gatekeeper accepts an abstract description of a resource to allocate and actualizes the resource request within the local environment.</li></ol><div>The existing software, Globus GRAM, provides a HTTP-like interface over TLS for remote access. &nbsp;The authentication is done using the Grid Security Infrastructure (GSI), using special client certificates. &nbsp;It does authorization by performing a callout to map the client certificate to a Unix account, then performing all further operations as that Unix user. &nbsp;The resource allocation provides an interface which accepts requests in Globus RSL (a job description language) and interact with a local batch system on the CE to run the job.</div><div><br /></div><div>With the HTCondor team, the OSG has been working to provide an alternate gatekeeper implementation, the <i style="font-weight: bold;">HTCondor-CE</i>. &nbsp;The HTCondor-CE is a special configuration of the HTCondor software which provides the three core pieces of functionality described above.</div><div><br /></div><div>HTCondor provides remote access using a custom communication protocol and called CEDAR. &nbsp;CEDAR provides a RPC and messaging mechanism over UDP or TCP, and can provide various levels of integrity or encryption based upon the session parameters. &nbsp;While the HTCondor-CE will ship with the same GSI authentication and authorization as Globus GRAM, it can be reconfigured to provide alternate authentication mechanisms such as Kerberos, SSL, shared secret, or even IP-based authentication.</div><div><br /></div><div>The HTCondor-CE allocates resources via having the client submit HTCondor jobs to a scheduler running on the CE (the schedd daemon). &nbsp;We refer to this as the "<i>grid job</i>". &nbsp;A separate daemon, the JobRouter, is responsible for transforming the <i>grid job</i>&nbsp;to a resource allocation for site. &nbsp;For a site with a HTCondor batch system, it will transform and mirror the <i>grid job</i>&nbsp;into the <i>routed job</i>&nbsp;in the site's batch system. &nbsp;The process is illustrated below:</div><div><br /></div><div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-UbMFNUvwsVs/UQaP3f6n4jI/AAAAAAAACl4/OqW79vo6g4I/s1600/HTCondorCE_Condor.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="306" src="http://2.bp.blogspot.com/-UbMFNUvwsVs/UQaP3f6n4jI/AAAAAAAACl4/OqW79vo6g4I/s320/HTCondorCE_Condor.png" width="320" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">The submit workflow for the HTCondor-CE running on a site with the HTCondor batch system. &nbsp;Notice the JobRouter copies the job directly into the site's batch system.</td></tr></tbody></table><span id="goog_33533915"></span><span id="goog_33533916"></span>For sites with the PBS batch system, the <i>routed job</i>&nbsp;stays in the HTCondor-CE schedd (as the JobRouter does not know how to submit directly into the PBS queue), and the job is submitted into PBS using the blahp daemon. &nbsp;See the illustration below:<br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://3.bp.blogspot.com/-IagX60Tm5WQ/UQaQd7aZNkI/AAAAAAAACmA/OKNIpiTEQ-4/s1600/CondorCE_PBS.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="292" src="http://3.bp.blogspot.com/-IagX60Tm5WQ/UQaQd7aZNkI/AAAAAAAACmA/OKNIpiTEQ-4/s320/CondorCE_PBS.png" width="320" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">The HTCondor-CE submit workflow for a PBS site. &nbsp;Notice the blahp, not the JobRouter, does the submission to PBS in this case.</td></tr></tbody></table>The blahp daemon is a common piece of software for interacting with batch systems - in addition to being integrated in the HTCondor grid universe, it also is used by the BOSCO project and the CREAM CE.<br /><br />Note there is no requirement that the job be routed into a batch system - given the appropriate transform logic. the JobRouter could also transform the grid job into VM running in Amazon EC2, an OpenStack instance, or a job for another HTCondor-CE!<br /><br />The CE is quite flexible; it is a configuration of the HTCondor software and leverages all the features available in HTCondor. &nbsp;As another example, we benefit from the fact that HTCondor's security uses sessions; clients do not re-authenticate for each status update. &nbsp;Future features, such as the sandbox size limits in the upcoming 7.9.4, can be used immediately by the CE through a configuration file change.<br /><br />The HTCondor-CE is currently under development, although functionality has been demonstrated using glideinWMS for up to 5,000 running pilots. &nbsp;It requires HTCondor 7.9.2 or later, so we are waiting for the next stable release (due late April) before starting to release the CE more widely. &nbsp;As we near release, I am planning on doing additional updates on specific pieces of this technology.<br /><br />We're looking forward to see how users will put it into action!<br /><br /></div>]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -247,6 +333,19 @@
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[Override HTCondor installation with sudo]]></title>
+      <link href="http://timothysc.github.com/blog/2012/11/12/condor-sudo/"/>
+      <updated>2012-11-12T09:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/11/12/condor-sudo</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[BOSCO v1.1 Features: Multi-OS Support]]></title>
       <link href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-os-support.html"/>
       <updated>2012-11-06T22:11:00Z</updated>
@@ -370,6 +469,19 @@ configured but the node needs to be configured to access the shared storage. [..
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[Elastic Grid with Condor and oVirt Integration]]></title>
+      <link href="http://timothysc.github.com/blog/2012/09/21/condor-n-overt/"/>
+      <updated>2012-09-21T08:50:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/09/21/condor-n-overt</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[Putting It Together]]></title>
       <link href="http://rrati.github.com/blog/2012/09/18/putting-it-together/"/>
       <updated>2012-09-18T12:59:00Z</updated>
@@ -404,6 +516,18 @@ configured but the node needs to be configured to access the shared storage. [..
         <uri>http://willbenton.com</uri>
       </author>
       <content type="html"><![CDATA[Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways. This post will explain how the authorization support works and show how to...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Dust off nuke it from orbit]]></title>
+      <link href="http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit/"/>
+      <updated>2012-09-12T09:12:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/09/12/dust-off-nuke-it-from-orbit</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -486,18 +610,6 @@ configured but the node needs to be configured to access the shared storage. [..
       <link href="http://osgtech.blogspot.com/2012/03/resource-isolation-in-condor-using.html"/>
       <updated>2012-03-10T19:28:00Z</updated>
       <id>tag:blogger.com,1999:blog-8803173202887660937.post-2804145841486035015</id>
-      <author>
-        <name><![CDATA[Brian Bockelman]]></name>
-        <uri>http://osgtech.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Improving File Isolation with chroot]]></title>
-      <link href="http://osgtech.blogspot.com/2012/02/improving-file-isolation-with-chroot.html"/>
-      <updated>2012-02-27T19:33:00Z</updated>
-      <id>tag:blogger.com,1999:blog-8803173202887660937.post-4833728643726960817</id>
       <author>
         <name><![CDATA[Brian Bockelman]]></name>
         <uri>http://osgtech.blogspot.com</uri>
