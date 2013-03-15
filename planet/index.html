@@ -9,8 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Background &#8220;Isolation&#8221; in modern computing comes in many flavors and functions. Virtual machines, c-groups, chroots/jails,
-sanboxing, and &hellip;">
+  <meta name="description" content="We want to invite you to HTCondor Week 2013
+, our annual HTCondor user conference, in beautiful Madison, WI April 29-May 3, 2013. (HTCondor Week was &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,41 @@ sanboxing, and &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2013/"> Paradyn/HTCondor Week 2013 registration open (March 8, 2013)</a></h1>
+      <p class="meta">
+        <time datetime="2013-03-08T06:00:00Z" pubdate data-updated="true">Mar 8<span>th</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">We want to invite you to 
+HTCondor Week 2013
+, our annual HTCondor user conference, in beautiful Madison, WI April 29-May 3, 2013. (HTCondor Week was formerly named Condor Week, matching 
+a name change for the software.) We will again host HTCondor Week at the Wisconsin Institutes for Discovery, a state of the art facility for academic and private research specifically designed to foster private and public collaboration. It provides HTCondor Week attendees a compelling environment to attend tutorials and talks from HTCondor developers and users like you. It also provides many comfortable spaces for one-on-one or small group collaborations throughout the week. This year we continue our partnership with the Paradyn Tools Project, making this year Paradyn/HTCondor Week 2013. There will be a full slate of tutorials and talk for both HTCondor and Paradyn.
+
+Our current development series, 7.9, is well underway toward our upcoming production release. When you attend, you will learn how to take advantage of the latest features such as per-job PID namespaces, cgroup enforced resource limits, Python bindings, CPU affinity, BOSCO for submitting jobs to remote batch systems without administrator assistance, EC2 spot instance support, and a variety of speed and memory optimizations. You'll also get a peek into our longer term development plans--something you can only get at HTCondor Week!
+
+We will have a variety of in-depth tutorials, talks, and panels where you can not only learn more about HTCondor, but you can also learn how other people are using and deploying HTCondor. Best of all you can establish contacts and learn best practices from people in industry, government and academia who are using HTCondor to solve hard problems, many of which may be similar to those facing you.
+
+Speaking of learning from the community, we'd love to have you give a talk at HTCondor Week. Talks are 20 minutes long and are a great way share your ideas and get feedback from the community. If you have a compelling use of HTCondor you'd like to share, let Alan De Smet know (adesmet@cs.wisc.edu) and he'll help you out. 
+
+More information on speaking at HTCondor Week is available at the HTCondor Week web site.
+
+You can register, get the hotel details and see the agenda overview on  
+the HTCondor Week 2013 site. See you soon in Madison! 
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2013/03/running-quantum-espresso-on-osg.html">Running Quantum Espresso on the OSG</a></h1>
+      <p class="meta">
+        <time datetime="2013-03-05T18:53:00Z" pubdate data-updated="true">Mar 5<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">While running Quantum Espresso on the Open Science Grid, we found a number of issues:<br /><ul><li>OpenMPI needs to have an rsh binary. &nbsp;Even if you are using shared memory for openmpi, and openmpi does not use rsh, it still looks for the binary and fails if it cannot find it.</li><li>Chroots (used on HCC machines for grid jobs) do not support pty's. &nbsp;OpenMPI has a compile option to turn off pty support.</li></ul><div>Once these issues where fixed, we were able to submit QE jobs to the OSG using Condor's partitionable slots on 8 cores.</div><div><br /></div><h3>Preparing Submission</h3><div>Before submitting our first QE job, we had to compile OpenMPI and QE. &nbsp;Since we are an HPC center, we had OpenMPI compiled for our Infiniband, therefore it would always fail on the OSG where there is no Infiniband (let alone our brand and drivers).</div><div><br /></div><div>After compiling, we created compressed files that contained the required files to run QE:</div><div><ul><li>bin.tar.gz - Only includes the cp.x file, specific to our run. &nbsp;It could have well included much more common pw.x.</li><li>lib.tar.gz - Includes the Intel math libraries and libgfortran.</li><li>openmpi.tar.gz - Includes the entire openmpi install directory (make install)</li></ul></div><div>Additionally, we wrote a wrapper script, run_espresso_grid.sh, that unpacks the required files and sets the environment.<br /><br /><div class="gistLoad" data-id="5093020" id="gist-5093020"><pre>#!/bin/bash<br />tar xzf bin.tar.gz<br />tar xzf lib.tar.gz<br />tar xzf pseudo.tar.gz<br />tar xzf openmpi.tar.gz<br />mkdir tmp<br /> <br />export PATH=$PWD/bin:$PWD/openmpi/bin:$PATH<br />export LD_LIBRARY_PATH=$PWD/lib:$PWD/openmpi/lib:$LD_LIBRARY_PATH<br />export OPAL_PREFIX=$PWD/openmpi<br /> <br />mpirun --mca orte_rsh_agent `pwd`/rsh -np 8 cp.x &lt; h2o-64-grid.in &gt; h2o-64-grid.out<br /></pre></div><h3>Submission</h3></div><div>We used GlideinWMS to submit to the OSG, below is our HTCondor submit file.</div><div><div class="gistLoad" data-id="5092949" id="gist-5092949"><pre>universe = vanilla<br />output = condor.out.$(CLUSTER).$(PROCESS)<br />error = condor.err.$(CLUSTER).$(PROCESS)<br />log            = condor.log<br />executable = run_espresso_grid.sh<br />request_cpus=8<br />request_memory = 10*1024<br />should_transfer_files = YES<br />when_to_transfer_output = ON_EXIT_OR_EVICT<br />transfer_input_files = bin.tar.gz, lib.tar.gz, pseudo.tar.gz, openmpi.tar.gz, h2o-64-grid.in, /usr/bin/rsh<br />transfer_output_files =h2o-64-grid.out<br />+RequiresWholeMachine=True<br />Requirements = CAN_RUN_WHOLE_MACHINE =?= TRUE<br />queue <br /></pre></div><br /></div><div>Note that we pull rsh from the submission machine. &nbsp;OpenMPI does not actually use rsh to start the processes on a shared memory machine, but it does require that the RSH binary is available.<br /><br /></div><div><h3>Acknowledgments</h3></div><div>This was done with the tremendous help of Jun Wang.</div><div><br /></div><script src="https://raw.github.com/moski/gist-Blogger/master/public/gistLoader.js" type="text/javascript"></script> <br /><center><br /><a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/88x31.png" style="border-width: 0;" /></a><br />This work is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license">Creative Commons Attribution 3.0 Unported License</a>. </center></div>
+  </article>
 
   <article>
     <header>
@@ -157,17 +192,29 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="manual/v7.9/9_3Development_Release.html"> HTCondor 7.9.4 released! (February 20, 2013)</a></h1>
+      <p class="meta">
+        <time datetime="2013-02-20T06:00:00Z" pubdate data-updated="true">Feb 20<span>th</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 7.9.4.
+This release supports per job PID namespaces for Linux RHEL 6, improvements
+to the resource usage of the EC2 GAHP, support for capping the size of input
+and output file transfer, and new analysis modes for condor_q -analyze.
+A complete list of bugs fixed and features can be found in the
+Version History. HTCondor 7.9.4 binaries
+and source code are available from our Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/">Statistic changes in HTCondor 7.7</a></h1>
       <p class="meta">
         <time datetime="2013-02-12T11:56:04Z" pubdate data-updated="true">Feb 12<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content"><p>Notice to HTCondor 7.8 users -</p>
-<p>Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column).</p>
-<p>See – <a href="https://gist.github.com/3911872">7.6 -&gt; 7.8 schedd stats</a><br />
-<small>(embedding content requires javascript, which is not available on wordpress.com)</small></p>
-<p>Note: The *Rate and Mean* attributes require math, and UpdateTime requires memory</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/925/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/925/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -177,7 +224,7 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
         <time datetime="2013-02-06T04:27:00Z" pubdate data-updated="true">Feb 6<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
       </p>
     </header>
-    <div class="entry-content">A homework assignment for my storage class required running ~30 hours of benchmarks of the btrfs and ext4 filesystems. &nbsp;I thought this would be an excellent time to test Bosco's ability to submit to Amazon EC2 to parallelize the benchmarks.<br /><br /><h3>Preparing Submission</h3><div>In order to start instances on Amazon EC2, you first need to sign up. &nbsp;Go to&nbsp;<a href="https://aws.amazon.com/">https://aws.amazon.com/</a>&nbsp;and sign up in the top right. &nbsp;After you sign up, you will need the access and secret key. &nbsp;These can be found in the 'Security Credentials' from the account drop down box. &nbsp;They are in the 'Access Keys' tab under the&nbsp;'Access Key ID' and&nbsp;'Secret Access Key'. &nbsp;Write those values in 2 files, you will need them when you submit EC2 instances.</div><div><br /></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://1.bp.blogspot.com/-0l_ddtj9fXc/URHJOTsFD8I/AAAAAAAAB2o/lAp3Yn_RVS8/s1600/amazoncred.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="441" src="http://1.bp.blogspot.com/-0l_ddtj9fXc/URHJOTsFD8I/AAAAAAAAB2o/lAp3Yn_RVS8/s640/amazoncred.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">Screenshot of Amazon Security credentials site</td></tr></tbody></table><div><br /></div><div><br /></div><div>Next, you will need a script to run at startup of the Amazon instance. &nbsp;When the instance starts up, a service named <a href="https://help.ubuntu.com/community/CloudInit">CloudInit</a>&nbsp;also start on the instance. &nbsp;It will&nbsp;interpret&nbsp;the user data file as a shell script which can setup and start any other services you would like. &nbsp;My shell script is provided below.</div><div><div class="gistLoad" data-id="4719948" id="gist-4719948">Loading ....</div></div><div><br /></div><div>This shell script will install python-boto (python bindings for S3 storage and ec2) and git onto the instance. &nbsp;Next, it will download the filebenchrunner (Benchmark runner for the homework), and start it. &nbsp;Most people will probably want to shut down the instance after you are done with processing, in that case you can just add to the bottom a 'poweroff'. <br /><br /><h3>Running the Instance</h3></div><div>Running an Amazon instance is as easy as running a Bosco job. &nbsp;First, you must create a Bosco submit file. &nbsp;Below is the one I used:</div><div><div class="gistLoad" data-id="4720141" id="gist-4720141"><br /></div><div><br />Some important things to note. &nbsp;I specified ec2_spot_price, which is the amount I am willing to pay for my m1.medium instance to run per hour. &nbsp;I said $0.04 an hour, which is pretty low, but reasonable for a medium instance. &nbsp;You can find all of the current spot prices either in the AWS console, or on the EC2 <a href="https://aws.amazon.com/ec2/spot-instances/#7">website</a>. &nbsp;As you can see, the spot prices are much, much smaller than the on-demand price of an instance. &nbsp;For example, for the m1.medium instance, which has 1.7 GB of ram and 1 core, the spot price currently is $0.013 per hour. &nbsp;The on-demand price is $0.120 per hour. &nbsp;That's a 90% discount on a m1.medium. &nbsp;Of course, you should always read the <a href="https://aws.amazon.com/ec2/spot-instances/#4">downsides</a> of using a spot instance, such as it can be terminated at any time, without warning, by Amazon. &nbsp;For my benchmarks, I can always re-run benchmarks if my instance is terminated. &nbsp;I needed to run 10 - 10 minute benchmarks, therefore after every benchmark, I uploaded the resulting data to S3&nbsp;immediately so I wouldn't lose any work if the instance was terminated.<br /><br />Also, I used the regular Amazon Linux AMI. &nbsp;They are listed on the Amazon <a href="https://aws.amazon.com/amazon-linux-ami/">website</a>. &nbsp;I could have very well used a CentOS, Ubuntu, or any other linux image for my instance. &nbsp;But, I prefer the official Linux AMI since it provides a very up to date OS which is very similar to the feel of a CentOS 6 instance. &nbsp;For example, it uses yum for repository management, and RPM's to install. &nbsp;And has versions (except for the kernel) similar to CentOS 6.<br /><br />I also added a special command, periodic_remove, in order to terminate the instance if something went wrong inside the instance. &nbsp;Sometimes yum can hang, or the instance may not start up properly. &nbsp;In those cases, amazon will not notify you of the problem, and Bosco will not be able to determine there is an issue. &nbsp;Since my benchmarks should not last longer than 100 minutes, I automatically remove the instance after 150 minutes (a little breathing room) of running.<br /><br />You may submit the instance with the normal 'condor_submit' command. &nbsp;The job will move to the <b>R</b>unning state when the instance has begun running.<br /><br />Once the instance has started, you may ssh into the instance by using the unique ssh key that Bosco generates for you. &nbsp;It is specified in the submit file as&nbsp;ec2_keypair_file. &nbsp;You also need the DNS name for the instance, which is available in the job's classad. <br /><pre>condor_q -run</pre><br />The command will output the hostname of the EC2 host.  You may connect to the EC2 instance with the command, replacing the XXXX with the job number, and hostname with the address you get from the above command:<br /><pre>$ ssh -i keyfile.XXXXX ec2-user@<span style="color: red;">hostname</span></pre><br /><h3>Summary</h3><div>Pros of using Bosco to submit Amazon EC2 Jobs:</div><div><ul><li>Simple management of Amazon instance <b>from your workstation</b>.</li><li>Specify spot price right inside of the job description.</li><li>Ability to bootstrap the instance easily with user data scripts.</li><li>Ability to use HTCondor policies in order to manage the instances, such as periodic remove statement above.</li></ul>Cons:</div><div><ul><li>The EC2 universe is only available on Linux builds of Bosco. &nbsp;You cannot manage EC2 instances on the Mac version of Bosco.</li><li>Amazon EC2 has hundreds and hundreds of features, Bosco only allows you to use the simple submit EC2 instances and spot pricing. &nbsp;You will not be able to use the vast majority when you are using Bosco to manage your instances. &nbsp;But if all you need is to run some processing, Bosco is great!</li></ul></div><br /></div><script src="https://raw.github.com/moski/gist-Blogger/master/public/gistLoader.js" type="text/javascript"></script></div><center><a href="http://bosco.opensciencegrid.org/download/">     <img src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png"       alt="Bosco Download"      style="border-width: 0;" /> </a><br /><a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/88x31.png" style="border-width: 0;" /></a><br />This work is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license">Creative Commons Attribution 3.0 Unported License</a>. </center></div>
+    <div class="entry-content"></div>
   </article>
 
   <article>
@@ -187,15 +234,7 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
         <time datetime="2013-02-05T11:46:28Z" pubdate data-updated="true">Feb 5<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content"><p>Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools.</p>
-<p>Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration.</p>
-<p>Quick background, <a href="http://getwallaby.com/">Wallaby</a> provides semantic configuration for HTCondor. It models a pool as parameters aggregated into features and nodes aggregated in groups, with features and individual parameters associated with nodes and groups. It provides semantic validation of configuration before it is distributed, and has expert knowledge for minimal impact configuration changes.</p>
-<p>And, accounting group configuration in HTCondor is spread across seven fixed parameters (GROUP_NAMES, GROUP_ACCEPT_SURPLUS, GROUP_SORT_EXPR, GROUP_NAMES, GROUP_QUOTA_ROUND_ROBIN_RATE, GROUP_AUTOREGROUP, GROUP_QUOTA_MAX_ALLOCATION_ROUNDS), and another five dynamic parameters (GROUP_ACCEPT_SURPLUS_groupname, GROUP_AUTOREGROUP_groupname, GROUP_PRIO_FACTOR_groupname, GROUP_QUOTA_groupname, GROUP_QUOTA_DYNAMIC_groupname). These are dynamic because the &#8220;groupname&#8221; in the parameter is any name listed in the GROUP_NAMES parameter.</p>
-<p>In addition to its other features, Wallaby has an <a href="http://getwallaby.com/2010/10/extending-the-wallaby-shell/">extensible shell mechanism</a>, which can be used to create task specific porcelain.</p>
-<p>For instance, agree that tools and administrators will store accounting group configuration on a feature called AccountingGroups, and the tools can use Wallaby&#8217;s API to manipulate the configuration while the following porcelain can simplify the task for managing that configuration by administrators.</p>
-<p>See &#8211; <a href="https://gist.github.com/4074465">wallaby_accounting_group_porcelain.txt</a><br />
-<small>(embedding content requires javascript, which is not available on wordpress.com)</small></p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/917/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/917/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -205,18 +244,7 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
         <time datetime="2013-01-29T11:36:06Z" pubdate data-updated="true">Jan 29<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content"><p>A few years ago I discovered <a href="http://webnumbr.com">Web Numbr</a>, a service that will monitor a web page for a number and graph that number over time.</p>
-<p>I installed a handful of webnumbrs to track things at <a href="http://condor-wiki.cs.wisc.edu">HTCondor&#8217;s gittrac instance</a>.</p>
-<p><a href="http://webnumbr.com/search?query=condor">http://webnumbr.com/search?query=condor</a></p>
-<p>Thing such as -</p>
-<ul>
-<li><a href="http://webnumbr.com/condor-resolved-tickets-with-no-destination">Tickets resolved with no destination:</a> tickets that don&#8217;t indicate what version they were fixed in. Anyone wanting to know if a bug is fixed or feature was added to their version of HTCodnor and encounters one of these will have to go spelunking in the repository for their answer.</li>
-<li><a href="http://webnumbr.com/condor-resolved-and-unassigned-tickets">Tickets resolved but not assigned:</a> tickets that were worked on, completed, but whomever worked on them never claimed ownership.</li>
-<li><a href="http://webnumbr.com/condor-action-items-with-commits">Action items with commits:</a> tickets that are marked as Todo/Incident, yet have associated code changes. Once there is a code change the ticket is either a bug fix (ticket type: defect) or feature addition (ticket type: enhancement). Extra work is imposed on whomever comes after the ticket owner who wants to understand what they are looking at. Additionally, these tickets skew information about bugs and features in releases.</li>
-<li><a href="http://webnumbr.com/condor-tickets-with-invalid-version-field">Tickets with invalid version fields:</a> tickets that do not follow the, somewhat strict, version field syntax &#8211; vXXYYZZ, e.g. v070901. All the extra 0s are necessary and the v must be lowercase.</li>
-</ul>
-<p>I wanted to embed the numbers here, but javascript is needed and wordpress.com filters javascript from posts.</p>
-<br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/903/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/903/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -287,6 +315,23 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
       </p>
     </header>
     <div class="entry-content"><p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v7.8/9_3Stable_Release.html"> HTCondor 7.8.7 released! (December 18, 2012)</a></h1>
+      <p class="meta">
+        <time datetime="2012-12-18T06:00:00Z" pubdate data-updated="true">Dec 18<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 7.8.7.
+This release contains several bug fixes related to grid jobs, including EC2 resource jobs. 
+It has bug fixes for glexec, privilege separation, condor_chirp, and a bug that prevented
+HTCondor from being stopped on system shutdown on Red Hat Linux systems. A complete list
+of bugs fixed can be found in the 
+Version History.  HTCondor 7.8.7
+and source code are available from our Downloads page.
 </div>
   </article>
 
@@ -364,16 +409,6 @@ in cases where the mount points have shared propagation enabled (Default in Fedo
     </header>
     <div class="entry-content"><h2>Background</h2> [...]
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-os-support.html">BOSCO v1.1 Features: Multi-OS Support</a></h1>
-      <p class="meta">
-        <time datetime="2012-11-06T22:11:00Z" pubdate data-updated="true">Nov 6<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
   </article>
 
   <article>
@@ -586,16 +621,6 @@ configured but the node needs to be configured to access the shared storage. [..
     <div class="entry-content"></div>
   </article>
 
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://osgtech.blogspot.com/2012/03/resource-isolation-in-condor-using.html">Resource Isolation in Condor using cgroups</a></h1>
-      <p class="meta">
-        <time datetime="2012-03-10T19:28:00Z" pubdate data-updated="true">Mar 10<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Brian Bockelman</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
-  </article>
-
 </div>
 <aside class="sidebar">
   <section>
@@ -616,6 +641,8 @@ configured but the node needs to be configured to access the shared storage. [..
       <a href="http://rrati.github.com/"> Robert Rati</a><br>
     
       <a href="http://timothysc.github.com/"> Timothy St. Clair</a><br>
+    
+      <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
     
       <a href="http://htcondor.github.com/"> HTCondor Team GitHub</a><br>
     
