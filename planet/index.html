@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor negotiator assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the NEGOTIATOR_INTERVAL &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 7.8.8.
+This release contains bug fixes for reconnection failure when using CCB, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,23 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v7.8/9_3Stable_Release.html"> HTCondor 7.8.8 released! ( March 28, 2013 )</a></h1>
+      <p class="meta">
+        <time datetime="2013-03-28T05:00:00Z" pubdate data-updated="true">Mar 28<span>th</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 7.8.8.
+This release contains bug fixes for reconnection failure when using CCB, 
+introduces automatic retries for some glexec errors, 
+and fixes several other grid related bugs.
+A complete list of bugs fixed can be found in the
+Version History. HTCondor 7.8.8 binaries
+and source code are available from our Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -767,23 +785,6 @@ and source code are available from our Downloads page.
       </p>
     </header>
     <div class="entry-content"><p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v7.8/9_3Stable_Release.html"> HTCondor 7.8.7 released! (December 18, 2012)</a></h1>
-      <p class="meta">
-        <time datetime="2012-12-18T06:00:00Z" pubdate data-updated="true">Dec 18<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 7.8.7.
-This release contains several bug fixes related to grid jobs, including EC2 resource jobs. 
-It has bug fixes for glexec, privilege separation, condor_chirp, and a bug that prevented
-HTCondor from being stopped on system shutdown on Red Hat Linux systems. A complete list
-of bugs fixed can be found in the 
-Version History.  HTCondor 7.8.7
-and source code are available from our Downloads page.
 </div>
   </article>
 

@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-03-27T13:19:04-07:00</updated>
+  <updated>2013-04-01T11:54:25-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 7.8.8 released! ( March 28, 2013 )]]></title>
+      <link href="manual/v7.8/9_3Stable_Release.html"/>
+      <updated>2013-03-28T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.8.8.
+This release contains bug fixes for reconnection failure when using CCB, 
+introduces automatic retries for some glexec errors, 
+and fixes several other grid related bugs.
+A complete list of bugs fixed can be found in the
+Version History. HTCondor 7.8.8 binaries
+and source code are available from our Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[The Impact of Negotiator Cycle Cadence on Slot Loading]]></title>
@@ -745,25 +764,6 @@ and source code are available from our Downloads page.
         <uri>http://erikerlandson.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 7.8.7 released! (December 18, 2012)]]></title>
-      <link href="manual/v7.8/9_3Stable_Release.html"/>
-      <updated>2012-12-18T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.8.7.
-This release contains several bug fixes related to grid jobs, including EC2 resource jobs. 
-It has bug fixes for glexec, privilege separation, condor_chirp, and a bug that prevented
-HTCondor from being stopped on system shutdown on Red Hat Linux systems. A complete list
-of bugs fixed can be found in the 
-Version History.  HTCondor 7.8.7
-and source code are available from our Downloads page.
 ]]></content>
     </entry>
   
