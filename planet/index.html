@@ -9,8 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 7.8.8.
-This release contains bug fixes for reconnection failure when using CCB, &hellip;">
+  <meta name="description" content="The Spark project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java. It offers map, filter, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +69,228 @@ This release contains bug fixes for reconnection failure when using CCB, &hellip
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2013/04/installing-spark-on-fedora-18.html">Installing Spark on Fedora 18</a></h1>
+      <p class="meta">
+        <time datetime="2013-04-11T21:37:28Z" pubdate data-updated="true">Apr 11<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Will Benton</time>
+      </p>
+    </header>
+    <div class="entry-content">
+        <p>The <a href="http://spark-project.org">Spark</a> project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java.  It offers map, filter, and reduce operations over in-memory collections, data from local files, or data taken from HDFS, but unlike standard map-reduce frameworks, it offers the opportunity to cache intermediate results across the cluster (and can thus offer orders-of-magnitude improvements over standard map-reduce when implementing iterative algorithms).  I&#8217;ve been using it lately and have been really impressed.  However &#8212; as with many cool projects in the &#8220;big data&#8221; space &#8212; the chain of dependencies to get a working installation can be daunting.</p>
+
+<p>In this post, we&#8217;ll walk through setting up Spark to run on a stock Fedora 18 installation.  We&#8217;ll also build the Mesos cluster manager so that we can run Spark jobs under Mesos, and we&#8217;ll build Hadoop with support for Mesos (so that we&#8217;ll have the option to run standard Hadoop MapReduce jobs under Mesos as well).  By following these steps, you should be up and running with Spark quickly and painlessly.</p>
+
+        <h3>Preliminary steps</h3>
+
+<p>You&#8217;ll first need to install some packages so that you&#8217;ll have all of the build dependencies for the packages you&#8217;ll want to install.  You may have some of these already installed, depending on what Fedora installation type you&#8217;ve used and what packages you&#8217;ve already installed, but this list should cover bringing you from a minimal Fedora installation to one that can support building Mesos, Hadoop, and Spark.</p>
+
+<p>First, we&#8217;ll install some essential tools that might not already be on your system:</p>
+
+<pre><code>sudo yum install -y git wget patch tar autoconf automake autotools libtool bzip2
+</code></pre>
+
+<p>Then, we&#8217;ll install some compilers, language environments, build tools, and support libraries:</p>
+
+<pre><code>sudo yum install -y gcc gcc-c++ python scala
+sudo yum install -y java-devel python-devel zlib-devel libcurl-devel openssl-devel
+sudo yum install -y ant maven maven2
+</code></pre>
+
+<p>We should now have all of the dependencies installed to build Mesos, Hadoop, and Spark.</p>
+
+<h3>Building Mesos</h3>
+
+<p>Set <code>JAVA_HOME</code> in your environment:</p>
+
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-1.7.0/
+</code></pre>
+
+<p>Then create a working directory and clone the Mesos source repository.  This will take a little while, since it&#8217;s a large (~180mb) repository:</p>
+
+<pre><code>mkdir ~/build
+cd ~/build
+git clone https://github.com/apache/mesos.git
+</code></pre>
+
+<p>We&#8217;re going to be working from the <code>0.12.x</code> branch of the Mesos repository.  Check that out:</p>
+
+<pre><code>cd mesos
+git checkout 0.12.x
+</code></pre>
+
+<p>Now we can actually build Mesos:</p>
+
+<pre><code>./bootstrap
+./configure --with-webui --with-included-zookeeper --disable-perftools
+make &amp;&amp; sudo make install
+</code></pre>
+
+<h3>Building and running Hadoop</h3>
+
+<p>You can run Spark jobs under Mesos without using Hadoop at all, and Spark running under Mesos can get data from HDFS even if the HDFS service isn&#8217;t itself running under Mesos.  However, in order to run Hadoop MapReduce jobs under Mesos, we&#8217;ll need to build a patched version of Hadoop.  If you already have Hadoop installed and running and are interested simply in running Spark against data in HDFS, you can skip this step, but if you don&#8217;t have Hadoop installed, installing it this way is simple and will give you greater flexibility in the future.</p>
+
+<p>Building the patched Hadoop is straightforward, since patches and build scripts are bundled with Mesos.  Simply run the following command from within your <code>mesos</code> directory and follow the prompts:</p>
+
+<pre><code>./hadoop/TUTORIAL.sh
+</code></pre>
+
+<p>It will explain what it is doing while downloading, patching, and building Hadoop.  It will then run an example Hadoop MapReduce job to make sure everything is working properly and remind you that you&#8217;ll need to make changes to the MapReduce configuration before running MapReduce jobs on your Mesos cluster.  Since we aren&#8217;t going to be running Hadoop MapReduce jobs under Mesos right away, we&#8217;ll skip that step for now.  However, we will be making some minor configuration changes.</p>
+
+<p>First, while you&#8217;re still in the <code>mesos</code> directory, change to the directory where you built your patched Hadoop:</p>
+
+<pre><code>cd hadoop/hadoop-0.20.205.0/
+</code></pre>
+
+<p>Then edit <code>conf/hadoop-env.sh</code> with your favorite editor, replacing the commented-out line that sets <code>JAVA_HOME</code> with the following:</p>
+
+<pre><code>export JAVA_HOME=/usr/lib/jvm/java-1.7.0/
+</code></pre>
+
+<p>Finally, edit <code>conf/core-site.xml</code> and add the following property:</p>
+
+<pre><code>&lt;property&gt;
+  &lt;name&gt;fs.default.name&lt;/name&gt;
+  &lt;value&gt;hdfs://localhost:9100&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+
+<p>Now we&#8217;re ready to run Hadoop.  Check to make sure that you can <code>ssh</code> to your local machine without a password, since the Hadoop startup scripts will do this several times and you will get tired of typing your password.  If you can&#8217;t and you already have a SSH key pair, append your public key to your <code>authorized_keys</code> file and make sure it&#8217;s only readable by you.  If you don&#8217;t already have a SSH key pair on your machine, you can simply type in the following commands for a local-only setup:</p>
+
+<pre><code>ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+cat ~/.ssh/id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+</code></pre>
+
+<p>Now you&#8217;re ready to format your HDFS storage:</p>
+
+<pre><code>./bin/hadoop namenode -format
+</code></pre>
+
+<p>Next, start all of the Hadoop daemons:</p>
+
+<pre><code>cd ~/build/mesos/hadoop/hadoop-0.20.205.0/
+./bin/start-all.sh
+</code></pre>
+
+<p>If you&#8217;re running as <code>root</code> (shame on you!), you&#8217;ll get an error that the <code>-jvm</code> option isn&#8217;t supported.  You can work around this error by running <code>sed -i 's/jvm //' bin/hadoop</code> or &#8212; if you prefer to do things manually &#8212; editing <code>bin/hadoop</code> and replacing the line that reads</p>
+
+<pre><code>HADOOP_OPTS="$HADOOP_OPTS -jvm server $HADOOP_DATANODE_OPTS"
+</code></pre>
+
+<p>with this line:</p>
+
+<pre><code>HADOOP_OPTS="$HADOOP_OPTS -server $HADOOP_DATANODE_OPTS"
+</code></pre>
+
+<p>If you had to make this change, run <code>bin/stop-all.sh</code> and then <code>bin/start-all.sh</code> again.</p>
+
+<h3>Storing an input file to HDFS</h3>
+
+<p>As long as we&#8217;re still thinking about Hadoop, let&#8217;s put some data there so we can process it after we&#8217;ve built Spark.  For our Spark example, we&#8217;ll work with a <a href="http://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format</a> file (like an Apache HTTPD <code>AccessLog</code>).  (You probably have one sitting around somewhere.)  Mine is called <code>~/access_log</code>.  Here&#8217;s how I&#8217;ll load it in to HDFS:</p>
+
+<pre><code>./bin/hadoop fs -mkdir input
+./bin/hadoop fs -put ~/access_log input
+</code></pre>
+
+<p>I can check that it&#8217;s actually there:</p>
+
+<pre><code>./bin/hadoop fs -ls input | grep access_log
+</code></pre>
+
+<p>and, sure enough, I&#8217;ll get something like this in return:</p>
+
+<pre><code>-rw-r--r--   3 root supergroup  792036736 2013-04-10 14:32 /user/root/input/access_log
+</code></pre>
+
+<p>Shame on me, too, I guess.  Now we&#8217;re ready to build Spark and run some example jobs against these data.</p>
+
+<h3>Building Spark</h3>
+
+<p>First, fetch the source tarball:</p>
+
+<pre><code>wget http://spark-project.org/files/spark-0.7.0-sources.tgz
+tar -xzvf spark-0.7.0-sources.tgz
+cd spark-0.7.0
+</code></pre>
+
+<p>In order to be able to fetch input data from HDFS, Spark needs to know what version of Hadoop you&#8217;re running before you build it.  To do this, either open <code>project/SparkBuild.scala</code> in your favorite editor or run the following command:</p>
+
+<pre><code>sed -i 's/= "1.0.4"/= "0.20.205.0"/' project/SparkBuild.scala
+</code></pre>
+
+<p>Now we&#8217;ll use the Scala build tool to compile Spark:</p>
+
+<pre><code>./sbt/sbt package
+</code></pre>
+
+<p>We can now run a simple job to make sure Spark works.  The <code>SparkPi</code> example uses a Monte Carlo method to approximate Pi:</p>
+
+<pre><code>export SCALA_HOME=/usr/share/scala
+./run spark.examples.SparkPi local 1000
+</code></pre>
+
+<p>Now you should have a working Spark installation and can run some jobs locally.  We&#8217;ll look at an example interaction with Spark next.</p>
+
+<h3>Running an example Spark job</h3>
+
+<p>The Spark shells use the <code>MASTER</code> environment variable to determine how to run jobs.  Set it to <code>local</code> for now:</p>
+
+<pre><code>export MASTER=local
+</code></pre>
+
+<p>This will run your jobs locally, using only one thread.  We&#8217;ll also want to enable Spark to use more memory if we&#8217;re going to work with a large dataset:</p>
+
+<pre><code>export SPARK_MEM=2g
+</code></pre>
+
+<p>If you want to use more or less than 2 gigabytes, change that setting appropriately; it uses the same format as Java heap size arguments.  Now we&#8217;ll start up the Python Spark environment:</p>
+
+<pre><code>./pyspark
+</code></pre>
+
+<p>You&#8217;ll find yourself in a Python REPL with a <a href="http://spark-project.org/docs/latest/api/pyspark/pyspark.context.SparkContext-class.html"><code>SparkContext</code></a> object initialized in the <code>sc</code> variable.  Now, create a Spark <a href="http://spark-project.org/docs/latest/api/pyspark/pyspark.rdd.RDD-class.html"><em>resilient distributed dataset</em></a> from the lines in the log file we uploaded to HDFS (noting, of course, that your URL may be different depending on how you stored the file):</p>
+
+<pre><code>log_entries = sc.textFile("hdfs://localhost:9100/user/root/input/access_log")
+</code></pre>
+
+<p>We&#8217;ll then write a short series of operations to count the number of log entries for each remote host:</p>
+
+<pre><code>ips = log_entries.map(lambda s: s.split()[0])
+ips.map(lambda ip: (ip, 1)).reduceByKey(lambda a, b: a + b).collect()
+</code></pre>
+
+<p>This example won&#8217;t benefit all that much from Spark&#8217;s caching support, but it will run faster in parallel.  If you have many cores in your machine, try using them!  Here&#8217;s how you&#8217;d set <code>MASTER</code> if you wanted to use 8 threads:</p>
+
+<pre><code>export MASTER='local[8]'
+</code></pre>
+
+<p>Exit out of <code>pyspark</code> and try running the example again with more threads, if you feel so inclined.</p>
+
+<h3>Next steps</h3>
+
+<p>Now that you have Spark up and running, here are some things to consider trying:</p>
+
+<ul>
+<li>learn more about Spark by working through some <a href="http://spark-project.org/examples/">examples</a></li>
+<li>read up on the <a href="http://spark-project.org/docs/latest/python-programming-guide.html">Python</a> or <a href="http://spark-project.org/docs/latest/scala-programming-guide.html">Scala</a> interfaces to programming Spark</li>
+<li>run <a href="http://spark-project.org/docs/latest/running-on-mesos.html">Spark under Mesos</a> or <a href="http://spark-project.org/docs/latest/spark-standalone.html">across several nodes without Mesos</a></li>
+<li>check out some other cool projects that work with Spark, like <a href="http://shark.cs.berkeley.edu">Shark</a> (an implementation of Apache Hive that uses Spark in the query planner) and <a href="http://spark-project.org/docs/latest/bagel-programming-guide.html">Bagel</a> (an implementation of Google&#8217;s Pregel system for graph processing)</li>
+</ul>
+
+    </div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2013/04/reprocessing-cms-events-with-bosco.html">Reprocessing CMS events with Bosco</a></h1>
+      <p class="meta">
+        <time datetime="2013-04-02T19:38:00Z" pubdate data-updated="true">Apr 2<span>nd</span>, 2013  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">Prior to the <a href="http://home.web.cern.ch/about/updates/2013/02/long-shutdown-1-exciting-times-ahead">LHC long shutdown</a>, the CMS experiment increased the trigger rate of the detector, therefore increasing the data coming off the detector. &nbsp;The Tier-0 was unable to process all of the events coming off of the detector, therefore the events where only stored and not processed. &nbsp;After the run, the experiment wanted to process the backlog of events, but didn't have the computing power available to do it. &nbsp;So they turned to opportunistic computing and <a href="http://bosco.opensciencegrid.org/">Bosco</a>.<br /><br />The CMS collaborators at UCSD worked with the <a href="http://www.sdsc.edu/">San Diego Supercomputing Resource</a> to run the processing on the <a href="http://www.sdsc.edu/News%20Items/PR030512_gordon.html">Gordon</a> supercomputer. &nbsp;Gordon is an <a href="https://www.xsede.org/web/guest/sdsc-gordon">XSEDE resource</a>&nbsp;and&nbsp;does not include a traditional OSG Globus Gatekeeper. &nbsp;Also, we did not have root access to the cluster to install a gatekeeper. &nbsp;Therefore, Bosco was used to submit and manage the <a href="http://www.uscms.org/SoftwareComputing/Grid/WMS/glideinWMS/doc.prd/index.html">GlidienWMS</a>&nbsp;Condor glideins to the resource.<br /><br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td><a href="http://3.bp.blogspot.com/-Iu-KOlNG1-s/UVswQYykYoI/AAAAAAAAB5A/0nsceq8Rumk/s1600/sdsc_jobs.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="480" src="http://3.bp.blogspot.com/-Iu-KOlNG1-s/UVswQYykYoI/AAAAAAAAB5A/0nsceq8Rumk/s640/sdsc_jobs.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="font-size: 13px;">Running jobs at Gordon, the SDSC supercomputer</td></tr></tbody></table><br /><br />As you can see from the graph, we reached nearly 4,000 CMS processing jobs on Gordon. &nbsp;4k cores is larger than most CMS Tier 2's, and as big as a European Tier-1. &nbsp;With Bosco, overnight, Gordon became one of the largest CMS clusters in the world.<br /><br />Full details will be written in a submitted paper to <a href="http://www.chep2013.org/">CHEP '13</a> in Amsterdam, and Bosco will be presented in a poster (and paper) as well. &nbsp;I hope to see you there!<br /><br />(If I got any details wrong about the CMS side of this run, please let me know. &nbsp;I have intimate knowledge of the Gordon side, but not so much the CMS side).<br /><br /><br /><center> <a href="http://bosco.opensciencegrid.org/download/">     <img alt="Bosco Download" src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png" style="border-width: 0;" /> </a>   </center><br /></div>
+  </article>
 
   <article>
     <header>
@@ -147,280 +368,7 @@ r = \\left( D / C \\right) - q \\\\
         <time datetime="2013-03-16T14:39:00Z" pubdate data-updated="true">Mar 16<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>One of the advantages of cubic Hermite splines is that their interval interpolation formula is an explicit function of gradients \( m_0, m_1, ... m_{n-1} \) at knot-points:</p>
-
-<div markdown="0">
-\\[
-y(t) = h_{00}(t) y_j + h_{10}(t) m_j + h_{01}(t) y_{j+1} + h_{11}(t) m_{j+1} \\\\
-\\]
-</div>
-
-
-<p>where the Hermite bases are:</p>
-
-<div markdown="0">
-\\[
-h_{00} = 2t^3 - 3t^2 + 1 \\\\
-h_{10} = t^3 - 2t^2 + t \\\\
-h_{01} = -2t^3 + 3t^2 \\\\
-h_{11} = t^3 - t^2 \\\\
-\\]
-</div>
-
-
-<p>(For now, I will be using the unit-interval form of the interpolation, where t runs from 0 to 1 on each interval.  I will also discuss the non-uniform interval equations below)</p>
-
-<p>This formulation allows one to explicitly specify the interpolation gradient at each knot point, and to choose from various gradient assignment policies, for example <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Interpolating_a_data_set">those listed here</a>, even supporting policies for <a href="http://en.wikipedia.org/wiki/Monotone_cubic_interpolation">enforcing monotonic interpolations</a>.</p>
-
-<p>One important caveat with cubic Hermite splines is that although the gradient \( y'(t) \) is guaranteed to be continuous, it is <em>not</em> guaranteed to be smooth (that is, differentiable) <em>across</em> the knots (it is of course smooth <em>inside</em> each interval). Therefore, another useful category of gradient policy is to obtain gradients \( m_0, m_1, ... m_{n-1} \) such that \( y'(t) \) is also smooth across knots.</p>
-
-<p>(I feel sure that what follows was long since derived elsewhere, but my attempts to dig the formulation up on the internet failed, and so I decided the derivation might make a useful blog post)</p>
-
-<p>To ensure smooth gradient across knot points, we want the 2nd derivative \( y"(t) \) to be equal at the boundaries of adjacent intervals:</p>
-
-<div markdown="0">
-\\[
-h_{00}^"(t) y_{j-1} + h_{10}^"(t) m_{j-1} + h_{01}^"(t) y_j + h_{11}^"(t) m_j \\\\
-= \\\\
-h_{00}^"(t) y_j + h_{10}^"(t) m_j + h_{01}^"(t) y_{j+1} + h_{11}^"(t) m_{j+1}
-\\]
-</div>
-
-
-<p>or substituting the 2nd derivative of the basis definitions above:</p>
-
-<div markdown="0">
-\\[
-\\left( 12 t - 6 \\right) y_{j-1} + \\left( 6 t - 4 \\right) m_{j-1}  + \\left( 6 - 12 t \\right) y_j + \\left( 6 t - 2 \\right) m_j \\\\
-= \\\\
-\\left( 12 t - 6 \\right) y_{j} + \\left( 6 t - 4 \\right) m_{j}  + \\left( 6 - 12 t \\right) y_{j+1} + \\left( 6 t - 2 \\right) m_{j+1}
-\\]
-</div>
-
-
-<p>Observe that t = 1 on the left hand side of this equation, and t = 0 on the right side, and so we have:</p>
-
-<div markdown="0">
-\\[
-6 y_{j-1} + 2 m_{j-1} - 6 y_j + 4 m_j
-=
--6 y_j - 4 m_j + 6 y_{j+1} - 2 m_{j+1}
-\\]
-</div>
-
-
-<p>which we can rearrange as:</p>
-
-<div markdown="0">
-\\[
-2 m_{j-1} + 8 m_j + 2 m_{j+1}
-=
-6 \\left( y_{j+1} - y_{j-1} \\right)
-\\]
-</div>
-
-
-<p>Given n knot points, the above equation holds for j = 1 to n-2 (using zero-based indexing, as nature intended).  Once we define equations for j = 0 and j = n-1, we will have a system of equations to solve.  There are two likely choices.  The first is to simply specify the endpoint gradients \( m_0 = G \) and \( m_{n-1} = H \) directly, which yields the following <a href="http://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm">tri-diagonal matrix equation:</a></p>
-
-<div markdown="0">
-\\[
-\\left( \\begin{array} {ccccc}
-1 &   &   &   &   \\\\
-2 & 8 & 2 &   &   \\\\
-  & 2 & 8 & 2 &   \\\\
-  &   & \\vdots &   &   \\\\
-  &   & 2 & 8 & 2 \\\\ 
-  &   &   &   & 1 \\\\
-\\end{array} \\right)
-
-\\left( \\begin{array} {c}
-m_0 \\\\
-m_1 \\\\
- \\\\
-\\vdots \\\\
- \\\\
-m_{n-1}
-\\end{array} \\right)
-=
-\\left( \\begin{array} {c}
-G \\\\
-6 \\left( y_2 - y_0 \\right) \\\\
-6 \\left( y_3 - y_1 \\right) \\\\
-\\vdots \\\\
-6 \\left( y_{n-1} - y_{n-3} \\right) \\\\
-H \\\\
-\\end{array} \\right)
-\\]
-</div>
-
-
-<p>The second common endpoint policy is to set the 2nd derivative equal to zero -- the "natural spline."   Setting the 2nd derivative to zero at the left-end knot (and t = 0) gives us:</p>
-
-<div markdown="0">
-\\[
-4 m_0 + 2 m_1   =   6 \\left( y_1 - y_0 \\right)
-\\]
-</div>
-
-
-<p>Similarly, at the right-end knot (t = 1), we have:</p>
-
-<div markdown="0">
-\\[
-2 m_0 + 4 m_1   =   6 \\left( y_{n-1} - y_{n-2} \\right)
-\\]
-</div>
-
-
-<p>And so for a natural spline endpoint policy the matrix equation looks like this:</p>
-
-<div markdown="0">
-\\[
-\\left( \\begin{array} {ccccc}
-4 & 2 &   &   &   \\\\
-2 & 8 & 2 &   &   \\\\
-  & 2 & 8 & 2 &   \\\\
-  &   & \\vdots &   &   \\\\
-  &   & 2 & 8 & 2 \\\\ 
-  &   &   & 2 & 4 \\\\
-\\end{array} \\right)
-
-\\left( \\begin{array} {c}
-m_0 \\\\
-m_1 \\\\
- \\\\
-\\vdots \\\\
- \\\\
-m_{n-1}
-\\end{array} \\right)
-=
-\\left( \\begin{array} {c}
-6 \\left( y_1 - y_0 \\right) \\\\
-6 \\left( y_2 - y_0 \\right) \\\\
-6 \\left( y_3 - y_1 \\right) \\\\
-\\vdots \\\\
-6 \\left( y_{n-1} - y_{n-3} \\right) \\\\
-6 \\left( y_{n-1} - y_{n-2} \\right) \\\\
-\\end{array} \\right)
-\\]
-</div>
-
-
-<p>The derivation above is for uniform (and unit) intervals, where t runs from 0 to 1 on each knot interval.  I'll now discuss the variation where knot intervals are non-uniform.   The non-uniform form of the interpolation equation is:</p>
-
-<div markdown="0">
-\\[
-y(x) = h_{00}(t) y_j + h_{10}(t) d_j m_j + h_{01}(t) y_{j+1} + h_{11}(t) d_j m_{j+1} \\\\
-\\text{ } \\\\
-\\text{where:} \\\\
-\\text{ }  \\\\
-d_j = x_{j+1} - x_j \\text{  for  } j = 0, 1, ... n-2 \\\\
-t = (x - x_j) / d_j
-\\]
-</div>
-
-
-<p>Taking \( t = t(x) \) and applying the chain rule, we see that 2nd derivative equation now looks like:</p>
-
-<div markdown="0">
-\\[
-y"(x) = \\frac { \\left( 12 t - 6 \\right) y_{j} + \\left( 6 t - 4 \\right) d_j m_{j}  + \\left( 6 - 12 t \\right) y_{j+1} + \\left( 6 t - 2 \\right) d_j m_{j+1} } { d_j^2 }
-\\]
-</div>
-
-
-<p>Applying a derivation similar to the above, we find that our (interior) equations look like this:</p>
-
-<div markdown="0">
-\\[
-\\frac {2} { d_{j-1} }  m_{j-1} + \\left( \\frac {4} { d_{j-1} } + \\frac {4} { d_j } \\right) m_j + \\frac {2} {d_j} m_{j+1}
-=
-\\frac { 6 \\left( y_{j+1} - y_{j} \\right) } { d_j^2 } + \\frac { 6 \\left( y_{j} - y_{j-1} \\right) } { d_{j-1}^2 }
-\\]
-</div>
-
-
-<p>and natural spline endpoint equations are:</p>
-
-<div markdown="0">
-\\[
-\\text{left:  } \\frac {4} {d_0} m_0 + \\frac {2} {d_0} m_1   =   \\frac {6 \\left( y_1 - y_0 \\right)} {d_0^2} \\\\
-\\text{right: } \\frac {2} {d_{n-2}} m_0 + \\frac {4} {d_{n-2}} m_1   =   \\frac {6 \\left( y_{n-1} - y_{n-2} \\right)} {d_{n-2}^2}
-\\]
-</div>
-
-
-<p>And so the matrix equation for specified endpoint gradients is:</p>
-
-<div markdown="0">
-\\[
-\\scriptsize
-\\left( \\begin{array} {ccccc}
-\\normalsize 1 \\scriptsize &   &   &   &   \\\\
-\\frac{2}{d_0} & \\frac{4}{d_0} {+} \\frac{4}{d_1} & \\frac{2}{d_1} &   &   \\\\
-  & \\frac{2}{d_1} & \\frac{4}{d_1} {+} \\frac{4}{d_2} & \\frac{2}{d_2} &   \\\\
-  &   & \\vdots &   &   \\\\
-  &   & \\frac{2}{d_{n-3}} & \\frac{4}{d_{n-3}} {+} \\frac{4}{d_{n-2}} & \\frac{2}{d_{n-2}} \\\\ 
-  &   &   &   & \\normalsize 1 \\scriptsize \\\\
-\\end{array} \\right)
-
-\\left( \\begin{array} {c}
-m_0 \\\\
-m_1 \\\\
- \\\\
-\\vdots \\\\
- \\\\
-m_{n-1}
-\\end{array} \\right)
-=
-\\left( \\begin{array} {c}
-G \\\\
-6 \\left( \\frac{y_2 {-} y_1}{d_1^2} {+} \\frac{y_1 {-} y_0}{d_0^2} \\right) \\\\
-6 \\left( \\frac{y_3 {-} y_2}{d_2^2} {+} \\frac{y_2 {-} y_1}{d_1^2} \\right)  \\\\
-\\vdots \\\\
-6 \\left( \\frac{y_{n-1} {-} y_{n-2}}{d_{n-2}^2} {+} \\frac{y_{n-2} {-} y_{n-3}}{d_{n-3}^2} \\right) \\\\
-H \\\\
-\\end{array} \\right)
-\\normalsize
-\\]
-</div>
-
-
-<p>And the equation for natural spline endpoints is:</p>
-
-<div markdown="0">
-\\[
-\\scriptsize
-\\left( \\begin{array} {ccccc}
-\\frac{4}{d_0} & \\frac{2}{d_0}  &   &   &   \\\\
-\\frac {2} {d_0} & \\frac {4} {d_0} {+} \\frac {4} {d_1} & \\frac{2}{d_1} &   &   \\\\
-  & \\frac{2}{d_1} & \\frac{4}{d_1} {+} \\frac{4}{d_2} & \\frac{2}{d_2} &   \\\\
-  &   & \\vdots &   &   \\\\
-  &   & \\frac{2}{d_{n-3}} & \\frac{4}{d_{n-3}} {+} \\frac{4}{d_{n-2}} & \\frac{2}{d_{n-2}} \\\\ 
-  &   &   & \\frac{2}{d_{n-2}} & \\frac{4}{d_{n-2}} \\\\
-\\end{array} \\right)
-
-\\left( \\begin{array} {c}
-m_0 \\\\
-m_1 \\\\
- \\\\
-\\vdots \\\\
- \\\\
-m_{n-1}
-\\end{array} \\right)
-=
-\\left( \\begin{array} {c}
-\\frac{6 \\left( y_1 {-} y_0 \\right)}{d_0^2} \\\\
-6 \\left( \\frac{y_2 {-} y_1}{d_1^2}  {+}  \\frac{y_1 {-} y_0}{d_0^2} \\right) \\\\
-6 \\left( \\frac{y_3 {-} y_2}{d_2^2}  {+}  \\frac{y_2 {-} y_1}{d_1^2} \\right)  \\\\
-\\vdots \\\\
-6 \\left( \\frac{y_{n-1} {-} y_{n-2}}{d_{n-2}^2}  {+}  \\frac{y_{n-2} {-} y_{n-3}}{d_{n-3}^2} \\right) \\\\
-\\frac{6 \\left( y_{n-1} {-} y_{n-2} \\right)}{d_{n-2}^2} \\\\
-\\end{array} \\right)
-\\normalsize
-\\]
-</div>
-
+    <div class="entry-content"><p>One of the advantages of cubic Hermite splines is that their interval interpolation formula is an explicit function of gradients \( m_0, m_1, ... m_{n-1} \) at knot-points: [...]</p>
 </div>
   </article>
 
@@ -431,186 +379,7 @@ m_{n-1}
         <time datetime="2013-03-15T19:03:00Z" pubdate data-updated="true">Mar 15<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><h3>Motivation</h3>
-
-<p>The original motivation for these experiments was consideration of the impact of negotiator cycle cadence (i.e. the time between the start of one cycle and the start of the next) on HTCondor pool loading.  Specifically, any HTCondor job that completes and vacates its resource may leave that resource unloaded until it can be re-matched on the next cycle.  Therefore, the duration of resource vacancies (and hence, pool loading) can be thought of as a function of job durations <em>modulo</em> the cadence of the negotiator cycle.  In general, the aggregate behavior of job durations on a pool is useful to model as a random variable.  And so, it seemed worthwhile to build up a little intuition about the behavior of a random variable when you take its modulus.</p>
-
-<h3>Methodology</h3>
-
-<p>I took a Monte Carlo approach to this study because a tractable theoretical framework eluded me, and you do not have to dive very deep to show that <a href="http://erikerlandson.github.com/blog/2013/01/02/the-mean-of-the-modulus-does-not-equal-the-modulus-of-the-mean/">even trivial random variable behavior under a modulus is dependent on the distribution</a>.   A Monte Carlo framework for the study also allows for other underlying distributions to be easily studied, by altering the random variable being sampled.   In the interest of getting right into results, I'll briefly discuss the tools I used at the end of this post.</p>
-
-<h3>Modulus and Variance</h3>
-
-<p>Consider what happens to a random variable's modulus as its variance increases.  This sequence of plots shows that the modulus of a normal distribution tends toward a uniform distribution over the modulus interval, as the underlying variance increases:</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">  </th>
-<th align="center">  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.20.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.30.png" width="375" height="375">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.40.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.50.png" width="375" height="375">  |</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<p>From the above plots, we can see that in the case of a normal distribution, its modulus tends toward uniform rather quickly - by the time the underlying variance is half of the modulus interval.</p>
-
-<p>The following plots demonstrate the same effect with a one-tailed distribution (the exponential) -- it requires a larger variance for the effect to manifest.</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">  </th>
-<th align="center">  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/exponential_01.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/exponential_04.png" width="375" height="375">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/exponential_10.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/exponential_20.png" width="375" height="375">  |</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<p>A third example, using a log-normal distribution.   The variance of the log-normal increases as a function of both \( \mu \) and \( \sigma \).  In this example \( \mu \) is increased systematically, holding \( \sigma \) constant at 1:</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">  </th>
-<th align="center">  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.0_1.0.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.5_1.0.png" width="375" height="375">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_1.0_1.0.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_2.0_1.0.png" width="375" height="375">  |</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<p>For a final examination of variance, I will again use log-normals and this time vary \( \sigma \), while holding \( \mu \) constant at 0.  Here we see that the effect of increasing the log-normal variance via \( \sigma \) does <em>not</em> follow the pattern in previous examples -- the distribution does not 'spread' and its modulus does not evolve toward a uniform distribution!</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">  </th>
-<th align="center">  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.0_0.5.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.0_1.0.png" width="375" height="375">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.0_1.5.png" width="375" height="375">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/lognormal_0.0_2.0.png" width="375" height="375">  |</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<h3>Modulus and Mean</h3>
-
-<p>The following table of plots demonstrates the decreasing effect that a distribution's location (mean) has, as its spread increases and its modulus approaches uniformity.   In fact, we see that <em>any</em> distribution in the 'uniform modulus' parameter region is indistinguishable from any other, with respect to its modulus -- all changes to mean or variance <em>within</em> this region have no affect on the distribution's modulus!</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">  </th>
-<th align="center">  </th>
-<th align="center">  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.0_0.3.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.5_0.3.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_1.0_0.3.png" width="260" height="260">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.0_0.4.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.5_0.4.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_1.0_0.4.png" width="260" height="260">  |</td>
-</tr>
-<tr>
-<td></td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.0_0.5.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_0.5_0.5.png" width="260" height="260">  </td>
-<td align="center">  <img src="/assets/images/rv_mod_study/normal_1.0_0.5.png" width="260" height="260">  |</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<h3>Conclusions</h3>
-
-<p>Generally, as the spread of a distribution increases, its modulus tends toward a uniform distribution on the modulus interval.   Although it was tempting to state this in terms of increasing variance, we see from the 2nd log-normal experiment that variance can increase without increasing 'spread' in a way that causes the trend toward uniform modulus.   Currently, I'm not sure what the true invariant is, that properly distinguishes the 2nd log-normal scenario from the others.</p>
-
-<p>For any distribution that <em>does</em> reside in the 'uniform-modulus' parameter space, we see that neither changes to location nor spread (nor even category of distribution) can be distinguished by the distribution modulus.</p>
-
-<h3>Tools</h3>
-
-<p>I used the following software widgets:</p>
-
-<ul>
-<li><a href="https://github.com/erikerlandson/condor_tools/blob/cad8773da36fa7f3c60c93895a428d6f1fae6752/bin/rv_modulus_study">rv_modulus_study</a> -- the jig for Monte Carlo sampling of underlying distributions and their corresponding modulus</li>
-<li><a href="https://github.com/erikerlandson/dtools/wiki/dplot">dplot</a> -- a simple cli wrapper around <code>matplotlib.pyplot</code> functionality</li>
-<li><a href="https://github.com/willb/capricious/">Capricious</a> -- a library for random sampling of various distribution types</li>
-<li><a href="https://github.com/erikerlandson/capricious/blob/c8ec13f1f49880bb3573034de59971f84d15f7c1/lib/capricious/spline_distribution.rb">Capricious::SplineDistribution</a> -- a ruby class for estimating PDF and CDF of a distribution from sampled data, using cubic Hermite splines (note, at the time of this writing, I'm using an experimental variation on my personal repo fork, at the link)</li>
-</ul>
-
+    <div class="entry-content"><h3>Motivation</h3> [...]
 </div>
   </article>
 
@@ -646,7 +415,7 @@ the HTCondor Week 2013 site. See you soon in Madison!
         <time datetime="2013-03-05T18:53:00Z" pubdate data-updated="true">Mar 5<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
       </p>
     </header>
-    <div class="entry-content">While running Quantum Espresso on the Open Science Grid, we found a number of issues:<br /><ul><li>OpenMPI needs to have an rsh binary. &nbsp;Even if you are using shared memory for openmpi, and openmpi does not use rsh, it still looks for the binary and fails if it cannot find it.</li><li>Chroots (used on HCC machines for grid jobs) do not support pty's. &nbsp;OpenMPI has a compile option to turn off pty support.</li></ul><div>Once these issues where fixed, we were able to submit QE jobs to the OSG using Condor's partitionable slots on 8 cores.</div><div><br /></div><h3>Preparing Submission</h3><div>Before submitting our first QE job, we had to compile OpenMPI and QE. &nbsp;Since we are an HPC center, we had OpenMPI compiled for our Infiniband, therefore it would always fail on the OSG where there is no Infiniband (let alone our brand and drivers).</div><div><br /></div><div>After compiling, we created compressed files that contained the required files to run QE:</div><div><ul><li>bin.tar.gz - Only includes the cp.x file, specific to our run. &nbsp;It could have well included much more common pw.x.</li><li>lib.tar.gz - Includes the Intel math libraries and libgfortran.</li><li>openmpi.tar.gz - Includes the entire openmpi install directory (make install)</li></ul></div><div>Additionally, we wrote a wrapper script, run_espresso_grid.sh, that unpacks the required files and sets the environment.<br /><br /><div class="gistLoad" data-id="5093020" id="gist-5093020"><pre>#!/bin/bash<br />tar xzf bin.tar.gz<br />tar xzf lib.tar.gz<br />tar xzf pseudo.tar.gz<br />tar xzf openmpi.tar.gz<br />mkdir tmp<br /> <br />export PATH=$PWD/bin:$PWD/openmpi/bin:$PATH<br />export LD_LIBRARY_PATH=$PWD/lib:$PWD/openmpi/lib:$LD_LIBRARY_PATH<br />export OPAL_PREFIX=$PWD/openmpi<br /> <br />mpirun --mca orte_rsh_agent `pwd`/rsh -np 8 cp.x &lt; h2o-64-grid.in &gt; h2o-64-grid.out<br /></pre></div><h3>Submission</h3></div><div>We used GlideinWMS to submit to the OSG, below is our HTCondor submit file.</div><div><div class="gistLoad" data-id="5092949" id="gist-5092949"><pre>universe = vanilla<br />output = condor.out.$(CLUSTER).$(PROCESS)<br />error = condor.err.$(CLUSTER).$(PROCESS)<br />log            = condor.log<br />executable = run_espresso_grid.sh<br />request_cpus=8<br />request_memory = 10*1024<br />should_transfer_files = YES<br />when_to_transfer_output = ON_EXIT_OR_EVICT<br />transfer_input_files = bin.tar.gz, lib.tar.gz, pseudo.tar.gz, openmpi.tar.gz, h2o-64-grid.in, /usr/bin/rsh<br />transfer_output_files =h2o-64-grid.out<br />+RequiresWholeMachine=True<br />Requirements = CAN_RUN_WHOLE_MACHINE =?= TRUE<br />queue <br /></pre></div><br /></div><div>Note that we pull rsh from the submission machine. &nbsp;OpenMPI does not actually use rsh to start the processes on a shared memory machine, but it does require that the RSH binary is available.<br /><br /></div><div><h3>Acknowledgments</h3></div><div>This was done with the tremendous help of Jun Wang.</div><div><br /></div><script src="https://raw.github.com/moski/gist-Blogger/master/public/gistLoader.js" type="text/javascript"></script> <br /><center><br /><a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/88x31.png" style="border-width: 0;" /></a><br />This work is licensed under a <a href="http://creativecommons.org/licenses/by/3.0/deed.en_US" rel="license">Creative Commons Attribution 3.0 Unported License</a>. </center></div>
+    <div class="entry-content"></div>
   </article>
 
   <article>
@@ -797,16 +566,6 @@ and source code are available from our Downloads page.
     </header>
     <div class="entry-content"><p>HTCondor supports a notion of aggregate compute resources known as partitionable slots (p-slots), which may be consumed by multiple jobs.   Historically, at most one job could be matched against such a slot in a single negotiation cycle, which limited the rate at which partitionable slot resources could be utilized.  More recently, the scheduler has been enhanced with logic to allow it to acquire multiple claims against a partitionable slot, which increases the p-slot utilization rate. However, as this potentially bypasses the negotiator's accounting of global pool resources such as accounting group quotas and concurrency limits, it places some contraints on what jobs can can safely acquire multiple claims against any particular p-slot: for example, only other jobs on the same scheduler can be considered.  Additionally, candidate job requirements must match the requirements of the job that originally matched in the negotiator.  Another significant impact is that the negotiator is still forced to match an entire p-slot, which may have a large match cost (weight): these large match costs cause <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3013">accounting difficulties</a> when submitter shares and/or group quotas drop below the cost of a slot.  This particular problem is growing steadily larger, as machines with ever-larger numbers of cores and other resources appear in HTCondor pools. [...]</p>
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2012/11/bosco-v11-features-multi-cluster-support.html">BOSCO v1.1 Features: Multi-Cluster Support</a></h1>
-      <p class="meta">
-        <time datetime="2012-11-29T06:33:00Z" pubdate data-updated="true">Nov 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
   </article>
 
   <article>
@@ -997,16 +756,6 @@ configured but the node needs to be configured to access the shared storage. [..
     </header>
     <div class="entry-content"><p>Many Condor users are interested in <em>high-availability</em> (HA) services:  they don&#8217;t want their compute resources to become unavailable due to the failure of a single machine that is running an important Condor daemon.  (See <a href="http://research.cs.wisc.edu/condor/CondorWeek2012/presentations/rati-benton-condor-ha.pdf">this talk</a> that Rob Rati and I gave at Condor Week this year for a couple of solutions to HA with the Condor <code>schedd</code>.)  So it&#8217;s only natural that Condor users who are interested in configuring their pools with <a href="http://getwallaby.com">Wallaby</a> might wonder how Wallaby responds in the face of failure. [...]</p>
 </div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/06/using-wallabys-skeleton-group.html">Using Wallaby's skeleton group</a></h1>
-      <p class="meta">
-        <time datetime="2012-06-15T21:04:21Z" pubdate data-updated="true">Jun 15<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
-      </p>
-    </header>
-    <div class="entry-content">Wallaby 0.15.0 includes a new feature called the skeleton group. (This feature was available in earlier versions of Wallaby, too, but it was experimental and had some rough edges.) Find out how the skeleton group makes configuration more flexible by...</div>
   </article>
 
   <article>
