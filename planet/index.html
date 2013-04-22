@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The Spark project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java. It offers map, filter, &hellip;">
+  <meta name="description" content="Background The following post outlines a setup and configuration of a &#8220;personal hadoop&#8221; development environment that is much akin to a &# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,519 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/04/22/personalhadoop/">Configuring a Personal Hadoop Development Environment on Fedora 18</a></h1>
+      <p class="meta">
+        <time datetime="2013-04-22T15:00:00Z" pubdate data-updated="true">Apr 22<span>nd</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
+      </p>
+    </header>
+    <div class="entry-content"><h2>Background</h2>
+
+<p>The following post outlines a setup and configuration of a &#8220;personal hadoop&#8221; development environment that is much akin to a &#8220;personal condor&#8221; setup.
+The primary purpose is to have a single source for configuration and logs along with a soft-link to development built binaries such that switching
+to a different build is a matter of updating a soft-link while maintaining all other data and configuration.</p>
+
+<hr />
+
+<h2>Use Cases</h2>
+
+<ul>
+<li>Comparison testing in a local sandbox without altering an existing system installation.</li>
+<li>Single source configuration and logs</li>
+<li>&#8230;</li>
+</ul>
+
+
+<hr />
+
+<h2>References</h2>
+
+<p>Inter-webz:</p>
+
+<ul>
+<li><a href="http://wiki.apache.org/hadoop/HowToSetupYourDevelopmentEnvironment">http://wiki.apache.org/hadoop/HowToSetupYourDevelopmentEnvironment</a></li>
+<li><a href="http://vichargrave.com/create-a-hadoop-build-and-development-environment-for-hadoop/">http://vichargrave.com/create-a-hadoop-build-and-development-environment-for-hadoop/</a></li>
+<li><a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/">http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/</a></li>
+<li><a href="http://wiki.apache.org/hadoop/">http://wiki.apache.org/hadoop/</a></li>
+<li><a href="http://docs.hortonworks.com/CURRENT/index.htm#Appendix/Configuring_Ports/HDFS_Ports.htm">http://docs.hortonworks.com/CURRENT/index.htm#Appendix/Configuring_Ports/HDFS_Ports.htm</a></li>
+</ul>
+
+
+<p>Books:</p>
+
+<ul>
+<li><a href="http://www.amazon.com/Hadoop-The-Definitive-Guide-ebook/dp/B0082FE448/ref=dp_kinw_strp_1">Hadoop &#8220;The Definitive Guide&#8221;</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Disclaimers</h2>
+
+<ul>
+<li>Currently this is a non-native development setup that uses the existing maven dependencies.  For details on native packaging please visit <a href="https://fedoraproject.org/wiki/Features/Hadoop">https://fedoraproject.org/wiki/Features/Hadoop</a></li>
+<li>The setup listed below is for creating &#8220;Single-Node-Cluster&#8221;</li>
+</ul>
+
+
+<hr />
+
+<h2>Prerequisites</h2>
+
+<h3>Configure Password-less ssh</h3>
+
+<pre><code>yum install openssh openssh-clients openssh-server
+# generate a public/private key, if you don't already have one
+ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+cat ~/.ssh/id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/*
+
+# testing ssh:
+ps -ef | grep sshd     # verify sshd is running
+ssh localhost          # accept the certification when prompted
+sudo passwd root       # Make sure the root has a password
+</code></pre>
+
+<h3>Install Other Build Dependencies</h3>
+
+<pre><code>yum install cmake git subversion dh-make ant autoconf automake sharutils libtool asciidoc xmlto curl protobuf-compiler maven gcc-c++ 
+</code></pre>
+
+<h3>Install Oracle 1.6 JDK</h3>
+
+<p><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk6downloads-1902814.html">You want jdk6 (not jdk7)</a>
+, for example: jdk-6u43-linux-x64-rpm.bin.  Run and it will unpack into several &#8220;.rpm&#8221; files:</p>
+
+<pre><code>jdk-6u43-linux-amd64.rpm
+sun-javadb-client-10.6.2-1.1.i386.rpm  
+sun-javadb-core-10.6.2-1.1.i386.rpm
+sun-javadb-docs-10.6.2-1.1.i386.rpm
+sun-javadb-common-10.6.2-1.1.i386.rpm  
+sun-javadb-demo-10.6.2-1.1.i386.rpm 
+sun-javadb-javadoc-10.6.2-1.1.i386.rpm
+</code></pre>
+
+<p>Install:</p>
+
+<pre><code>yum localinstall jdk-6u43-linux-amd64.rpm sun-javadb-*.rpm
+</code></pre>
+
+<p>append to your .bashrc file:</p>
+
+<pre><code>export JAVA_HOME="/usr/java/jdk1.6.0_43"
+export JVM_ARGS="-Xmx1024m -XX:MaxPermSize=512m"
+export PATH=${JAVA_HOME}/bin:${PATH}
+</code></pre>
+
+<hr />
+
+<h2>Building and Setting up a &#8220;personal-hadoop&#8221;</h2>
+
+<h3>Building</h3>
+
+<pre><code>git clone git://git.apache.org/hadoop-common.git
+cd hadoop-common
+git checkout branch-2.0.4-alpha origin/branch-2.0.4-alpha
+mvn clean package -Pdist -DskipTests
+</code></pre>
+
+<h3>Creating Your &#8220;personal-hadoop&#8221; Sandbox</h3>
+
+<p>In this configuration we default to <strong>/home/tstclair</strong></p>
+
+<pre><code>cd ~
+mkdir personal-hadoop
+cd personal-hadoop
+mkdir -p conf data name logs/yarn
+ln -sf &lt;your-git-loc&gt;/hadoop-dist/target/hadoop-2.0.4-alpha home
+</code></pre>
+
+<h3>Override your environment</h3>
+
+<p>append to your .bashrc file:</p>
+
+<pre><code># Hadoop env override:
+export HADOOP_BASE_DIR=${HOME}/personal-hadoop
+export HADOOP_LOG_DIR=${HOME}/personal-hadoop/logs
+export HADOOP_PID_DIR=${HADOOP_BASE_DIR}
+export HADOOP_CONF_DIR=${HOME}/personal-hadoop/conf
+export HADOOP_COMMON_HOME=${HOME}/personal-hadoop/home
+export HADOOP_HDFS_HOME=${HADOOP_COMMON_HOME}
+export HADOOP_MAPRED_HOME=${HADOOP_COMMON_HOME}
+# Yarn env override:
+export HADOOP_YARN_HOME=${HADOOP_COMMON_HOME}
+export YARN_LOG_DIR=${HADOOP_LOG_DIR}/yarn
+#classpath override to search hadoop loc
+export CLASSPATH=/usr/share/java/:${HADOOP_COMMON_HOME}/share
+#Finally update your PATH
+export PATH=${HADOOP_COMMON_HOME}/bin:${HADOOP_COMMON_HOME}/sbin:${HADOOP_COMMON_HOME}/libexec:${PATH}
+</code></pre>
+
+<h3>Verify your setup</h3>
+
+<pre><code>source ~/.bashrc
+which hadoop    # verify it should be ${HOME}/personal-hadoop/home/bin  
+hadoop -help    # verify classpath is correct.
+</code></pre>
+
+<h3>Creating Initial Single Configuration Node Setup</h3>
+
+<p>First copy in the default configuration files:</p>
+
+<pre><code>cp ${HADOOP_COMMON_HOME}/etc/hadoop/* ${HADOOP_BASE_DIR}/conf
+</code></pre>
+
+<p>NOTE: As your configuration testing space expands it is sometimes useful to have your conf directory to also be a softlink of configuration templates.</p>
+
+<p>Next update your <em>hdfs-site.xml</em> with the following:</p>
+
+<figure class='code'><figcaption><span> (hdfs-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/hdfs-site.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span>
+</span><span class='line'><span class="c">&lt;!--</span>
+</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
+</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
+</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
+</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
+</span><span class='line'><span class="c">--&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- Override tstclair with your home directory --&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>fs.default.name<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>hdfs://localhost/<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.name.dir<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>file:///home/tstclair/personal-hadoop/name<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.http.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50070<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.data.dir<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>file:///home/tstclair/personal-hadoop/data<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50010<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.http.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50075<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.ipc.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50020<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Append, or update, your <em>mapred-site.xml</em> with the following:</p>
+
+<figure class='code'><figcaption><span> (mapred-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/mapred-site.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span>
+</span><span class='line'><span class="c">&lt;!--</span>
+</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
+</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
+</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
+</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
+</span><span class='line'><span class="c">--&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">&lt;!-- Update or append these vars --&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>mapreduce.cluster.temp.dir<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>No description<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;final&gt;</span>true<span class="nt">&lt;/final&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>mapreduce.cluster.local.dir<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>No description<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;final&gt;</span>true<span class="nt">&lt;/final&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally update your <em>yarn-site.xml</em> with the following:</p>
+
+<figure class='code'><figcaption><span> (yarn-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/yarn-site.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+</span><span class='line'><span class="c">&lt;!--</span>
+</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
+</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
+</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
+</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
+</span><span class='line'><span class="c">--&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>    <span class="c">&lt;!-- Site specific YARN configuration properties --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8031<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>host is the hostname of the resource manager and
+</span><span class='line'>                    port is the port on which the NodeManagers contact the Resource Manager.
+</span><span class='line'>        <span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.scheduler.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8030<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>host is the hostname of the resourcemanager and port is the port
+</span><span class='line'>                     on which the Applications in the cluster talk to the Resource Manager.
+</span><span class='line'>        <span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.scheduler.class<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>In case you do not want to use the default scheduler<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8032<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the host is the hostname of the ResourceManager and the port is the port on
+</span><span class='line'>                    which the clients can talk to the Resource Manager. <span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.local-dirs<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the local directories used by the nodemanager<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.address<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8034<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the nodemanagers bind to this port<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.resource.memory-mb<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>10240<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the amount of memory on the NodeManager in GB<span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;value&gt;</span>mapreduce.shuffle<span class="nt">&lt;/value&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;description&gt;</span>shuffle service that needs to be set for Map Reduce to run <span class="nt">&lt;/description&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
+</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>NOTE:</strong> You may notice that I&#8217;ve included default variables and their corresponding port numbers to ease default hunting.</p>
+
+<h2>Starting Your Single Node Hadoop Cluster</h2>
+
+<p>Format your namenode (only needed for the 1st setup):</p>
+
+<pre><code>hadoop namenode -format
+#verify output is correct.
+</code></pre>
+
+<p>Start HDFS:</p>
+
+<pre><code>start-dfs.sh
+</code></pre>
+
+<p>open a browser to http://localhost:50070 and verify you have 1 live node.</p>
+
+<p>Next start yarn:</p>
+
+<pre><code>start-yarn.sh
+</code></pre>
+
+<p>Verify the logs show it&#8217;s running normally.</p>
+
+<p>Finally check to see if you can run an MR application:</p>
+
+<pre><code>cd ${HADOOP_COMMON_HOME}/share/hadoop/mapreduce
+hadoop jar hadoop-mapreduce-example-2.0.4-alpha.jar randomwriter out
+</code></pre>
+
+<p><strong>HAPPY HACKING!!!</strong></p>
+</div>
+  </article>
 
   <article>
     <header>
@@ -316,48 +829,7 @@ and source code are available from our Downloads page.
         <time datetime="2013-03-21T22:10:00Z" pubdate data-updated="true">Mar 21<span>st</span>, 2013  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>The <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_1Introduction.html#8555">HTCondor negotiator</a> assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#20544">NEGOTIATOR_INTERVAL</a> parameter.  This interval (the cycle <em>cadence</em>) has a fundamental impact on a pool <em>loading factor</em> -- the fraction of time that slots are being productively utilized.</p>
-
-<p>Consider the following diagram, which illustrates the utilization of a slot over the lifetime of a job.  When a job completes, its slot will remain empty until it can be assigned a new job on the next negotiation cycle.</p>
-
-<p><img src="/assets/images/slot_load_study/loading_factor_diagram.png" width="750"></p>
-
-<p>As the diagram above shows, the loading factor for a slot can be expressed as D/Z, where D is the duration of the job, and Z is the total time until the next cycle occurring after the job completes.  We can also write Z = D+I, where I is the "idle time" from job completion to the start of the next negotiation cycle.   Loading factor is always &lt;= 1, where a value of 1 corresponds to ideal loading -- every slot is utilized 100% of the time.  In general, loading will be &lt; 1, as jobs rarely complete exactly on a cycle boundary.</p>
-
-<p>It is worth briefly noting that the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#18202">claim reuse</a> feature was developed to help address this problem.  However, claim re-use is not compatible with all other features -- for example enabling claim re-use can cause accounting group starvation -- and so what follows remains relevant to many HTCondor configurations.</p>
-
-<p>Given a particular negotiation cycle cadence, how does a slot's loading factor behave, as a function of job duration?  The loading factor can be expressed as:</p>
-
-<div markdown="0">
-\\[
-\\text{Loading Factor} = \\frac{D}{C \\left( q + \\lceil r \\rceil \\right)} \\\\
- \\\\
-\\text{where:} \\\\
-D = \\text{job duration} \\\\
-C = \\text{cycle cadence} \\\\
-q = \\lfloor D / C \\rfloor \\\\
-r = \\left( D / C \\right) - q \\\\
-\\]
-</div>
-
-
-<p>The following plot illustrates how the loading factor changes with job duration, assuming a cadence of 300 seconds (5 minutes):</p>
-
-<p><img src="/assets/images/slot_load_study/load_factor_300s.png" width="750"></p>
-
-<p>We immediately see that there is a saw-tooth pattern to the plot.  As the job duration increases towards the boundary of a cycle, there is less and less idle time until the next cycle, and so the loading approaches 1.0.  However, once the job's end crosses the thresold to <em>just past</em> the start of the cycle, it immediately drops to the worse possible case: the slot will be idle for nearly an entire cycle.</p>
-
-<p>The other important pattern is that the bottom of the saw-tooth gradually increases.  As a job's duration occupies more whole negotiation cycles, the idle time at the end of the last cycle represents a decreasing fraction of the total time.</p>
-
-<p>Observe that the most important 'unit' in this plot is the number of negotiation cycles.  Since the saw-toothing scales with the cycle interval, we can express the same plot in units of cycles instead of seconds:</p>
-
-<p><img src="/assets/images/slot_load_study/load_factor_cu.png" width="750"></p>
-
-<p>The results above suggest a couple possible approaches for tuning negotiator cycle cadence to optimize slot loading in an HTCondor pool.  The first is to configure the negotiator interval to be small relative to a typical job duration, as the lower-bound on loading factor increases with the number of cycles a job's duration occupies.  For example, if a typical job duration is 10 minutes, then a cycle cadence of 60 seconds ensures that in general 9 out of 10 cycles will be fully utilized, and so loading will be around 90%.  However, if one has mostly very short jobs, this can be difficult, as negotiation cycle cadences much less than 60 seconds may risk causing performance problems even on a moderately loaded pool.</p>
-
-<p>A second approach is to try and tune the cadence so that as many jobs as possible complete <em>near the end</em> of a cycle, thus minimizing delay until the next cycle.  For example, if job durations are relatively consistent, say close to 90 seconds, then setting the negotiator interval to something like 50 seconds will induce those jobs to finish near the end of the 2nd negotiation cycle (at t+100 seconds), for a loading factor around 90%.  The caveat here is that job durations are frequently <em>not</em> that consistent, and as job duration spread increases, one's ability to play this game <a href="http://erikerlandson.github.com/blog/2013/03/15/examining-the-modulus-of-random-variables/">rapidly evaporates</a>.</p>
-
-<p>In this post, I have focused on the behavior of individual jobs and individual slots.  An obvious next question is what happens to aggregate pool loading when job durations are treated as population sampling from random variables, which I plan to explore in future posts.</p>
+    <div class="entry-content"><p>The <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_1Introduction.html#8555">HTCondor negotiator</a> assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#20544">NEGOTIATOR_INTERVAL</a> parameter.  This interval (the cycle <em>cadence</em>) has a fundamental impact on a pool <em>loading factor</em> -- the fraction of time that slots are being productively utilized. [...]</p>
 </div>
   </article>
 
