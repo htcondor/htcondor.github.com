@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-04-22T14:39:21-07:00</updated>
+  <updated>2013-06-06T11:49:11-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HPCwire article highlights running stochastic models on HTCondor ( June 6, 2013 )]]></title>
+      <link href="http://www.hpcwire.com/hpcwire/2013-05-30/running_stochastic_models_on_htcondor.html"/>
+      <updated>2013-06-06T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[An article published at HPCwire highlights research out of Brigham Young University with a goal to 
+demonstrate an alternative model to High Performance Computing (HPC) for water resource stakeholders by leveraging
+High Throughput Computing (HTC) with HTCondor.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Atlas project at CERN describes their computing environment ( May 29, 2013 )]]></title>
+      <link href="http://www.hpcwire.com/hpcwire/2013-05-21/cern_google_and_the_future_of_global_science_initiatives.html"/>
+      <updated>2013-05-29T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HPCwire: CERN, Google Drive Future of Global Science Initiatives article describes the computing environment of 
+the ATLAS project at CERN.  
+HTCondor and now Google Compute Engine aid the extensive collision 
+analysis effort for ATLAS.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Submitting R jobs with Bosco]]></title>
+      <link href="http://derekweitzel.blogspot.com/2013/05/submitting-r-jobs-with-bosco.html"/>
+      <updated>2013-05-20T14:51:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-9067247722276578550</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[The Bosco team has been working on integrating with the <a href="http://www.r-project.org/">R</a> statistics processing language. &nbsp;We have&nbsp;chosen&nbsp;to modify the <a href="http://cran.r-project.org/web/packages/GridR/index.html">GridR</a> package in order to integrate with R.<br /><br /><h3>How will the R user see Bosco?</h3><div>The goal of the integration is to simplify the method of submitting processing, written in the R&nbsp;language, to remote clusters and grids. &nbsp;The expected steps for the integration are:</div><div><ol><li>Install Bosco</li><li>Install the Bosco'ified GridR package into your local R environment.</li></ol></div><div>After installing the 2 pieces of software above, the user creates a R script, which includes the 'function' that is to be executed on the remote cluster. &nbsp;The user can send any data as input, lists, tables, an entire CSV file (already read into a R variable). &nbsp;The function output will be automatically imported into the environment when the remote job has completed.</div><div><br /></div><div>Below is a demo of the GridR package working with Bosco to submit to a campus cluster here at Nebraska.</div><div><br /></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://4.bp.blogspot.com/-WJlIyBopEBk/UZo2UDWMOCI/AAAAAAAAB8E/8jP712IKSMQ/s1600/Screen+Shot+2013-05-18+at+12.55.40+AM.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="433" src="http://4.bp.blogspot.com/-WJlIyBopEBk/UZo2UDWMOCI/AAAAAAAAB8E/8jP712IKSMQ/s640/Screen+Shot+2013-05-18+at+12.55.40+AM.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;"><a href="http://www.rstudio.com/">RStudio</a> IDE showing demo of Bosco + GridR integration</td></tr></tbody></table><div>The steps in the demo are:</div><div><ol><li>Load the GridR library</li><li>Create the function, in this case named simply 'a' that doubles the value of the argument.</li><li>Initialize the GridR integration to talk to Bosco</li><li>"Apply" the function. &nbsp;Run the function 'a', with the input 14, and write the result to the variable "x". &nbsp;Also, wait for the remote job to complete.</li><li>Finally, I printed out the value of x, which is 28, double the 14.&nbsp;</li></ol><div>This is a very simple demo. &nbsp;You could imagine the function sent to the remote machine could parse the a CSV file, or more complex operations...</div></div><div><br /></div><div>The Bosco team expects to have this integration done and in production by Mid-July for the <a href="http://161.67.142.97/congresos/useR-2013/%E2%80%8E">R users meeting</a>.</div><br /><center> <a href="http://bosco.opensciencegrid.org/download/">     <img alt="Bosco Download" src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png" style="border-width: 0;" /> </a>   </center>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 7.9.6 released! ( May 08, 2013 )]]></title>
+      <link href="manual/v7.9/9_3Development_Release.html"/>
+      <updated>2013-05-08T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.9.6.
+This is the final release of the 7.9 series. This release contains new
+tools, VMware player support, Linux out of memory killer hints, python
+bindings, new configuration parameters, and many bug fixes.
+A complete list of bugs fixed and features can be found in the
+Version History. HTCondor 7.9.6 binaries
+and source code are available from our Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Configuring a Personal Hadoop Development Environment on Fedora 18]]></title>
@@ -21,509 +83,7 @@
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2>Background</h2>
-
-<p>The following post outlines a setup and configuration of a &#8220;personal hadoop&#8221; development environment that is much akin to a &#8220;personal condor&#8221; setup.
-The primary purpose is to have a single source for configuration and logs along with a soft-link to development built binaries such that switching
-to a different build is a matter of updating a soft-link while maintaining all other data and configuration.</p>
-
-<hr />
-
-<h2>Use Cases</h2>
-
-<ul>
-<li>Comparison testing in a local sandbox without altering an existing system installation.</li>
-<li>Single source configuration and logs</li>
-<li>&#8230;</li>
-</ul>
-
-
-<hr />
-
-<h2>References</h2>
-
-<p>Inter-webz:</p>
-
-<ul>
-<li><a href="http://wiki.apache.org/hadoop/HowToSetupYourDevelopmentEnvironment">http://wiki.apache.org/hadoop/HowToSetupYourDevelopmentEnvironment</a></li>
-<li><a href="http://vichargrave.com/create-a-hadoop-build-and-development-environment-for-hadoop/">http://vichargrave.com/create-a-hadoop-build-and-development-environment-for-hadoop/</a></li>
-<li><a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/">http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/</a></li>
-<li><a href="http://wiki.apache.org/hadoop/">http://wiki.apache.org/hadoop/</a></li>
-<li><a href="http://docs.hortonworks.com/CURRENT/index.htm#Appendix/Configuring_Ports/HDFS_Ports.htm">http://docs.hortonworks.com/CURRENT/index.htm#Appendix/Configuring_Ports/HDFS_Ports.htm</a></li>
-</ul>
-
-
-<p>Books:</p>
-
-<ul>
-<li><a href="http://www.amazon.com/Hadoop-The-Definitive-Guide-ebook/dp/B0082FE448/ref=dp_kinw_strp_1">Hadoop &#8220;The Definitive Guide&#8221;</a></li>
-</ul>
-
-
-<hr />
-
-<h2>Disclaimers</h2>
-
-<ul>
-<li>Currently this is a non-native development setup that uses the existing maven dependencies.  For details on native packaging please visit <a href="https://fedoraproject.org/wiki/Features/Hadoop">https://fedoraproject.org/wiki/Features/Hadoop</a></li>
-<li>The setup listed below is for creating &#8220;Single-Node-Cluster&#8221;</li>
-</ul>
-
-
-<hr />
-
-<h2>Prerequisites</h2>
-
-<h3>Configure Password-less ssh</h3>
-
-<pre><code>yum install openssh openssh-clients openssh-server
-# generate a public/private key, if you don't already have one
-ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
-cat ~/.ssh/id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/*
-
-# testing ssh:
-ps -ef | grep sshd     # verify sshd is running
-ssh localhost          # accept the certification when prompted
-sudo passwd root       # Make sure the root has a password
-</code></pre>
-
-<h3>Install Other Build Dependencies</h3>
-
-<pre><code>yum install cmake git subversion dh-make ant autoconf automake sharutils libtool asciidoc xmlto curl protobuf-compiler maven gcc-c++ 
-</code></pre>
-
-<h3>Install Oracle 1.6 JDK</h3>
-
-<p><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk6downloads-1902814.html">You want jdk6 (not jdk7)</a>
-, for example: jdk-6u43-linux-x64-rpm.bin.  Run and it will unpack into several &#8220;.rpm&#8221; files:</p>
-
-<pre><code>jdk-6u43-linux-amd64.rpm
-sun-javadb-client-10.6.2-1.1.i386.rpm  
-sun-javadb-core-10.6.2-1.1.i386.rpm
-sun-javadb-docs-10.6.2-1.1.i386.rpm
-sun-javadb-common-10.6.2-1.1.i386.rpm  
-sun-javadb-demo-10.6.2-1.1.i386.rpm 
-sun-javadb-javadoc-10.6.2-1.1.i386.rpm
-</code></pre>
-
-<p>Install:</p>
-
-<pre><code>yum localinstall jdk-6u43-linux-amd64.rpm sun-javadb-*.rpm
-</code></pre>
-
-<p>append to your .bashrc file:</p>
-
-<pre><code>export JAVA_HOME="/usr/java/jdk1.6.0_43"
-export JVM_ARGS="-Xmx1024m -XX:MaxPermSize=512m"
-export PATH=${JAVA_HOME}/bin:${PATH}
-</code></pre>
-
-<hr />
-
-<h2>Building and Setting up a &#8220;personal-hadoop&#8221;</h2>
-
-<h3>Building</h3>
-
-<pre><code>git clone git://git.apache.org/hadoop-common.git
-cd hadoop-common
-git checkout branch-2.0.4-alpha origin/branch-2.0.4-alpha
-mvn clean package -Pdist -DskipTests
-</code></pre>
-
-<h3>Creating Your &#8220;personal-hadoop&#8221; Sandbox</h3>
-
-<p>In this configuration we default to <strong>/home/tstclair</strong></p>
-
-<pre><code>cd ~
-mkdir personal-hadoop
-cd personal-hadoop
-mkdir -p conf data name logs/yarn
-ln -sf &lt;your-git-loc&gt;/hadoop-dist/target/hadoop-2.0.4-alpha home
-</code></pre>
-
-<h3>Override your environment</h3>
-
-<p>append to your .bashrc file:</p>
-
-<pre><code># Hadoop env override:
-export HADOOP_BASE_DIR=${HOME}/personal-hadoop
-export HADOOP_LOG_DIR=${HOME}/personal-hadoop/logs
-export HADOOP_PID_DIR=${HADOOP_BASE_DIR}
-export HADOOP_CONF_DIR=${HOME}/personal-hadoop/conf
-export HADOOP_COMMON_HOME=${HOME}/personal-hadoop/home
-export HADOOP_HDFS_HOME=${HADOOP_COMMON_HOME}
-export HADOOP_MAPRED_HOME=${HADOOP_COMMON_HOME}
-# Yarn env override:
-export HADOOP_YARN_HOME=${HADOOP_COMMON_HOME}
-export YARN_LOG_DIR=${HADOOP_LOG_DIR}/yarn
-#classpath override to search hadoop loc
-export CLASSPATH=/usr/share/java/:${HADOOP_COMMON_HOME}/share
-#Finally update your PATH
-export PATH=${HADOOP_COMMON_HOME}/bin:${HADOOP_COMMON_HOME}/sbin:${HADOOP_COMMON_HOME}/libexec:${PATH}
-</code></pre>
-
-<h3>Verify your setup</h3>
-
-<pre><code>source ~/.bashrc
-which hadoop    # verify it should be ${HOME}/personal-hadoop/home/bin  
-hadoop -help    # verify classpath is correct.
-</code></pre>
-
-<h3>Creating Initial Single Configuration Node Setup</h3>
-
-<p>First copy in the default configuration files:</p>
-
-<pre><code>cp ${HADOOP_COMMON_HOME}/etc/hadoop/* ${HADOOP_BASE_DIR}/conf
-</code></pre>
-
-<p>NOTE: As your configuration testing space expands it is sometimes useful to have your conf directory to also be a softlink of configuration templates.</p>
-
-<p>Next update your <em>hdfs-site.xml</em> with the following:</p>
-
-<figure class='code'><figcaption><span> (hdfs-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/hdfs-site.xml'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span>
-</span><span class='line'><span class="c">&lt;!--</span>
-</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
-</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
-</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
-</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
-</span><span class='line'><span class="c">--&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;!-- Override tstclair with your home directory --&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>fs.default.name<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>hdfs://localhost/<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.name.dir<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>file:///home/tstclair/personal-hadoop/name<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.http.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50070<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.data.dir<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>file:///home/tstclair/personal-hadoop/data<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50010<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.http.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50075<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>dfs.datanode.ipc.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>0.0.0.0:50020<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Append, or update, your <em>mapred-site.xml</em> with the following:</p>
-
-<figure class='code'><figcaption><span> (mapred-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/mapred-site.xml'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;</span>
-</span><span class='line'><span class="c">&lt;!--</span>
-</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
-</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
-</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
-</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
-</span><span class='line'><span class="c">--&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">&lt;!-- Update or append these vars --&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>mapreduce.cluster.temp.dir<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>No description<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;final&gt;</span>true<span class="nt">&lt;/final&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>mapreduce.cluster.local.dir<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>No description<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;final&gt;</span>true<span class="nt">&lt;/final&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Finally update your <em>yarn-site.xml</em> with the following:</p>
-
-<figure class='code'><figcaption><span> (yarn-site.xml)</span> <a href='http://timothysc.github.com/downloads/code/xml/yarn-site.xml'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
-</span><span class='line'><span class="c">&lt;!--</span>
-</span><span class='line'><span class="c">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-</span><span class='line'><span class="c">you may not use this file except in compliance with the License.</span>
-</span><span class='line'><span class="c">You may obtain a copy of the License at</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">http://www.apache.org/licenses/LICENSE-2.0</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">Unless required by applicable law or agreed to in writing, software</span>
-</span><span class='line'><span class="c">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-</span><span class='line'><span class="c">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-</span><span class='line'><span class="c">See the License for the specific language governing permissions and</span>
-</span><span class='line'><span class="c">limitations under the License. See accompanying LICENSE file.</span>
-</span><span class='line'><span class="c">--&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>    <span class="c">&lt;!-- Site specific YARN configuration properties --&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8031<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>host is the hostname of the resource manager and
-</span><span class='line'>                    port is the port on which the NodeManagers contact the Resource Manager.
-</span><span class='line'>        <span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.scheduler.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8030<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>host is the hostname of the resourcemanager and port is the port
-</span><span class='line'>                     on which the Applications in the cluster talk to the Resource Manager.
-</span><span class='line'>        <span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.scheduler.class<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>In case you do not want to use the default scheduler<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8032<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the host is the hostname of the ResourceManager and the port is the port on
-</span><span class='line'>                    which the clients can talk to the Resource Manager. <span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.local-dirs<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the local directories used by the nodemanager<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.address<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>localhost:8034<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the nodemanagers bind to this port<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.resource.memory-mb<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>10240<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>the amount of memory on the NodeManager in GB<span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;property&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;value&gt;</span>mapreduce.shuffle<span class="nt">&lt;/value&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;description&gt;</span>shuffle service that needs to be set for Map Reduce to run <span class="nt">&lt;/description&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/property&gt;</span>
-</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>NOTE:</strong> You may notice that I&#8217;ve included default variables and their corresponding port numbers to ease default hunting.</p>
-
-<h2>Starting Your Single Node Hadoop Cluster</h2>
-
-<p>Format your namenode (only needed for the 1st setup):</p>
-
-<pre><code>hadoop namenode -format
-#verify output is correct.
-</code></pre>
-
-<p>Start HDFS:</p>
-
-<pre><code>start-dfs.sh
-</code></pre>
-
-<p>open a browser to http://localhost:50070 and verify you have 1 live node.</p>
-
-<p>Next start yarn:</p>
-
-<pre><code>start-yarn.sh
-</code></pre>
-
-<p>Verify the logs show it&#8217;s running normally.</p>
-
-<p>Finally check to see if you can run an MR application:</p>
-
-<pre><code>cd ${HADOOP_COMMON_HOME}/share/hadoop/mapreduce
-hadoop jar hadoop-mapreduce-example-2.0.4-alpha.jar randomwriter out
-</code></pre>
-
-<p><strong>HAPPY HACKING!!!</strong></p>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -536,209 +96,7 @@ hadoop jar hadoop-mapreduce-example-2.0.4-alpha.jar randomwriter out
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <p>The <a href="http://spark-project.org">Spark</a> project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java.  It offers map, filter, and reduce operations over in-memory collections, data from local files, or data taken from HDFS, but unlike standard map-reduce frameworks, it offers the opportunity to cache intermediate results across the cluster (and can thus offer orders-of-magnitude improvements over standard map-reduce when implementing iterative algorithms).  I&#8217;ve been using it lately and have been really impressed.  However &#8212; as with many cool projects in the &#8220;big data&#8221; space &#8212; the chain of dependencies to get a working installation can be daunting.</p>
-
-<p>In this post, we&#8217;ll walk through setting up Spark to run on a stock Fedora 18 installation.  We&#8217;ll also build the Mesos cluster manager so that we can run Spark jobs under Mesos, and we&#8217;ll build Hadoop with support for Mesos (so that we&#8217;ll have the option to run standard Hadoop MapReduce jobs under Mesos as well).  By following these steps, you should be up and running with Spark quickly and painlessly.</p>
-
-        <h3>Preliminary steps</h3>
-
-<p>You&#8217;ll first need to install some packages so that you&#8217;ll have all of the build dependencies for the packages you&#8217;ll want to install.  You may have some of these already installed, depending on what Fedora installation type you&#8217;ve used and what packages you&#8217;ve already installed, but this list should cover bringing you from a minimal Fedora installation to one that can support building Mesos, Hadoop, and Spark.</p>
-
-<p>First, we&#8217;ll install some essential tools that might not already be on your system:</p>
-
-<pre><code>sudo yum install -y git wget patch tar autoconf automake autotools libtool bzip2
-</code></pre>
-
-<p>Then, we&#8217;ll install some compilers, language environments, build tools, and support libraries:</p>
-
-<pre><code>sudo yum install -y gcc gcc-c++ python scala
-sudo yum install -y java-devel python-devel zlib-devel libcurl-devel openssl-devel
-sudo yum install -y ant maven maven2
-</code></pre>
-
-<p>We should now have all of the dependencies installed to build Mesos, Hadoop, and Spark.</p>
-
-<h3>Building Mesos</h3>
-
-<p>Set <code>JAVA_HOME</code> in your environment:</p>
-
-<pre><code>export JAVA_HOME=/usr/lib/jvm/java-1.7.0/
-</code></pre>
-
-<p>Then create a working directory and clone the Mesos source repository.  This will take a little while, since it&#8217;s a large (~180mb) repository:</p>
-
-<pre><code>mkdir ~/build
-cd ~/build
-git clone https://github.com/apache/mesos.git
-</code></pre>
-
-<p>We&#8217;re going to be working from the <code>0.12.x</code> branch of the Mesos repository.  Check that out:</p>
-
-<pre><code>cd mesos
-git checkout 0.12.x
-</code></pre>
-
-<p>Now we can actually build Mesos:</p>
-
-<pre><code>./bootstrap
-./configure --with-webui --with-included-zookeeper --disable-perftools
-make &amp;&amp; sudo make install
-</code></pre>
-
-<h3>Building and running Hadoop</h3>
-
-<p>You can run Spark jobs under Mesos without using Hadoop at all, and Spark running under Mesos can get data from HDFS even if the HDFS service isn&#8217;t itself running under Mesos.  However, in order to run Hadoop MapReduce jobs under Mesos, we&#8217;ll need to build a patched version of Hadoop.  If you already have Hadoop installed and running and are interested simply in running Spark against data in HDFS, you can skip this step, but if you don&#8217;t have Hadoop installed, installing it this way is simple and will give you greater flexibility in the future.</p>
-
-<p>Building the patched Hadoop is straightforward, since patches and build scripts are bundled with Mesos.  Simply run the following command from within your <code>mesos</code> directory and follow the prompts:</p>
-
-<pre><code>./hadoop/TUTORIAL.sh
-</code></pre>
-
-<p>It will explain what it is doing while downloading, patching, and building Hadoop.  It will then run an example Hadoop MapReduce job to make sure everything is working properly and remind you that you&#8217;ll need to make changes to the MapReduce configuration before running MapReduce jobs on your Mesos cluster.  Since we aren&#8217;t going to be running Hadoop MapReduce jobs under Mesos right away, we&#8217;ll skip that step for now.  However, we will be making some minor configuration changes.</p>
-
-<p>First, while you&#8217;re still in the <code>mesos</code> directory, change to the directory where you built your patched Hadoop:</p>
-
-<pre><code>cd hadoop/hadoop-0.20.205.0/
-</code></pre>
-
-<p>Then edit <code>conf/hadoop-env.sh</code> with your favorite editor, replacing the commented-out line that sets <code>JAVA_HOME</code> with the following:</p>
-
-<pre><code>export JAVA_HOME=/usr/lib/jvm/java-1.7.0/
-</code></pre>
-
-<p>Finally, edit <code>conf/core-site.xml</code> and add the following property:</p>
-
-<pre><code>&lt;property&gt;
-  &lt;name&gt;fs.default.name&lt;/name&gt;
-  &lt;value&gt;hdfs://localhost:9100&lt;/value&gt;
-&lt;/property&gt;
-</code></pre>
-
-<p>Now we&#8217;re ready to run Hadoop.  Check to make sure that you can <code>ssh</code> to your local machine without a password, since the Hadoop startup scripts will do this several times and you will get tired of typing your password.  If you can&#8217;t and you already have a SSH key pair, append your public key to your <code>authorized_keys</code> file and make sure it&#8217;s only readable by you.  If you don&#8217;t already have a SSH key pair on your machine, you can simply type in the following commands for a local-only setup:</p>
-
-<pre><code>ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
-cat ~/.ssh/id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-</code></pre>
-
-<p>Now you&#8217;re ready to format your HDFS storage:</p>
-
-<pre><code>./bin/hadoop namenode -format
-</code></pre>
-
-<p>Next, start all of the Hadoop daemons:</p>
-
-<pre><code>cd ~/build/mesos/hadoop/hadoop-0.20.205.0/
-./bin/start-all.sh
-</code></pre>
-
-<p>If you&#8217;re running as <code>root</code> (shame on you!), you&#8217;ll get an error that the <code>-jvm</code> option isn&#8217;t supported.  You can work around this error by running <code>sed -i 's/jvm //' bin/hadoop</code> or &#8212; if you prefer to do things manually &#8212; editing <code>bin/hadoop</code> and replacing the line that reads</p>
-
-<pre><code>HADOOP_OPTS="$HADOOP_OPTS -jvm server $HADOOP_DATANODE_OPTS"
-</code></pre>
-
-<p>with this line:</p>
-
-<pre><code>HADOOP_OPTS="$HADOOP_OPTS -server $HADOOP_DATANODE_OPTS"
-</code></pre>
-
-<p>If you had to make this change, run <code>bin/stop-all.sh</code> and then <code>bin/start-all.sh</code> again.</p>
-
-<h3>Storing an input file to HDFS</h3>
-
-<p>As long as we&#8217;re still thinking about Hadoop, let&#8217;s put some data there so we can process it after we&#8217;ve built Spark.  For our Spark example, we&#8217;ll work with a <a href="http://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format</a> file (like an Apache HTTPD <code>AccessLog</code>).  (You probably have one sitting around somewhere.)  Mine is called <code>~/access_log</code>.  Here&#8217;s how I&#8217;ll load it in to HDFS:</p>
-
-<pre><code>./bin/hadoop fs -mkdir input
-./bin/hadoop fs -put ~/access_log input
-</code></pre>
-
-<p>I can check that it&#8217;s actually there:</p>
-
-<pre><code>./bin/hadoop fs -ls input | grep access_log
-</code></pre>
-
-<p>and, sure enough, I&#8217;ll get something like this in return:</p>
-
-<pre><code>-rw-r--r--   3 root supergroup  792036736 2013-04-10 14:32 /user/root/input/access_log
-</code></pre>
-
-<p>Shame on me, too, I guess.  Now we&#8217;re ready to build Spark and run some example jobs against these data.</p>
-
-<h3>Building Spark</h3>
-
-<p>First, fetch the source tarball:</p>
-
-<pre><code>wget http://spark-project.org/files/spark-0.7.0-sources.tgz
-tar -xzvf spark-0.7.0-sources.tgz
-cd spark-0.7.0
-</code></pre>
-
-<p>In order to be able to fetch input data from HDFS, Spark needs to know what version of Hadoop you&#8217;re running before you build it.  To do this, either open <code>project/SparkBuild.scala</code> in your favorite editor or run the following command:</p>
-
-<pre><code>sed -i 's/= "1.0.4"/= "0.20.205.0"/' project/SparkBuild.scala
-</code></pre>
-
-<p>Now we&#8217;ll use the Scala build tool to compile Spark:</p>
-
-<pre><code>./sbt/sbt package
-</code></pre>
-
-<p>We can now run a simple job to make sure Spark works.  The <code>SparkPi</code> example uses a Monte Carlo method to approximate Pi:</p>
-
-<pre><code>export SCALA_HOME=/usr/share/scala
-./run spark.examples.SparkPi local 1000
-</code></pre>
-
-<p>Now you should have a working Spark installation and can run some jobs locally.  We&#8217;ll look at an example interaction with Spark next.</p>
-
-<h3>Running an example Spark job</h3>
-
-<p>The Spark shells use the <code>MASTER</code> environment variable to determine how to run jobs.  Set it to <code>local</code> for now:</p>
-
-<pre><code>export MASTER=local
-</code></pre>
-
-<p>This will run your jobs locally, using only one thread.  We&#8217;ll also want to enable Spark to use more memory if we&#8217;re going to work with a large dataset:</p>
-
-<pre><code>export SPARK_MEM=2g
-</code></pre>
-
-<p>If you want to use more or less than 2 gigabytes, change that setting appropriately; it uses the same format as Java heap size arguments.  Now we&#8217;ll start up the Python Spark environment:</p>
-
-<pre><code>./pyspark
-</code></pre>
-
-<p>You&#8217;ll find yourself in a Python REPL with a <a href="http://spark-project.org/docs/latest/api/pyspark/pyspark.context.SparkContext-class.html"><code>SparkContext</code></a> object initialized in the <code>sc</code> variable.  Now, create a Spark <a href="http://spark-project.org/docs/latest/api/pyspark/pyspark.rdd.RDD-class.html"><em>resilient distributed dataset</em></a> from the lines in the log file we uploaded to HDFS (noting, of course, that your URL may be different depending on how you stored the file):</p>
-
-<pre><code>log_entries = sc.textFile("hdfs://localhost:9100/user/root/input/access_log")
-</code></pre>
-
-<p>We&#8217;ll then write a short series of operations to count the number of log entries for each remote host:</p>
-
-<pre><code>ips = log_entries.map(lambda s: s.split()[0])
-ips.map(lambda ip: (ip, 1)).reduceByKey(lambda a, b: a + b).collect()
-</code></pre>
-
-<p>This example won&#8217;t benefit all that much from Spark&#8217;s caching support, but it will run faster in parallel.  If you have many cores in your machine, try using them!  Here&#8217;s how you&#8217;d set <code>MASTER</code> if you wanted to use 8 threads:</p>
-
-<pre><code>export MASTER='local[8]'
-</code></pre>
-
-<p>Exit out of <code>pyspark</code> and try running the example again with more threads, if you feel so inclined.</p>
-
-<h3>Next steps</h3>
-
-<p>Now that you have Spark up and running, here are some things to consider trying:</p>
-
-<ul>
-<li>learn more about Spark by working through some <a href="http://spark-project.org/examples/">examples</a></li>
-<li>read up on the <a href="http://spark-project.org/docs/latest/python-programming-guide.html">Python</a> or <a href="http://spark-project.org/docs/latest/scala-programming-guide.html">Scala</a> interfaces to programming Spark</li>
-<li>run <a href="http://spark-project.org/docs/latest/running-on-mesos.html">Spark under Mesos</a> or <a href="http://spark-project.org/docs/latest/spark-standalone.html">across several nodes without Mesos</a></li>
-<li>check out some other cool projects that work with Spark, like <a href="http://shark.cs.berkeley.edu">Shark</a> (an implementation of Apache Hive that uses Spark in the query planner) and <a href="http://spark-project.org/docs/latest/bagel-programming-guide.html">Bagel</a> (an implementation of Google&#8217;s Pregel system for graph processing)</li>
-</ul>
-
-    ]]></content>
+      <content type="html"><![CDATA[The Spark project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java. It offers map, filter, and reduce operations over in-memory collections, data from local files, or data taken from HDFS, but unlike standard...]]></content>
     </entry>
   
     <entry>
@@ -750,25 +108,24 @@ ips.map(lambda ip: (ip, 1)).reduceByKey(lambda a, b: a + b).collect()
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[Prior to the <a href="http://home.web.cern.ch/about/updates/2013/02/long-shutdown-1-exciting-times-ahead">LHC long shutdown</a>, the CMS experiment increased the trigger rate of the detector, therefore increasing the data coming off the detector. &nbsp;The Tier-0 was unable to process all of the events coming off of the detector, therefore the events where only stored and not processed. &nbsp;After the run, the experiment wanted to process the backlog of events, but didn't have the computing power available to do it. &nbsp;So they turned to opportunistic computing and <a href="http://bosco.opensciencegrid.org/">Bosco</a>.<br /><br />The CMS collaborators at UCSD worked with the <a href="http://www.sdsc.edu/">San Diego Supercomputing Resource</a> to run the processing on the <a href="http://www.sdsc.edu/News%20Items/PR030512_gordon.html">Gordon</a> supercomputer. &nbsp;Gordon is an <a href="https://www.xsede.org/web/guest/sdsc-gordon">XSEDE resource</a>&nbsp;and&nbsp;does not include a traditional OSG Globus Gatekeeper. &nbsp;Also, we did not have root access to the cluster to install a gatekeeper. &nbsp;Therefore, Bosco was used to submit and manage the <a href="http://www.uscms.org/SoftwareComputing/Grid/WMS/glideinWMS/doc.prd/index.html">GlidienWMS</a>&nbsp;Condor glideins to the resource.<br /><br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td><a href="http://3.bp.blogspot.com/-Iu-KOlNG1-s/UVswQYykYoI/AAAAAAAAB5A/0nsceq8Rumk/s1600/sdsc_jobs.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="480" src="http://3.bp.blogspot.com/-Iu-KOlNG1-s/UVswQYykYoI/AAAAAAAAB5A/0nsceq8Rumk/s640/sdsc_jobs.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="font-size: 13px;">Running jobs at Gordon, the SDSC supercomputer</td></tr></tbody></table><br /><br />As you can see from the graph, we reached nearly 4,000 CMS processing jobs on Gordon. &nbsp;4k cores is larger than most CMS Tier 2's, and as big as a European Tier-1. &nbsp;With Bosco, overnight, Gordon became one of the largest CMS clusters in the world.<br /><br />Full details will be written in a submitted paper to <a href="http://www.chep2013.org/">CHEP '13</a> in Amsterdam, and Bosco will be presented in a poster (and paper) as well. &nbsp;I hope to see you there!<br /><br />(If I got any details wrong about the CMS side of this run, please let me know. &nbsp;I have intimate knowledge of the Gordon side, but not so much the CMS side).<br /><br /><br /><center> <a href="http://bosco.opensciencegrid.org/download/">     <img alt="Bosco Download" src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png" style="border-width: 0;" /> </a>   </center><br />]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 7.8.8 released! ( March 28, 2013 )]]></title>
-      <link href="manual/v7.8/9_3Stable_Release.html"/>
-      <updated>2013-03-28T05:00:00Z</updated>
+      <title type="html"><![CDATA[ HTC deals with big data ( April 1, 2013 )]]></title>
+      <link href="http://www.hpcinthecloud.com/ct/uz5597866Biz16505092"/>
+      <updated>2013-04-01T05:00:00Z</updated>
       <id></id>
       <author>
         <name><![CDATA[HTCondor Team]]></name>
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.8.8.
-This release contains bug fixes for reconnection failure when using CCB, 
-introduces automatic retries for some glexec errors, 
-and fixes several other grid related bugs.
-A complete list of bugs fixed can be found in the
-Version History. HTCondor 7.8.8 binaries
-and source code are available from our Downloads page.
+      <content type="html"><![CDATA[Contributor Miha Ahronovitz traces the history of high throughput computing 
+(HTC), noting the particularly enthusiastic response from the 
+high energy physics world and the role of HTC in such important discoveries 
+as the Higgs boson. As one of the biggest generators of data, 
+this community has been dealing with the "big data" deluge long before "big data" assumed its position as the buzzword du jour.
+Read more at HPC In the Cloud.
 ]]></content>
     </entry>
   
@@ -812,33 +169,6 @@ and source code are available from our Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ Paradyn/HTCondor Week 2013 registration open (March 8, 2013)]]></title>
-      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2013/"/>
-      <updated>2013-03-08T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[We want to invite you to 
-HTCondor Week 2013
-, our annual HTCondor user conference, in beautiful Madison, WI April 29-May 3, 2013. (HTCondor Week was formerly named Condor Week, matching 
-a name change for the software.) We will again host HTCondor Week at the Wisconsin Institutes for Discovery, a state of the art facility for academic and private research specifically designed to foster private and public collaboration. It provides HTCondor Week attendees a compelling environment to attend tutorials and talks from HTCondor developers and users like you. It also provides many comfortable spaces for one-on-one or small group collaborations throughout the week. This year we continue our partnership with the Paradyn Tools Project, making this year Paradyn/HTCondor Week 2013. There will be a full slate of tutorials and talk for both HTCondor and Paradyn.
-
-Our current development series, 7.9, is well underway toward our upcoming production release. When you attend, you will learn how to take advantage of the latest features such as per-job PID namespaces, cgroup enforced resource limits, Python bindings, CPU affinity, BOSCO for submitting jobs to remote batch systems without administrator assistance, EC2 spot instance support, and a variety of speed and memory optimizations. You'll also get a peek into our longer term development plans--something you can only get at HTCondor Week!
-
-We will have a variety of in-depth tutorials, talks, and panels where you can not only learn more about HTCondor, but you can also learn how other people are using and deploying HTCondor. Best of all you can establish contacts and learn best practices from people in industry, government and academia who are using HTCondor to solve hard problems, many of which may be similar to those facing you.
-
-Speaking of learning from the community, we'd love to have you give a talk at HTCondor Week. Talks are 20 minutes long and are a great way share your ideas and get feedback from the community. If you have a compelling use of HTCondor you'd like to share, let Alan De Smet know (adesmet@cs.wisc.edu) and he'll help you out. 
-
-More information on speaking at HTCondor Week is available at the HTCondor Week web site.
-
-You can register, get the hotel details and see the agenda overview on  
-the HTCondor Week 2013 site. See you soon in Madison! 
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Running Quantum Espresso on the OSG]]></title>
       <link href="http://derekweitzel.blogspot.com/2013/03/running-quantum-espresso-on-osg.html"/>
       <updated>2013-03-05T18:53:00Z</updated>
@@ -864,25 +194,6 @@ the HTCondor Week 2013 site. See you soon in Madison!
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 7.9.4 released! (February 20, 2013)]]></title>
-      <link href="manual/v7.9/9_3Development_Release.html"/>
-      <updated>2013-02-20T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.9.4.
-This release supports per job PID namespaces for Linux RHEL 6, improvements
-to the resource usage of the EC2 GAHP, support for capping the size of input
-and output file transfer, and new analysis modes for condor_q -analyze.
-A complete list of bugs fixed and features can be found in the
-Version History. HTCondor 7.9.4 binaries
-and source code are available from our Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Statistic changes in HTCondor 7.7]]></title>
       <link href="http://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/"/>
       <updated>2013-02-12T11:56:04Z</updated>
@@ -891,7 +202,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -915,7 +226,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -927,7 +238,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -951,7 +262,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -975,19 +286,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Matthew Farrellee]]></name>
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [...]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Bosco 1.1 Release]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/01/bosco-11-release.html"/>
-      <updated>2013-01-08T23:01:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-2171189043756995217</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
+      <content type="html"><![CDATA[So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -1262,19 +561,6 @@ configured but the node needs to be configured to access the shared storage. [..
         <uri>http://getwallaby.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>In Wallaby, Condor nodes are configured by applying <em>features</em> and <em>parameter</em> settings to <em>groups</em>.  In order for the group abstraction to be fully general, <a href="http://getwallaby.com/2011/05/using-wallaby-groups-to-implement-node-tagging/">Wallaby provides two kinds of <em>special groups</em></a>:  the <em>default group</em>, which contains every node (but which is the lowest-priority membership for each node), and a set of <em>identity groups</em>, each of which only contains a single node (and which is always its highest-priority membership, so that special settings applied to a node&#8217;s identity group always take precedence over settings from that node&#8217;s other memberships). [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Troubleshooting Condor with Wallaby]]></title>
-      <link href="http://getwallaby.com/2012/06/troubleshooting/"/>
-      <updated>2012-06-01T17:27:00Z</updated>
-      <id>http://getwallaby.com/2012/06/troubleshooting</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://getwallaby.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Often, if you&#8217;re trying to reproduce a problem someone else is having with Condor, you&#8217;ll need their configuration.  Likewise, if you&#8217;re trying to help someone reproduce a problem you&#8217;re having, you&#8217;ll want to send along your configuration to aid them in replicating your setup.  For installations that use legacy flat-file configurations (optionally with a local configuration directory), this can be a pain, since you&#8217;ll need to copy several files from site to site (ensuring that you&#8217;ve included all the files necessary to replicate your configuration, perhaps across multiple machines on the site experiencing the problem). [...]</p>
 ]]></content>
     </entry>
   
