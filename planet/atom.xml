@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-06-18T16:32:52-07:00</updated>
+  <updated>2013-07-29T11:48:26-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Creating a native Mac Installer for Bosco]]></title>
+      <link href="http://derekweitzel.blogspot.com/2013/07/creating-native-mac-installer-for-bosco.html"/>
+      <updated>2013-07-11T20:34:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-9151105712164146929</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[It has been our goal for some time to create a native installer for our supported platforms. &nbsp;This week, we created a prototype for the first of those platforms, the Mac installer.<br /><br /><h3>The PKG file</h3><div>The first step to creating the installer is the PKG file. &nbsp;I installed Bosco the usual way, using the multi-platform installer. &nbsp;Then, I looked through the Bosco files (using a find command) to locate all of the instances of hard coded paths. &nbsp;They where located in the bosco.sh, bosco_setenv, and the condor_config files. &nbsp;I modified those to use the environment variable HOME.</div><div><br /></div><div>Then I used <a href="https://developer.apple.com/downloads/index.action">PackageMaker</a> from the auxiliary&nbsp;tools for Mac package available on the Mac developer page (free registration required). &nbsp;In PackageMaker, I opened the Bosco directory in the home directory.</div><div><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-4_JeICuk9Ck/Ud8VE-ZZO8I/AAAAAAAAB-s/sArZ3N51wd0/s1600/Screen+Shot+2013-07-11+at+3.26.29+PM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="529" src="http://2.bp.blogspot.com/-4_JeICuk9Ck/Ud8VE-ZZO8I/AAAAAAAAB-s/sArZ3N51wd0/s640/Screen+Shot+2013-07-11+at+3.26.29+PM.png" width="640" /></a></div><div>I unchecked the 'Require admin authentication' because bosco will be installed in the user's home directory. &nbsp;After these simple steps, I built the installer and tested, everything worked!</div><div><br /></div><h3>DMG File</h3><div>A DMG is a disk image that is used for software distribution. &nbsp;The first step is to create the Bosco.dmg disk image using Mac's built-in Disk Utility.</div><div><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-lNMwZDZXqvQ/Ud8VvheBT-I/AAAAAAAAB-0/aTG0ulkDyNk/s1600/Screen+Shot+2013-07-11+at+3.29.30+PM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="564" src="http://3.bp.blogspot.com/-lNMwZDZXqvQ/Ud8VvheBT-I/AAAAAAAAB-0/aTG0ulkDyNk/s640/Screen+Shot+2013-07-11+at+3.29.30+PM.png" width="640" /></a></div><div>After mounting the DMG, I copied the Bosco installer into the image. &nbsp;Then, I ran the command:</div><div><pre class="code-java" style="background-color: whitesmoke; color: #333333; font-size: 12px; line-height: 16px; max-height: 30em; overflow: auto; padding: 0px; white-space: pre-wrap; word-wrap: normal;">bless --folder /Volumes/Bosco --openfolder /Volumes/Bosco</pre></div><div><br /></div><div>This will cause the DMG to automatically open a window when mounting it.</div><div><br /></div><h3>Where to get this</h3><div>The Bosco DMG makes it very easy to install Bosco on a Mac. &nbsp;The DMG is available on Dropbox, and will be put in production when a few more minor fixes are put in place.</div><div><br /></div><div><a href="https://www.dropbox.com/s/8ljehuufos3x7hf/bosco.dmg">Bosco.dmg</a></div><div><br /></div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Miron Livny receives the HPDC 2013 Achievement Award ( July 10, 2013 )]]></title>
+      <link href="http://www.news.wisc.edu/21969"/>
+      <updated>2013-07-10T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[Miron Livny, Director of the UW-Madison Center for High Throughput Computing and founder of the HTCondor workload management system, has been honored with the 2013 High Performance Parallel and Distributed Computing (HPDC) Achievement Award.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.0.1 released! ( June 17, 2013 )]]></title>
+      <link href="manual/v8.0.1/10_3Stable_Release.html"/>
+      <updated>2013-06-17T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.0.1.
+This new version contains support for Debian 7 (wheezy) with standard universe, fixes in hierarchical group quotas, fixes for DAGman restarting workflows on upgrade, a fix for CCB only using the first broker even when given a list.
+A complete list of bugs fixed and features can be found in the 
+Version History. HTCondor 8.0.1 binaries
+and source code are available from our Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Leveraging systemd cgroup integration to provide SLAs on Fedora 18 & 19]]></title>
@@ -21,227 +63,7 @@
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2 id="background">Background</h2>
-<p>In the not-so-distant past, enterprise data centers would create silos for specific 
-services to gaurentee some metric of performance, or “Service Level Agreement” (SLA).  However,
-this approach can be costly to create and maintain.</p>
-
-<p>Enter the modern era of cloud computing, and one might wonder, “Why not just put it in VM?”.  For 
-some use cases this might work just fine, because the metrics are “good-enough”.   Despite this flexibility, 
-there are many cases where this approach simply won’t meet some measure of performance.  I won’t elaborate 
-on the details, but it doesn’t take Schrödinger math to figure this out, because sometimes the cat 
-is dead even before you peak into the box. ;-) </p>
-
-<p>Thus, in this post we will explore leveraging systemd cgroup integration to provide SLAs on Fedora. </p>
-
-<hr />
-
-<h2 id="references">References</h2>
-
-<ul>
-  <li><a href="http://searchitchannel.techtarget.com/definition/service-level-agreement">Definition SLA</a></li>
-  <li><a href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/">Redhat Cgroup Documentation</a></li>
-  <li><a href="http://0pointer.de/blog/projects/resources.html">Resource Management with Systemd</a></li>
-  <li><a href="http://0pointer.de/public/systemd-man/systemd.directives.html">Systemd Service Directives</a></li>
-</ul>
-
-<hr />
-
-<h2 id="prerequisites">Prerequisites</h2>
-
-<ul>
-  <li>Fedora 18 or 19 box(es).</li>
-  <li>Make certain you’ve read the references, as I may gloss over some details in this post.</li>
-</ul>
-
-<hr />
-
-<h2 id="getting-started">Getting Started</h2>
-<p>First you will need to choose a service which has been integrated with systemd that you can plan on tuning.
-In this example I will use ‘condor’, but you could use any service that you desire.</p>
-
-<pre><code> sudo yum install condor
-</code></pre>
-
-<p><strong>NOTE:</strong> You could do this with raw cgroups, but it becomes difficult to gaurentee performance unless 
-every service is in a group.  So systemd does a lot of the heavy lifting for us. </p>
-
-<p>Next you will need to determine the metrics of performance that you want to provide for that service.  For the 
-purposes of simplicity, lets say we want to carve off 50% of the CPU for condor.  You can 
-also play with disk-io-bandwidth and network settings too, but I think I will leave that for another post
-as this can be complicated enough.</p>
-
-<p>In order to divide up your machine you will first need to determine the existing 
-shares on your machine.  This can be done by dumping the current cgroup settings to a file which 
-can then be analyzed to determine the new settings. </p>
-
-<pre><code>cgsnapshot -s &gt; cgroup_snap.conf 
-</code></pre>
-
-<p>If you have a fairly basic setup you will notice the following pattern </p>
-
-<pre><code># Configuration file generated by cgsnapshot
-mount {
-    cpuset = /sys/fs/cgroup/cpuset;
-    cpu = /sys/fs/cgroup/cpu,cpuacct;
-    cpuacct = /sys/fs/cgroup/cpu,cpuacct;
-    memory = /sys/fs/cgroup/memory;
-    devices = /sys/fs/cgroup/devices;
-    freezer = /sys/fs/cgroup/freezer;
-    net_cls = /sys/fs/cgroup/net_cls;
-    blkio = /sys/fs/cgroup/blkio;
-    perf_event = /sys/fs/cgroup/perf_event;
-}
-
-group system {
-    cpu {
-            cpu.rt_period_us="1000000";
-            cpu.rt_runtime_us="0";
-            cpu.cfs_period_us="100000";
-            cpu.cfs_quota_us="-1";
-            cpu.shares="1024";
-    }
-    cpuacct {
-            cpuacct.usage="147354515620554";
-    }
-}
-
-group system/condor.service {
-    cpu {
-            cpu.rt_period_us="1000000";
-            cpu.rt_runtime_us="0";
-            cpu.cfs_period_us="100000";
-            cpu.cfs_quota_us="-1";
-            cpu.shares="1024";
-    }
-    cpuacct {
-            cpuacct.usage="146844720798260";
-    }
-}
-
-... * service look ~= 
-</code></pre>
-
-<hr />
-
-<h2 id="analyzing-your-configuration">Analyzing your Configuration</h2>
-<p>One thing you will notice is that systemd creates an implied hierarchy on your 
-machine by default, where each service has an equal amount of cpu.shares.  This means 
-when all services are contending for resources, each “service” gets an equal
-share. </p>
-
-<p>Lets elaborate on shares a bit.  Say you had two service S(a) = 1, and S(b) = 3 and each service 
-has multiple processes all contending for CPU. </p>
-
-<pre><code>%CPU = service.cpu.share /(sum (service shares @ level)) 
-%CPU[S(a)] = 1/4 = 25% 
-%CPU[S(b)] = 3/4 = 75% 
-</code></pre>
-
-<p>So now lets extend this idea and create a simple hierarchy
-where there are two groups, with each group having two services:</p>
-
-<pre><code>            Share   Overall%
-Group 1     1       25%
-    S(a)        1       12.5%
-    S(b)        1       12.5%
-Group 2     3       75%
-    S(c)        3       56.25%
-    S(d)        1       18.75%
-</code></pre>
-
-<p>Hopefully this should be intuitive, however it can quickly goto plaid. Therefore, it’s 
-important to have a handle on how many services you have planed for a given machine, and
-your intended hierarchy.  Thus the cost of reliable performance is extra complexity, which 
-isn’t so bad provided you’ve done your math.</p>
-
-<hr />
-
-<h2 id="altering-your-configuration">Altering your Configuration</h2>
-
-<p>So now lets provision condor such that it has 50% of the CPU.  First we need to get a count
-of number of services that exist on the machine. </p>
-
-<pre><code>$ cgsnapshot -s | grep [.]service | wc -l
-30
-</code></pre>
-
-<p>As you can see from the previous example, and from the documentation, the default cpu.shares 
-given to a service is 1024.  Thus if we want 50% CPU:</p>
-
-<pre><code>.50 = condor.cpu.shares/(1024*29 + condor.cpu.shares)
-512*(29) + .50*condor.cpu.shares = condor.cpu.shares
-14848 = (1-.50)*condor.cpu.shares 
-condor.cpu.shares = 14848/.50 = 29696
-</code></pre>
-
-<p>Now we need to plug this magic number in:</p>
-
-<pre><code>vim /usr/lib/systemd/system/condor.service
-
-[Service]
-CPUShares=29696
-</code></pre>
-
-<p>Once we exit we will need to restart the daemon and verify it worked.</p>
-
-<pre><code>systemctl daemon-reload
-systemctl restart condor.service
-cgsnapshot -s &gt; cgroup_snap_2.conf
-</code></pre>
-
-<p>Now you can compare the two configuration files.</p>
-
-<p>Next you will want to submit a whole bunch of condor jobs, and try to load down the other services. 
-To verify that your machine is behaving as expected you can run: </p>
-
-<pre><code>systemd-cgtop
-</code></pre>
-
-<p>In this example it can be difficult when you have 30 services to accurately test that you are 
-guaranteed 50% so I would recommend that the reader trim their machine down and create a 
-more controlled experiment to verify. </p>
-
-<hr />
-
-<h2 id="in-summary">In Summary</h2>
-<p>Systemd’s integration with cgroups is a many splendid thing, and when used correctly can
-give administrators and developers another tool in which to help create SLAs in their datacenter.</p>
-
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.0.0 released! ( June 6, 2013 )]]></title>
-      <link href="manual/v8.0/10_3Stable_Release.html"/>
-      <updated>2013-06-06T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.0.0.
-This release is the first in the new stable series.
-The major version number changed because of the project rename to HTCondor and not because of major incompatibility with the version 7.8 stable series.
-This new version contains Bosco, support for EC2 Spot instances, interactive jobs, improved job sandboxing, native python API and several new tools.
-A complete list of bugs fixed and features can be found in the 
-Version History. HTCondor 8.0.0 binaries
-and source code are available from our Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HPCwire article highlights running stochastic models on HTCondor ( June 6, 2013 )]]></title>
-      <link href="http://www.hpcwire.com/hpcwire/2013-05-30/running_stochastic_models_on_htcondor.html"/>
-      <updated>2013-06-06T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[An article published at HPCwire highlights research out of Brigham Young University with a goal to 
-demonstrate an alternative model to High Performance Computing (HPC) for water resource stakeholders by leveraging
-High Throughput Computing (HTC) with HTCondor.
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -265,18 +87,36 @@ you need inside the clusters you connect to.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ Atlas project at CERN describes their computing environment ( May 29, 2013 )]]></title>
-      <link href="http://www.hpcwire.com/hpcwire/2013-05-21/cern_google_and_the_future_of_global_science_initiatives.html"/>
-      <updated>2013-05-29T05:00:00Z</updated>
+      <title type="html"><![CDATA[ HPCwire article highlights running stochastic models on HTCondor ( June 6, 2013 )]]></title>
+      <link href="http://www.hpcwire.com/hpcwire/2013-05-30/running_stochastic_models_on_htcondor.html"/>
+      <updated>2013-06-06T05:00:00Z</updated>
       <id></id>
       <author>
         <name><![CDATA[HTCondor Team]]></name>
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
-      <content type="html"><![CDATA[The HPCwire: CERN, Google Drive Future of Global Science Initiatives article describes the computing environment of 
-the ATLAS project at CERN.  
-HTCondor and now Google Compute Engine aid the extensive collision 
-analysis effort for ATLAS.
+      <content type="html"><![CDATA[An article published at HPCwire highlights research out of Brigham Young University with a goal to 
+demonstrate an alternative model to High Performance Computing (HPC) for water resource stakeholders by leveraging
+High Throughput Computing (HTC) with HTCondor.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.0.0 released! ( June 6, 2013 )]]></title>
+      <link href="manual/v8.0/10_3Stable_Release.html"/>
+      <updated>2013-06-06T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.0.0.
+This release is the first in the new stable series.
+The major version number changed because of the project rename to HTCondor and not because of major incompatibility with the version 7.8 stable series.
+This new version contains Bosco, support for EC2 Spot instances, interactive jobs, improved job sandboxing, native python API and several new tools.
+A complete list of bugs fixed and features can be found in the 
+Version History. HTCondor 8.0.0 binaries
+and source code are available from our Downloads page.
 ]]></content>
     </entry>
   
@@ -289,26 +129,7 @@ analysis effort for ATLAS.
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[The Bosco team has been working on integrating with the <a href="http://www.r-project.org/">R</a> statistics processing language. &nbsp;We have&nbsp;chosen&nbsp;to modify the <a href="http://cran.r-project.org/web/packages/GridR/index.html">GridR</a> package in order to integrate with R.<br /><br /><h3>How will the R user see Bosco?</h3><div>The goal of the integration is to simplify the method of submitting processing, written in the R&nbsp;language, to remote clusters and grids. &nbsp;The expected steps for the integration are:</div><div><ol><li>Install Bosco</li><li>Install the Bosco'ified GridR package into your local R environment.</li></ol></div><div>After installing the 2 pieces of software above, the user creates a R script, which includes the 'function' that is to be executed on the remote cluster. &nbsp;The user can send any data as input, lists, tables, an entire CSV file (already read into a R variable). &nbsp;The function output will be automatically imported into the environment when the remote job has completed.</div><div><br /></div><div>Below is a demo of the GridR package working with Bosco to submit to a campus cluster here at Nebraska.</div><div><br /></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://4.bp.blogspot.com/-WJlIyBopEBk/UZo2UDWMOCI/AAAAAAAAB8E/8jP712IKSMQ/s1600/Screen+Shot+2013-05-18+at+12.55.40+AM.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" height="433" src="http://4.bp.blogspot.com/-WJlIyBopEBk/UZo2UDWMOCI/AAAAAAAAB8E/8jP712IKSMQ/s640/Screen+Shot+2013-05-18+at+12.55.40+AM.png" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;"><a href="http://www.rstudio.com/">RStudio</a> IDE showing demo of Bosco + GridR integration</td></tr></tbody></table><div>The steps in the demo are:</div><div><ol><li>Load the GridR library</li><li>Create the function, in this case named simply 'a' that doubles the value of the argument.</li><li>Initialize the GridR integration to talk to Bosco</li><li>"Apply" the function. &nbsp;Run the function 'a', with the input 14, and write the result to the variable "x". &nbsp;Also, wait for the remote job to complete.</li><li>Finally, I printed out the value of x, which is 28, double the 14.&nbsp;</li></ol><div>This is a very simple demo. &nbsp;You could imagine the function sent to the remote machine could parse the a CSV file, or more complex operations...</div></div><div><br /></div><div>The Bosco team expects to have this integration done and in production by Mid-July for the <a href="http://161.67.142.97/congresos/useR-2013/%E2%80%8E">R users meeting</a>.</div><br /><center> <a href="http://bosco.opensciencegrid.org/download/">     <img alt="Bosco Download" src="https://raw.github.com/osg-bosco/bosco-download-images/master/images/download-orange.png" style="border-width: 0;" /> </a>   </center>]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 7.9.6 released! ( May 08, 2013 )]]></title>
-      <link href="manual/v7.9/9_3Development_Release.html"/>
-      <updated>2013-05-08T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 7.9.6.
-This is the final release of the 7.9 series. This release contains new
-tools, VMware player support, Linux out of memory killer hints, python
-bindings, new configuration parameters, and many bug fixes.
-A complete list of bugs fixed and features can be found in the
-Version History. HTCondor 7.9.6 binaries
-and source code are available from our Downloads page.
-]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -320,10 +141,7 @@ and source code are available from our Downloads page.
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2 id="background">Background</h2>
-<p>The following post outlines a setup and configuration of a “personal hadoop” development environment that is much akin to a “personal condor” setup.
-The primary purpose is to have a single source for configuration and logs along with a soft-link to development built binaries such that switching 
-to a different build is a matter of updating a soft-link while maintaining all other data and configuration. [...]</p>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -411,10 +229,7 @@ to a different build is a matter of updating a soft-link while maintaining all o
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2 id="background">Background</h2>
-<p>“Isolation” in modern computing comes in many flavors and functions.  Virtual machines, c-groups, chroots/jails,
-sanboxing, and namespaces all have a role to play.  In this post we will review process mount namespace isolation, which allows a process to isolate 
-its mount points from the outside world.  Furthermore, it enables cleanup of that namespace, which is highly useful in grid applications.   [...]</p>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -491,18 +306,6 @@ its mount points from the outside world.  Furthermore, it enables cleanup of tha
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[Bosco 1.1.1 Release]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/01/bosco-111-release.html"/>
-      <updated>2013-01-14T18:59:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1926902995750303001</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Your API is a feature, give it real resource management]]></title>
       <link href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
       <updated>2013-01-14T12:17:29Z</updated>
@@ -574,8 +377,7 @@ its mount points from the outside world.  Furthermore, it enables cleanup of tha
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2 id="background">Background</h2>
-<p>As a developer, I often find myself wanting to iterate on a build, and test in a sandboxed environment.  Isolating the environment ensures that your changes work well in a controlled experiment, but it has one fundamental flaw, it’s not realistic.  In order to truly test a complicated system it’s best to put it into some production environment.  This is great for testing, but it has been known to give admins a headache, because you are mucking with a known good installation.  So in this post we will set about the task of overriding an installtion of HTCondor using sudo while keeping the following requirements in mind: [...]</p>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
@@ -699,8 +501,7 @@ configured but the node needs to be configured to access the shared storage. [..
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<h2 id="background">Background</h2>
-<p>Gone are the days where an IT administrator could procure a dedicated compute cluster for a single task, so it is often the case where admins are asked to do more with existing resources where possible, especially those which are underutilized.  There are several existing solutions to oversubscription, but few that remain “general purpose” while adapting to the environment as the load within the cluster changes.  Enter Condor, which has been most well known for its batch processing capabilities, but can also be leveraged in many ways as an IaaS tool when coupled with oVirt.  [...]</p>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
