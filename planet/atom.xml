@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-08-06T03:07:20-07:00</updated>
+  <updated>2013-08-07T03:44:23-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -63,6 +63,28 @@
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[ HTCondor 8.1.0 released! ( August 5, 2013 )]]></title>
+      <link href="manual/v8.1.0/10_3Development_Release.html"/>
+      <updated>2013-08-05T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor 8.1.0.
+This first release in a new development series includes all bug fixes added in the 8.0.1 stable series.
+Major new features include:
+the ability to push usage metrics into the Ganglia Monitoring System,
+DAGman now reports usage metrics,
+a Debian 7 port including support for the standard universe.
+The Python bindings omitted from this release will reappear in improved form in version 8.1.1.
+A complete list of bugs fixed and features can be found in the 
+Version History. HTCondor 8.1.0 binaries
+and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[ HTCondor 8.0.1 released! ( July 17, 2013 )]]></title>
       <link href="manual/v8.0.1/10_3Stable_Release.html"/>
       <updated>2013-07-17T05:00:00Z</updated>
@@ -118,17 +140,21 @@ and source code are available from our Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HPCwire article highlights running stochastic models on HTCondor ( June 6, 2013 )]]></title>
-      <link href="http://www.hpcwire.com/hpcwire/2013-05-30/running_stochastic_models_on_htcondor.html"/>
+      <title type="html"><![CDATA[ Open Science Grid releases Bosco 1.2, based on HTCondor ( June 6, 2013 )]]></title>
+      <link href="http://bosco.opensciencegrid.org/2013/06/bosco-1-2-release/"/>
       <updated>2013-06-06T05:00:00Z</updated>
       <id></id>
       <author>
         <name><![CDATA[HTCondor Team]]></name>
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
-      <content type="html"><![CDATA[An article published at HPCwire highlights research out of Brigham Young University with a goal to 
-demonstrate an alternative model to High Performance Computing (HPC) for water resource stakeholders by leveraging
-High Throughput Computing (HTC) with HTCondor.
+      <content type="html"><![CDATA[Bosco is a client for Linux and Mac operating systems for submitting jobs to 
+remote batch systems without administrator assistance. It is designed
+for end-users, and only requires ssh access to one or more cluster front-ends.
+Target clusters can be HTCondor, LSF, PBS, SGE or SLURM managed resources.  
+The new Bosco 1.2 release is much easier to install, will handle more jobs, 
+will send clearer error messages, and makes it easier to specify the memory
+you need inside the clusters you connect to.  
 ]]></content>
     </entry>
   
@@ -148,25 +174,6 @@ This new version contains Bosco, support for EC2 Spot instances, interactive job
 A complete list of bugs fixed and features can be found in the 
 Version History. HTCondor 8.0.0 binaries
 and source code are available from our Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ Open Science Grid releases Bosco 1.2, based on HTCondor ( June 6, 2013 )]]></title>
-      <link href="http://bosco.opensciencegrid.org/2013/06/bosco-1-2-release/"/>
-      <updated>2013-06-06T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[Bosco is a client for Linux and Mac operating systems for submitting jobs to 
-remote batch systems without administrator assistance. It is designed
-for end-users, and only requires ssh access to one or more cluster front-ends.
-Target clusters can be HTCondor, LSF, PBS, SGE or SLURM managed resources.  
-The new Bosco 1.2 release is much easier to install, will handle more jobs, 
-will send clearer error messages, and makes it easier to specify the memory
-you need inside the clusters you connect to.  
 ]]></content>
     </entry>
   
