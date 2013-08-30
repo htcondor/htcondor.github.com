@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-08-29T03:18:20-07:00</updated>
+  <updated>2013-08-30T03:31:23-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -597,19 +597,6 @@ configured but the node needs to be configured to access the shared storage. [..
         <uri>http://willbenton.com</uri>
       </author>
       <content type="html"><![CDATA[Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways. This post will explain how the authorization support works and show how to...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Highly-available configuration data with Wallaby]]></title>
-      <link href="http://getwallaby.com/2012/08/live-backup/"/>
-      <updated>2012-08-29T14:40:00Z</updated>
-      <id>http://getwallaby.com/2012/08/live-backup</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://getwallaby.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Many Condor users are interested in <em>high-availability</em> (HA) services:  they don&#8217;t want their compute resources to become unavailable due to the failure of a single machine that is running an important Condor daemon.  (See <a href="http://research.cs.wisc.edu/condor/CondorWeek2012/presentations/rati-benton-condor-ha.pdf">this talk</a> that Rob Rati and I gave at Condor Week this year for a couple of solutions to HA with the Condor <code>schedd</code>.)  So it&#8217;s only natural that Condor users who are interested in configuring their pools with <a href="http://getwallaby.com">Wallaby</a> might wonder how Wallaby responds in the face of failure. [...]</p>
-]]></content>
     </entry>
   
 </feed>
