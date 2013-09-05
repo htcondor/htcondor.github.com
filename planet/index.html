@@ -95,45 +95,7 @@ and source code are available from our Downloads page.
         <time datetime="2013-08-05T17:14:10Z" pubdate data-updated="true">Aug 5<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
     </header>
-    <div class="entry-content">
-        <p>Scala combines a lot of excellent features (functional-style pattern matching, an expressive type system, closures, etc.) with JVM compatibility and a very interesting developer ecosystem (e.g., <a href="http://akka.io">Akka</a>, <a href="http://www.playframework.com/">Play</a>, <a href="http://liftweb.net/">Lift</a>, <a href="https://github.com/rickynils/scalacheck">scalacheck</a>, and <a href="http://spark-project.org">Spark</a>, just to name a few notable projects).  Fedora has included a package for Scala itself for some time, but it doesn't include any of the ecosystem projects.  The main obstacle to having Scala ecosystem projects in Fedora is that many projects use <code>sbt</code>, the Simple Build Tool, but there is no native Fedora <code>sbt</code> package.  In this post, I'm going to discuss some of the things that make <code>sbt</code> very interesting as a build tool but challenging to package for Fedora, as well as the solutions I've come up with to these problems.  First, however, we'll discuss some background.</p>
-
-<p>I've <a href="http://chapeau.freevariable.com/2011/07/when-software-dependency-philosophies-collide.html">noted in the past</a> that there is a big tension between the Fedora model of dependency management and the models adopted by many language-specific dependency managers.  Put simply, the Fedora model is that projects should depend upon system copies of the latest versions of libraries, which have been built with system tools, which were themselves built from pristine sources in a controlled environment.  Language-specific models, such as the ones we see with RubyGems and <code>rvm</code>; Python eggs; Java projects using Maven or Ivy; and Erlang releases (especially those managed with <code>rebar</code>), typically allow developers more flexibility to install multiple versions of libraries, fetch dependencies from canonical locations on the web or from source repositories, and rely on different versions of language environments and language runtimes.  <code>sbt</code>, which provides both build and dependency management, is no exception in this regard; in fact, it provides as much flexibility as any other language-specific build tool I've encountered.</p>
-
-<h3>Launching</h3>
-
-<p>You don't actually download <code>sbt</code>.  Instead, you <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html">download a small, self-contained JAR file</a> that will run on any Java 1.6 JRE and includes enough of <code>sbt</code>, Apache Ivy, and the Scala standard library to fetch the whole Scala standard library and compiler, <code>sbt</code> itself, and its dependencies.  It can also fetch multiple versions of each of these.  This approach means that it's absolutely straightforward to get started using <code>sbt</code> in almost any environment with a JVM, but it conflicts with Fedora policies on bundling, single versions of libraries, and pristine sources.</p>
-
-<p>My solution to this problem is to develop a Fedora-specific <code>sbt</code> launcher that is willing to run against system copies of <code>sbt</code> itself, the Scala compiler and libraries, and other locally-installed JAR files.</p>
-
-<h3>Dependency management</h3>
-
-<p><code>sbt</code> uses Apache Ivy to manage dependencies.  Fedora has <a href="http://fedoraproject.org/wiki/Features/Simplified_Maven_Packaging">excellent support</a> for building packages that use Maven, but Ivy is still not well-represented in Fedora.  Just as with Maven, most of the concerns that Ivy is meant to handle are either addressed by RPM itself (specifying versions of dependencies, finding transitive dependencies, etc.) or do not apply to packages that meet Fedora guidelines (e.g. running different projects against different versions of their dependencies).</p>
-
-<p>It is possible (but clearly suboptimal) to build Ivy packages against RPM-installed dependencies by specifying an <a href="http://ant.apache.org/ivy/history/latest-milestone/concept.html#patterns">Ivy resolver pattern</a> that ignores version numbers and finds JAR artifacts <a href="http://fedoraproject.org/wiki/Packaging:Java#JAR_file_installation">where Fedora packages put them in the filesystem</a>, like this:</p>
-
-<pre><code>/usr/share/java/[artifact].[ext]
-</code></pre>
-
-<p>However, <code>/usr/share/java</code> isn't set up as a proper Ivy repository; it contains no <a href="http://ant.apache.org/ivy/history/latest-milestone/terminology.html#descriptor">Ivy module descriptor files</a> (i.e., <code>ivy.xml</code> files).  This isn't a problem if we're using Ivy from Ant or standalone, but <code>sbt</code> calls out to Ivy in a way that requires module descriptors and doesn't expose the <a href="http://ant.apache.org/ivy/history/latest-milestone/settings/resolvers.html">setting to make them optional</a>.</p>
-
-<p>I have solved this problem in two ways:  the first is a simple script that makes an ersatz Ivy repository from locally-installed packages, which can then be used by an <code>sbt</code> build.  The second is a small patch to <code>sbt</code> that exposes the Ivy setting to make module descriptor files optional.  (I use the former to build <code>sbt</code> binaries that include the latter.)</p>
-
-<h3>Bootstrapping</h3>
-
-<p><code>sbt</code> is used to build itself, as well as some of its dependencies.  Fedora has <a href="http://fedoraproject.org/wiki/Packaging:Guidelines#Exceptions">a policy for packaging projects that need to bootstrap in this way</a>, and some other build tools (like <code>rebar</code>) also depend on libraries that are built with that tool.  Because of how <code>sbt</code> uses a launcher and because of its dependency management, it is trickier to bootstrap in Fedora than other similar projects (since the initial <code>sbt</code> binary must run locally and must incorporate other Fedora-specific patches, like the module descriptor patch above and patches to work with versions of libraries that ship in Fedora).</p>
-
-<h3>Where from here?</h3>
-
-<p>Having <code>sbt</code> in Fedora would remove the biggest barrier to getting a lot of the Scala ecosystem in to Fedora, and <code>sbt</code> is a really interesting framework in its own right.  However, it's one of the projects where the mismatch between what Fedora requires of upstream projects and the assumptions that contemporary developers work under is particularly pronounced.  These difficulties aren't insurmountable, although I found the way that they combine and interweave somewhat daunting when I started investigating <code>sbt</code>.</p>
-
-<p>I'm envisioning a <code>sbt</code> package for Fedora that provides the best of both worlds:  an unrestricted <code>sbt</code> environment for developers who want to use Fedora but have the flexibility to target development to other Scala versions (or to use libraries that are available in Ivy repositories but not in Fedora) and a Fedora-specific <code>sbt</code> script that builds software against system packages in a Fedora-friendly way, much like the <code>xmvn</code> and <code>mvn-rpmbuild</code> tools were for Maven.  This way, Fedora packagers would have a straightforward way to generate high-quality RPMs from Scala sources and Scala hackers who just want Fedora to meet their needs today could use the system package without restrictions (while having a path to package their projects for Fedora in the future should they choose to).</p>
-
-<p>I welcome feedback and collaboration from Scala hackers who'd like to use Fedora (or other downstream distributions with similar packaging constraints) and from Fedora hackers who'd like to see Fedora as a better place for Scala.</p>
-
-        
-
-    </div>
+    <div class="entry-content">Scala combines a lot of excellent features (functional-style pattern matching, an expressive type system, closures, etc.) with JVM compatibility and a very interesting developer ecosystem (e.g., Akka, Play, Lift, scalacheck, and Spark, just to name a few notable projects). Fedora...</div>
   </article>
 
   <article>
@@ -317,12 +279,12 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/">Statistic changes in HTCondor 7.7</a></h1>
+      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/">Statistic changes in HTCondor 7.7</a></h1>
       <p class="meta">
         <time datetime="2013-02-12T11:56:04Z" pubdate data-updated="true">Feb 12<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content">Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -337,22 +299,22 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/">How accounting group configuration could work with Wallaby</a></h1>
+      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/">How accounting group configuration could work with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2013-02-05T11:46:28Z" pubdate data-updated="true">Feb 5<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content">Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/">Some htcondor-wiki stats</a></h1>
+      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/">Some htcondor-wiki stats</a></h1>
       <p class="meta">
         <time datetime="2013-01-29T11:36:06Z" pubdate data-updated="true">Jan 29<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content">A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -367,22 +329,22 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/">Concurrency Limits: Group defaults</a></h1>
+      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/">Concurrency Limits: Group defaults</a></h1>
       <p class="meta">
         <time datetime="2013-01-21T12:47:07Z" pubdate data-updated="true">Jan 21<span>st</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content">Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/">Your API is a feature, give it real resource management</a></h1>
+      <h1 class="entry-title"><a href="https://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/">Your API is a feature, give it real resource management</a></h1>
       <p class="meta">
         <time datetime="2013-01-14T12:17:29Z" pubdate data-updated="true">Jan 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content">So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -589,7 +551,7 @@ configured but the node needs to be configured to access the shared storage. [..
     
       <a href="http://erikerlandson.github.com/"> Erik Erlandson</a><br>
     
-      <a href="http://spinningmatt.wordpress.com"> Matthew Farrellee</a><br>
+      <a href="https://spinningmatt.wordpress.com"> Matthew Farrellee</a><br>
     
       <a href="http://tmckayus.github.com/"> Trevor McKay</a><br>
     
