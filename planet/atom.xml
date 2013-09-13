@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-09-12T03:35:28-07:00</updated>
+  <updated>2013-09-13T03:14:20-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -528,31 +528,6 @@ configured but the node needs to be configured to access the shared storage. [..
         <uri>http://rrati.github.com/</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Authorization for Wallaby clients]]></title>
-      <link href="http://getwallaby.com/2012/09/authorization-for-wallaby-clients/"/>
-      <updated>2012-09-12T22:30:00Z</updated>
-      <id>http://getwallaby.com/2012/09/authorization-for-wallaby-clients</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://getwallaby.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways.  This post will explain how the authorization support works and show how to get started using it.  If you just want to get started using Wallaby with authorization support as quickly as possible, skip ahead to the section titled &#8220;Getting Started&#8221; below.  Detailed information about which role is required for each Wallaby API method is <a href="http://getwallaby.com/api-roles/">available here</a>. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Authorization for Wallaby clients]]></title>
-      <link href="http://chapeau.freevariable.com/2012/09/authorization-for-wallaby-clients.html"/>
-      <updated>2012-09-12T22:23:18Z</updated>
-      <id>tag:chapeau.freevariable.com,2012://1.36</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[Wallaby 0.16.0, which updates the Wallaby API version to 20101031.6, includes support for authorizing broker users with various roles that can interact with Wallaby in different ways. This post will explain how the authorization support works and show how to...]]></content>
     </entry>
   
 </feed>
