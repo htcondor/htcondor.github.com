@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="International Science Grid This Week (ISGTW) reports on two research efforts in the area of brain research. The work of Ned Kalin is highlighted in &hellip;">
+  <meta name="description" content="Background Recently the BIG DATA SIG has added Hadoop 2.0.5 (or 2.X series) to the Fedora channels. This
+marks the first addition into any &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,115 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/">Bootstrapping your MapReduce 2.X programming on Fedora 20</a></h1>
+      <p class="meta">
+        <time datetime="2013-09-14T15:00:00Z" pubdate data-updated="true">Sep 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/></p>
+
+<h2>Background</h2>
+
+<p>Recently the BIG DATA SIG has added Hadoop 2.0.5 (or 2.X series) to the Fedora channels.  This
+marks the first addition into <em>any</em> distribution which meets all the standards, and system integration
+requirements set forth by their steering committee(s).  Don&#8217;t be fooled, bundling .jars into a package that
+looks like a .rpm or .deb != a compliant package (not even by a long shot).</p>
+
+<p>So to give some props to all the effort that it took to lasso this elephant, this post will outline how to bootstrap
+the default installation for MapReduce development.</p>
+
+<hr />
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://fedoraproject.org/wiki/Changes/Hadoop">Fedora 20 Hadoop Integration</a></li>
+<li><a href="https://fedoraproject.org/wiki/Big_data_SIG">Fedora BIG DATA SIG</a></li>
+<li><a href="http://fedoraproject.org/wiki/FedUp">Upgrading with FedUp</a></li>
+<li><a href="https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines">Fedora Packaging Guidelines</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Prerequisites</h2>
+
+<ul>
+<li>Fedora 20 Machine</li>
+</ul>
+
+
+<hr />
+
+<h2>Installation and Setup (as root)</h2>
+
+<p>First you will need to install all the default hadoop packages and tools required.</p>
+
+<pre><code>yum install hadoop-common hadoop-hdfs hadoop-libhdfs hadoop-mapreduce hadoop-mapreduce-examples hadoop-yarn maven-* xmvn* 
+</code></pre>
+
+<p>Next you will need need to format your namenode:</p>
+
+<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop namenode -format"
+</code></pre>
+
+<p>Once your namenode has been formatted you can now start the daemons using the default service methods:</p>
+
+<pre><code>systemctl start hadoop-namenode hadoop-datanode hadoop-nodemanager hadoop-resourcemanager
+</code></pre>
+
+<p>Finally you will want to create the default directories:</p>
+
+<pre><code>hdfs-create-dirs
+</code></pre>
+
+<hr />
+
+<h2>Setting up a Users Sandbox (as root)</h2>
+
+<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -mkdir /user/tstclair"
+runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -chown tstclair /user/tstclair"
+</code></pre>
+
+<hr />
+
+<h2>Running WordCount (as user)</h2>
+
+<p>For simplicity I&#8217;ve setup a WordCount example on github that you can copy.</p>
+
+<pre><code>git clone https://github.com/timothysc/hadoop-tests.github
+</code></pre>
+
+<p>Once it has downloaded you can put the example .txt file into your user location</p>
+
+<pre><code>cd hadoop-tests/WordCount
+hadoop fs -put constition.txt /user/tstclair
+</code></pre>
+
+<p>Now you can build WordCount against the system installed .jars.</p>
+
+<pre><code>mvn-rpmbuild package 
+</code></pre>
+
+<p>Finally you can run:</p>
+
+<pre><code>hadoop jar org.myorg.WordCount /user/tstclair /user/tstclair/output 
+</code></pre>
+
+<p>Feel free to cat the part-0000 file to see the results.</p>
+
+<hr />
+
+<h2>In Summary</h2>
+
+<p>Hadoop 2.0.5 now acts like a standard package, with all the accoutrements folks have come to expect.</p>
+
+<p><em>Giddyup!</em></p>
+</div>
+  </article>
 
   <article>
     <header>
@@ -486,17 +596,6 @@ configured but the node needs to be configured to access the shared storage. [..
       </p>
     </header>
     <div class="entry-content"><p>Cumin is a Python web UI developed in the Fedora community for managing Condor pools and Qpid messaging brokers.  It is packaged for Fedora but may be run from sources and would probably be easy to port to other Linux distributions (or just run Fedora on a node or two in a heterogeneous environment!)  The current development focus for Cumin is on expanding the Condor management facilities. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/09/21/condor-n-overt/">Elastic Grid with Condor and oVirt Integration</a></h1>
-      <p class="meta">
-        <time datetime="2012-09-21T08:50:00Z" pubdate data-updated="true">Sep 21<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><h2>Background</h2> [...]
 </div>
   </article>
 
