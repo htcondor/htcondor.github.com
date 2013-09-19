@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-09-18T03:40:18-07:00</updated>
+  <updated>2013-09-19T03:34:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -621,18 +621,6 @@ configured but the node needs to be configured to access the shared storage. [..
       </author>
       <content type="html"><![CDATA[<p>Cumin is a Python web UI developed in the Fedora community for managing Condor pools and Qpid messaging brokers.  It is packaged for Fedora but may be run from sources and would probably be easy to port to other Linux distributions (or just run Fedora on a node or two in a heterogeneous environment!)  The current development focus for Cumin is on expanding the Condor management facilities. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Putting It Together]]></title>
-      <link href="http://rrati.github.com/blog/2012/09/18/putting-it-together/"/>
-      <updated>2012-09-18T12:59:00Z</updated>
-      <id>http://rrati.github.com/blog/2012/09/18/putting-it-together</id>
-      <author>
-        <name><![CDATA[Robert Rati]]></name>
-        <uri>http://rrati.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
