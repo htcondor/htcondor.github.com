@@ -91,115 +91,6 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/">Bootstrapping your MapReduce 2.X programming on Fedora 20</a></h1>
-      <p class="meta">
-        <time datetime="2013-09-14T15:00:00Z" pubdate data-updated="true">Sep 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/></p>
-
-<h2>Background</h2>
-
-<p>Recently the BIG DATA SIG has added Hadoop 2.0.5 (or 2.X series) to the Fedora channels.  This
-marks the first addition into <em>any</em> OS-distribution which meets all the standards, and system integration
-requirements set forth by their steering committee(s).  Don&#8217;t be fooled, bundling .jars into a package that
-looks like a .rpm or .deb != a compliant package (not even by a long shot).</p>
-
-<p>So to give some props to all the effort that it took to lasso this elephant, this post will outline how to bootstrap
-the default installation for MapReduce development.</p>
-
-<hr />
-
-<h2>References</h2>
-
-<ul>
-<li><a href="https://fedoraproject.org/wiki/Changes/Hadoop">Fedora 20 Hadoop Integration</a></li>
-<li><a href="https://fedoraproject.org/wiki/Big_data_SIG">Fedora BIG DATA SIG</a></li>
-<li><a href="http://fedoraproject.org/wiki/FedUp">Upgrading with FedUp</a></li>
-<li><a href="https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines">Fedora Packaging Guidelines</a></li>
-</ul>
-
-
-<hr />
-
-<h2>Prerequisites</h2>
-
-<ul>
-<li>Fedora 20 Machine</li>
-</ul>
-
-
-<hr />
-
-<h2>Installation and Setup (as root)</h2>
-
-<p>First you will need to install all the default hadoop packages and tools required.</p>
-
-<pre><code>yum install hadoop-common hadoop-hdfs hadoop-libhdfs hadoop-mapreduce hadoop-mapreduce-examples hadoop-yarn maven-* xmvn* 
-</code></pre>
-
-<p>Next you will need need to format your namenode:</p>
-
-<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop namenode -format"
-</code></pre>
-
-<p>Once your namenode has been formatted you can now start the daemons using the default service methods:</p>
-
-<pre><code>systemctl start hadoop-namenode hadoop-datanode hadoop-nodemanager hadoop-resourcemanager
-</code></pre>
-
-<p>Finally you will want to create the default directories:</p>
-
-<pre><code>hdfs-create-dirs
-</code></pre>
-
-<hr />
-
-<h2>Setting up a Users Sandbox (as root)</h2>
-
-<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -mkdir /user/tstclair"
-runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -chown tstclair /user/tstclair"
-</code></pre>
-
-<hr />
-
-<h2>Running WordCount (as user)</h2>
-
-<p>For simplicity I&#8217;ve setup a WordCount example on github that you can copy.</p>
-
-<pre><code>git clone https://github.com/timothysc/hadoop-tests.github
-</code></pre>
-
-<p>Once it has downloaded you can put the example .txt file into your user location</p>
-
-<pre><code>cd hadoop-tests/WordCount
-hadoop fs -put constition.txt /user/tstclair
-</code></pre>
-
-<p>Now you can build WordCount against the system installed .jars.</p>
-
-<pre><code>mvn-rpmbuild package 
-</code></pre>
-
-<p>Finally you can run:</p>
-
-<pre><code>hadoop jar org.myorg.WordCount /user/tstclair /user/tstclair/output 
-</code></pre>
-
-<p>Feel free to cat the part-0000 file to see the results.</p>
-
-<hr />
-
-<h2>In Summary</h2>
-
-<p>Hadoop 2.0.5 now acts like a standard package, with all the accoutrements folks have come to expect.</p>
-
-<p><em>Giddyup!</em></p>
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://www.isgtw.org/feature/brain-circuitry-and-mechanisms-underlying-anxiety-uncovered"> Success stories enhanced by HTCondor in the area of brain research ( September 10, 2013 )</a></h1>
       <p class="meta">
         <time datetime="2013-09-10T05:00:00Z" pubdate data-updated="true">Sep 10<span>th</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
@@ -283,34 +174,12 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/06/14/systemd-cgroup-sla/">Leveraging systemd cgroup integration to provide SLAs on Fedora 18 & 19</a></h1>
-      <p class="meta">
-        <time datetime="2013-06-14T15:00:00Z" pubdate data-updated="true">Jun 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><h2>Background</h2> [...]
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2013/05/submitting-r-jobs-with-bosco.html">Submitting R jobs with Bosco</a></h1>
       <p class="meta">
         <time datetime="2013-05-20T14:51:00Z" pubdate data-updated="true">May 20<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
       </p>
     </header>
     <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/04/22/personalhadoop/">Configuring a Personal Hadoop Development Environment on Fedora 18</a></h1>
-      <p class="meta">
-        <time datetime="2013-04-22T15:00:00Z" pubdate data-updated="true">Apr 22<span>nd</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><h2>Background</h2> [...]
-</div>
   </article>
 
   <article>
@@ -374,17 +243,6 @@ and source code are available from our Downloads page.
       </p>
     </header>
     <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2013/02/22/perprocess/">Per-Process Mount Namespaces</a></h1>
-      <p class="meta">
-        <time datetime="2013-02-22T16:00:00Z" pubdate data-updated="true">Feb 22<span>nd</span>, 2013  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><h2>Background</h2> [...]
-</div>
   </article>
 
   <article>
@@ -502,34 +360,12 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2012/11/12/condor-sudo/">Override HTCondor installation with sudo</a></h1>
-      <p class="meta">
-        <time datetime="2012-11-12T09:00:00Z" pubdate data-updated="true">Nov 12<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
-      </p>
-    </header>
-    <div class="entry-content"><h2>Background</h2> [...]
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/11/best-practices-for-wallabys-default-group.html">Best practices for Wallaby's default group</a></h1>
       <p class="meta">
         <time datetime="2012-11-01T20:14:53Z" pubdate data-updated="true">Nov 1<span>st</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
       </p>
     </header>
     <div class="entry-content">Recall that Wallaby applies partial configurations to groups of nodes. Groups can be either explicit —- that is, a named subset of nodes created by the user, or special groups that are built-in to Wallaby; each node’s group memberships have...</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/">Welcome To The HTCondor Project Github Site</a></h1>
-      <p class="meta">
-        <time datetime="2012-10-29T20:15:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team GitHub</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project. [...]</p>
-</div>
   </article>
 
   <article>
@@ -623,11 +459,7 @@ configured but the node needs to be configured to access the shared storage. [..
     
       <a href="http://rrati.github.com/"> Robert Rati</a><br>
     
-      <a href="http://timothysc.github.com/"> Timothy St. Clair</a><br>
-    
       <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
-    
-      <a href="http://htcondor.github.com/"> HTCondor Team GitHub</a><br>
     
       <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
     
