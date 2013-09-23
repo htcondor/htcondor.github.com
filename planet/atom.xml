@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-09-22T16:18:32-07:00</updated>
+  <updated>2013-09-23T03:38:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -29,6 +29,117 @@ parameter substitution in configuration now honors per-daemon overrides.
 A complete list of bugs fixed and features can be found in the 
 Version History. HTCondor 8.1.1 binaries
 and source code are available from our Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Bootstrapping your MapReduce 2.X programming on Fedora 20]]></title>
+      <link href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/"/>
+      <updated>2013-09-14T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/></p>
+
+<h2>Background</h2>
+
+<p>Recently the BIG DATA SIG has added Hadoop 2.0.5 (or 2.X series) to the Fedora channels.  This
+marks the first addition into <em>any</em> OS-distribution which meets all the standards, and system integration
+requirements set forth by their steering committee(s).  Don&#8217;t be fooled, bundling .jars into a package that
+looks like a .rpm or .deb != a compliant package (not even by a long shot).</p>
+
+<p>So to give some props to all the effort that it took to lasso this elephant, this post will outline how to bootstrap
+the default installation for MapReduce development.</p>
+
+<hr />
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://fedoraproject.org/wiki/Changes/Hadoop">Fedora 20 Hadoop Integration</a></li>
+<li><a href="https://fedoraproject.org/wiki/Big_data_SIG">Fedora BIG DATA SIG</a></li>
+<li><a href="http://fedoraproject.org/wiki/FedUp">Upgrading with FedUp</a></li>
+<li><a href="https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines">Fedora Packaging Guidelines</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Prerequisites</h2>
+
+<ul>
+<li>Fedora 20 Machine</li>
+</ul>
+
+
+<hr />
+
+<h2>Installation and Setup (as root)</h2>
+
+<p>First you will need to install all the default hadoop packages and tools required.</p>
+
+<pre><code>yum install hadoop-common hadoop-hdfs hadoop-libhdfs hadoop-mapreduce hadoop-mapreduce-examples hadoop-yarn maven-* xmvn* 
+</code></pre>
+
+<p>Next you will need need to format your namenode:</p>
+
+<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop namenode -format"
+</code></pre>
+
+<p>Once your namenode has been formatted you can now start the daemons using the default service methods:</p>
+
+<pre><code>systemctl start hadoop-namenode hadoop-datanode hadoop-nodemanager hadoop-resourcemanager
+</code></pre>
+
+<p>Finally you will want to create the default directories:</p>
+
+<pre><code>hdfs-create-dirs
+</code></pre>
+
+<hr />
+
+<h2>Setting up a Users Sandbox (as root)</h2>
+
+<pre><code>runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -mkdir /user/tstclair"
+runuser hdfs -s /bin/bash /bin/bash -c "hadoop fs -chown tstclair /user/tstclair"
+</code></pre>
+
+<hr />
+
+<h2>Running WordCount (as user)</h2>
+
+<p>For simplicity I&#8217;ve setup a WordCount example on github that you can copy.</p>
+
+<pre><code>git clone https://github.com/timothysc/hadoop-tests.github
+</code></pre>
+
+<p>Once it has downloaded you can put the example .txt file into your user location</p>
+
+<pre><code>cd hadoop-tests/WordCount
+hadoop fs -put constition.txt /user/tstclair
+</code></pre>
+
+<p>Now you can build WordCount against the system installed .jars.</p>
+
+<pre><code>mvn-rpmbuild package 
+</code></pre>
+
+<p>Finally you can run:</p>
+
+<pre><code>hadoop jar org.myorg.WordCount /user/tstclair /user/tstclair/output 
+</code></pre>
+
+<p>Feel free to cat the part-0000 file to see the results.</p>
+
+<hr />
+
+<h2>In Summary</h2>
+
+<p>Hadoop 2.0.5 now acts like a standard package, with all the accoutrements folks have come to expect.</p>
+
+<p><em>Giddyup!</em></p>
 ]]></content>
     </entry>
   
@@ -128,6 +239,19 @@ and source code are available from our Downloads page.
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[Leveraging systemd cgroup integration to provide SLAs on Fedora 18 & 19]]></title>
+      <link href="http://timothysc.github.com/blog/2013/06/14/systemd-cgroup-sla/"/>
+      <updated>2013-06-14T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/06/14/systemd-cgroup-sla</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[Submitting R jobs with Bosco]]></title>
       <link href="http://derekweitzel.blogspot.com/2013/05/submitting-r-jobs-with-bosco.html"/>
       <updated>2013-05-20T14:51:00Z</updated>
@@ -137,6 +261,19 @@ and source code are available from our Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Configuring a Personal Hadoop Development Environment on Fedora 18]]></title>
+      <link href="http://timothysc.github.com/blog/2013/04/22/personalhadoop/"/>
+      <updated>2013-04-22T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/04/22/personalhadoop</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
     </entry>
   
     <entry>
@@ -212,6 +349,19 @@ and source code are available from our Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Per-Process Mount Namespaces]]></title>
+      <link href="http://timothysc.github.com/blog/2013/02/22/perprocess/"/>
+      <updated>2013-02-22T16:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/02/22/perprocess</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
     </entry>
   
     <entry>
@@ -350,6 +500,19 @@ and source code are available from our Downloads page.
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[Override HTCondor installation with sudo]]></title>
+      <link href="http://timothysc.github.com/blog/2012/11/12/condor-sudo/"/>
+      <updated>2012-11-12T09:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2012/11/12/condor-sudo</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h2>Background</h2> [...]
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[Best practices for Wallaby's default group]]></title>
       <link href="http://chapeau.freevariable.com/2012/11/best-practices-for-wallabys-default-group.html"/>
       <updated>2012-11-01T20:14:53Z</updated>
@@ -374,24 +537,6 @@ and source code are available from our Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[Using Cluster Suite's GUI to configure High Availability Schedulers ]]></title>
-      <link href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/"/>
-      <updated>2012-10-18T17:20:00Z</updated>
-      <id>http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers</id>
-      <author>
-        <name><![CDATA[Robert Rati]]></name>
-        <uri>http://rrati.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>In an <a href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/">earlier post</a> I talked about using Cluster Suite
-to manage high availability schedulers and referenced the command line tools
-available perform the configuration.  I'd like to focus on using the GUI that
-is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
-process but does require you run a wallaby shell command to complete the
-configuration. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Credentials in LDAP URLs when Anonymous Search is Disabled]]></title>
       <link href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/"/>
       <updated>2012-10-10T20:55:00Z</updated>
@@ -401,23 +546,6 @@ configuration. [...]</p>
         <uri>http://tmckayus.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Using Cluster Suite to Manage a High Availability Scheduler]]></title>
-      <link href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/"/>
-      <updated>2012-09-26T19:53:00Z</updated>
-      <id>http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler</id>
-      <author>
-        <name><![CDATA[Robert Rati]]></name>
-        <uri>http://rrati.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Condor provides simple and easy to configure HA functionality for the schedd
-that relies upon shared storage (usually NFS).  The shared store is used to
-store the job queue log and coordinate which node is running the schedd.  This
-means that each node that can run a particular schedd not only have condor
-configured but the node needs to be configured to access the shared storage. [...]</p>
 ]]></content>
     </entry>
   
