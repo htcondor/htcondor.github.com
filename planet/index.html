@@ -9,8 +9,9 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor Team is pleased to announce the release of HTCondor version 8.1.1.
-This development release contains all the bug fixes from the stable &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.0.3.
+This new version contains
+a fix for DAGMan recovery mode when using Pegasus- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +71,24 @@ This development release contains all the bug fixes from the stable &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.0.3/10_3Stable_Release.html"> HTCondor 8.0.3 released! ( September 23, 2013 )</a></h1>
+      <p class="meta">
+        <time datetime="2013-09-23T05:00:00Z" pubdate data-updated="true">Sep 23<span>rd</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.0.3.
+This new version contains
+a fix for DAGMan recovery mode when using Pegasus-generated SUBDAGs,
+and a fix for condor_ssh_to_job when using PID namespaces.
+A complete list of bugs fixed can be found in the 
+Version History.
+HTCondor 8.0.3 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -252,21 +271,6 @@ a Debian 7 port including support for the standard universe.
 The Python bindings omitted from this release will reappear in improved form in version 8.1.1.
 A complete list of bugs fixed and features can be found in the 
 Version History. HTCondor 8.1.0 binaries
-and source code are available from our Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.0.1/10_3Stable_Release.html"> HTCondor 8.0.1 released! ( July 17, 2013 )</a></h1>
-      <p class="meta">
-        <time datetime="2013-07-17T05:00:00Z" pubdate data-updated="true">Jul 17<span>th</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.0.1.
-This new version contains support for Debian 7 (wheezy) with standard universe, fixes in hierarchical group quotas, fixes for DAGMan restarting workflows on upgrade, a fix for CCB only using the first broker even when given a list.
-A complete list of bugs fixed and features can be found in the 
-Version History. HTCondor 8.0.1 binaries
 and source code are available from our Downloads page.
 </div>
   </article>
@@ -523,6 +527,17 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/">Welcome To The HTCondor Project Github Site</a></h1>
+      <p class="meta">
+        <time datetime="2012-10-29T20:15:00Z" pubdate data-updated="true">Oct 29<span>th</span>, 2012  &nbsp; &mdash; &nbsp; HTCondor Team GitHub</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Welcome to the HTCondor Project GitHub website!  This site is the github web and blog presence for the HTCondor project. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2012/10/configuring-high-availability-condor-central-managers-with-wallaby.html">Configuring high-availability Condor central managers with Wallaby</a></h1>
       <p class="meta">
         <time datetime="2012-10-23T04:34:58Z" pubdate data-updated="true">Oct 23<span>rd</span>, 2012  &nbsp; &mdash; &nbsp; Will Benton</time>
@@ -533,12 +548,43 @@ and source code are available from our Downloads page.
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/">Using Cluster Suite's GUI to configure High Availability Schedulers </a></h1>
+      <p class="meta">
+        <time datetime="2012-10-18T17:20:00Z" pubdate data-updated="true">Oct 18<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Robert Rati</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In an <a href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/">earlier post</a> I talked about using Cluster Suite
+to manage high availability schedulers and referenced the command line tools
+available perform the configuration.  I'd like to focus on using the GUI that
+is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
+process but does require you run a wallaby shell command to complete the
+configuration. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/">Credentials in LDAP URLs when Anonymous Search is Disabled</a></h1>
       <p class="meta">
         <time datetime="2012-10-10T20:55:00Z" pubdate data-updated="true">Oct 10<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Trevor McKay</time>
       </p>
     </header>
     <div class="entry-content"><p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/">Using Cluster Suite to Manage a High Availability Scheduler</a></h1>
+      <p class="meta">
+        <time datetime="2012-09-26T19:53:00Z" pubdate data-updated="true">Sep 26<span>th</span>, 2012  &nbsp; &mdash; &nbsp; Robert Rati</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Condor provides simple and easy to configure HA functionality for the schedd
+that relies upon shared storage (usually NFS).  The shared store is used to
+store the job queue log and coordinate which node is running the schedd.  This
+means that each node that can run a particular schedd not only have condor
+configured but the node needs to be configured to access the shared storage. [...]</p>
 </div>
   </article>
 
@@ -579,9 +625,13 @@ and source code are available from our Downloads page.
     
       <a href="http://tmckayus.github.com/"> Trevor McKay</a><br>
     
+      <a href="http://rrati.github.com/"> Robert Rati</a><br>
+    
       <a href="http://timothysc.github.com/"> Timothy St. Clair</a><br>
     
       <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
+    
+      <a href="http://htcondor.github.com/"> HTCondor Team GitHub</a><br>
     
       <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
     
