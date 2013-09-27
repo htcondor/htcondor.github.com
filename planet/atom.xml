@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-09-26T03:29:26-07:00</updated>
+  <updated>2013-09-27T03:18:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -580,23 +580,6 @@ configuration. [...]</p>
         <uri>http://tmckayus.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Using Cluster Suite to Manage a High Availability Scheduler]]></title>
-      <link href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/"/>
-      <updated>2012-09-26T19:53:00Z</updated>
-      <id>http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler</id>
-      <author>
-        <name><![CDATA[Robert Rati]]></name>
-        <uri>http://rrati.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Condor provides simple and easy to configure HA functionality for the schedd
-that relies upon shared storage (usually NFS).  The shared store is used to
-store the job queue log and coordinate which node is running the schedd.  This
-means that each node that can run a particular schedd not only have condor
-configured but the node needs to be configured to access the shared storage. [...]</p>
 ]]></content>
     </entry>
   
