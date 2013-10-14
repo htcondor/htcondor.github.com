@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-10-05T03:38:17-07:00</updated>
+  <updated>2013-10-14T07:41:49-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ Interview with Miron Livny ( October 10, 2013 )]]></title>
+      <link href="http://www.news.wisc.edu/22204?utm_source=iUW&utm_medium=email&utm_campaign=iUW2013-10-10"/>
+      <updated>2013-10-10T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[In this UW-Madison news story, Miron Livny offers perspective on finding the Higgs boson particle and the computational collaboration that supported this and other scientific research.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor is a hero of software engineering ( September 30, 2013 )]]></title>
@@ -186,25 +199,6 @@ hadoop fs -put constition.txt /user/tstclair
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
       <content type="html"><![CDATA[International Science Grid This Week (ISGTW) reports on two research efforts in the area of brain research. The work of Ned Kalin is highlighted in this article on brain circuitry and mechanisms underlying anxiety. And, high throughput computing permits the research of Mike Koenigs in psychopathy to analyze data in days, when without HTC, it might take years. 
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.0.2 released! ( August 22, 2013 )]]></title>
-      <link href="manual/v8.0.2/10_3Stable_Release.html"/>
-      <updated>2013-08-22T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.0.2.
-This new version contains a workaround to avoid a Linux kernel panic when
-using cgroups, fixes for the python bindings, and a fix for vm universe jobs
-under Xen or KVM.
-A complete list of bugs fixed and features can be found in the 
-Version History. HTCondor 8.0.2 binaries
-and source code are available from our Downloads page.
 ]]></content>
     </entry>
   
@@ -558,19 +552,6 @@ available perform the configuration.  I'd like to focus on using the GUI that
 is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
 process but does require you run a wallaby shell command to complete the
 configuration. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Credentials in LDAP URLs when Anonymous Search is Disabled]]></title>
-      <link href="http://tmckayus.github.com/blog/2012/10/10/ldap-credentials/"/>
-      <updated>2012-10-10T20:55:00Z</updated>
-      <id>http://tmckayus.github.com/blog/2012/10/10/ldap-credentials</id>
-      <author>
-        <name><![CDATA[Trevor McKay]]></name>
-        <uri>http://tmckayus.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Cumin authenticates logins against LDAP using a two step process: [...]</p>
 ]]></content>
     </entry>
   
