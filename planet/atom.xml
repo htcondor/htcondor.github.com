@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-10-18T03:35:16-07:00</updated>
+  <updated>2013-10-19T03:06:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -456,24 +456,6 @@ and source code are available from our Downloads page.
         <uri>http://willbenton.com</uri>
       </author>
       <content type="html"><![CDATA[Rob Rati and I gave a tutorial on highly-available job queues at Condor Week this year. While it was not a Wallaby-specific tutorial, we did point out that configuring highly-available job queues is easier for users who manage and deploy...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Using Cluster Suite's GUI to configure High Availability Schedulers ]]></title>
-      <link href="http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers/"/>
-      <updated>2012-10-18T17:20:00Z</updated>
-      <id>http://rrati.github.com/blog/2012/10/18/using-cluster-suites-gui-to-configure-high-availability-schedulers</id>
-      <author>
-        <name><![CDATA[Robert Rati]]></name>
-        <uri>http://rrati.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>In an <a href="http://rrati.github.com/blog/2012/09/26/using-cluster-suite-to-manage-a-high-availability-scheduler/">earlier post</a> I talked about using Cluster Suite
-to manage high availability schedulers and referenced the command line tools
-available perform the configuration.  I'd like to focus on using the GUI that
-is part of Cluster Suite to configure an HA schedd.  It's a pretty simple
-process but does require you run a wallaby shell command to complete the
-configuration. [...]</p>
-]]></content>
     </entry>
   
 </feed>
