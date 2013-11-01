@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-10-31T03:31:43-07:00</updated>
+  <updated>2013-11-01T03:41:14-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.1.2 released! ( October 31, 2013 )]]></title>
+      <link href="manual/v8.1.2/10_3Development_Release.html"/>
+      <updated>2013-10-31T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.1.2.
+This development release contains all the bug fixes from the stable release version 8.0.4.
+Major new features include:
+partitionable slots can now be split into dynamic slots at negotiation time using new consumption policies;
+new condor_chirp commands permit updates to job ClassAd attributes to occur in a delayed fashion, reducing the overhead of making the update;
+there are many Python binding improvements including a new Negotiator class;
+condor_ssh_to_job now works for grid universe jobs on amazon EC2 resources;
+new command line options for condor_config_val and condor_history allow them to query remote machines;
+increased the scalability of the condor_shared_port daemon, condor_queue, and condor_status by increasing concurrency.
+A complete list of bugs fixed and features can be found in the 
+Version History.
+HTCondor 8.1.2 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.0.4 released! ( October 24, 2013 )]]></title>
@@ -94,26 +119,6 @@ A complete list of bugs fixed can be found in the
 Version History.
 HTCondor 8.0.3 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.1.1 released! ( September 17, 2013 )]]></title>
-      <link href="manual/v8.1.1/10_3Development_Release.html"/>
-      <updated>2013-09-17T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor version 8.1.1.
-This development release contains all the bug fixes from the stable release version 8.0.2.
-Major new features include:
-the condor_startd daemon now advertises statistics about preemption,
-parameter substitution in configuration now honors per-daemon overrides.
-A complete list of bugs fixed and features can be found in the 
-Version History. HTCondor 8.1.1 binaries
-and source code are available from our Downloads page.
 ]]></content>
     </entry>
   
