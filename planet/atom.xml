@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-11-11T03:46:15-07:00</updated>
+  <updated>2013-11-12T03:18:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -410,19 +410,6 @@ Downloads page.
         <uri>http://tmckayus.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Roles in Cumin scope activities and content in the UI.  There are currently two roles defined in Cumin, <code>admin</code> and <code>user</code>.  The <code>admin</code> role is a superset of the <code>user</code> role, and every new account has the <code>user</code> role by default. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Override HTCondor installation with sudo]]></title>
-      <link href="http://timothysc.github.com/blog/2012/11/12/condor-sudo/"/>
-      <updated>2012-11-12T09:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2012/11/12/condor-sudo</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
     </entry>
   
