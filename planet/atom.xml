@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-11-18T03:39:17-07:00</updated>
+  <updated>2013-11-19T03:23:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -273,14 +273,14 @@ Downloads page.
   
     <entry>
       <title type="html"><![CDATA[Statistic changes in HTCondor 7.7]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/02/12/statistic-changes-in-htcondor-7-7/"/>
       <updated>2013-02-12T11:56:04Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=925</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -297,26 +297,26 @@ Downloads page.
   
     <entry>
       <title type="html"><![CDATA[How accounting group configuration could work with Wallaby]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
       <updated>2013-02-05T11:46:28Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=917</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
       <title type="html"><![CDATA[Some htcondor-wiki stats]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
       <updated>2013-01-29T11:36:06Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=903</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -333,26 +333,26 @@ Downloads page.
   
     <entry>
       <title type="html"><![CDATA[Concurrency Limits: Group defaults]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/"/>
       <updated>2013-01-21T12:47:07Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=895</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
       <title type="html"><![CDATA[Your API is a feature, give it real resource management]]></title>
-      <link href="https://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
+      <link href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/"/>
       <updated>2013-01-14T12:17:29Z</updated>
       <id>http://spinningmatt.wordpress.com/?p=872</id>
       <author>
         <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>https://spinningmatt.wordpress.com</uri>
+        <uri>http://spinningmatt.wordpress.com</uri>
       </author>
-      <content type="html"><![CDATA[So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="https://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
+      <content type="html"><![CDATA[So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
