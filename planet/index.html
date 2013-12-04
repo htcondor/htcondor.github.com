@@ -382,17 +382,6 @@ Downloads page.
 </div>
   </article>
 
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2012/12/03/a-demonstration-of-negotiator-side-resource-consumption/">A Demonstration of Negotiator-Side Resource Consumption</a></h1>
-      <p class="meta">
-        <time datetime="2012-12-03T15:25:00Z" pubdate data-updated="true">Dec 3<span>rd</span>, 2012  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>HTCondor supports a notion of aggregate compute resources known as partitionable slots (p-slots), which may be consumed by multiple jobs.   Historically, at most one job could be matched against such a slot in a single negotiation cycle, which limited the rate at which partitionable slot resources could be utilized.  More recently, the scheduler has been enhanced with logic to allow it to acquire multiple claims against a partitionable slot, which increases the p-slot utilization rate. However, as this potentially bypasses the negotiator's accounting of global pool resources such as accounting group quotas and concurrency limits, it places some contraints on what jobs can can safely acquire multiple claims against any particular p-slot: for example, only other jobs on the same scheduler can be considered.  Additionally, candidate job requirements must match the requirements of the job that originally matched in the negotiator.  Another significant impact is that the negotiator is still forced to match an entire p-slot, which may have a large match cost (weight): these large match costs cause <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3013">accounting difficulties</a> when submitter shares and/or group quotas drop below the cost of a slot.  This particular problem is growing steadily larger, as machines with ever-larger numbers of cores and other resources appear in HTCondor pools. [...]</p>
-</div>
-  </article>
-
 </div>
 <aside class="sidebar">
   <section>

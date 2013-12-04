@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2013-12-03T03:48:23-07:00</updated>
+  <updated>2013-12-04T03:35:14-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -377,19 +377,6 @@ Downloads page.
         <uri>http://erikerlandson.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[A Demonstration of Negotiator-Side Resource Consumption]]></title>
-      <link href="http://erikerlandson.github.com/blog/2012/12/03/a-demonstration-of-negotiator-side-resource-consumption/"/>
-      <updated>2012-12-03T15:25:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2012/12/03/a-demonstration-of-negotiator-side-resource-consumption</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>HTCondor supports a notion of aggregate compute resources known as partitionable slots (p-slots), which may be consumed by multiple jobs.   Historically, at most one job could be matched against such a slot in a single negotiation cycle, which limited the rate at which partitionable slot resources could be utilized.  More recently, the scheduler has been enhanced with logic to allow it to acquire multiple claims against a partitionable slot, which increases the p-slot utilization rate. However, as this potentially bypasses the negotiator's accounting of global pool resources such as accounting group quotas and concurrency limits, it places some contraints on what jobs can can safely acquire multiple claims against any particular p-slot: for example, only other jobs on the same scheduler can be considered.  Additionally, candidate job requirements must match the requirements of the job that originally matched in the negotiator.  Another significant impact is that the negotiator is still forced to match an entire p-slot, which may have a large match cost (weight): these large match costs cause <a href="https://htcondor-wiki.cs.wisc.edu/index.cgi/tktview?tn=3013">accounting difficulties</a> when submitter shares and/or group quotas drop below the cost of a slot.  This particular problem is growing steadily larger, as machines with ever-larger numbers of cores and other resources appear in HTCondor pools. [...]</p>
 ]]></content>
     </entry>
   
