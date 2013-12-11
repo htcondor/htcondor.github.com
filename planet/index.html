@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="I'm currently on my way back from the first-ever Spark Summit, where I presented a talk on some of my work with the Fedora Big Data SIG to package &hellip;">
+  <meta name="description" content="It really is this simple, 1. sudo yum install -y docker-io 2. sudo systemctl start docker 3. sudo docker run mattdm/fedora cat /etc/system-release &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,42 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/12/10/hello-fedora-with-docker-in-3-steps/">Hello Fedora with docker in 3 steps</a></h1>
+      <p class="meta">
+        <time datetime="2013-12-10T13:18:17Z" pubdate data-updated="true">Dec 10<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>It really is this simple,</p>
+<pre class="brush: bash; gutter: false; title: ; notranslate">
+1. sudo yum install -y docker-io
+
+2. sudo systemctl start docker
+
+3. sudo docker run mattdm/fedora cat /etc/system-release
+</pre>
+<hr />
+<p>Bonus, for when you want to go deeper -</p>
+<p>If you don&#8217;t want to use sudo all the time, which you shouldn&#8217;t want to do, you add yourself to the docker group,</p>
+<pre class="brush: bash; gutter: false; title: ; notranslate">
+$ sudo usermod -a -G docker $USER
+</pre>
+<p>If you don&#8217;t want to log out and back in, make your new group effective immediately,</p>
+<pre class="brush: bash; gutter: false; title: ; notranslate">
+$ su - $USER
+$ groups | grep -q docker &amp;&amp; echo Good job || echo Try again
+</pre>
+<p>If you want to run a known image, search for it on <a href="https://index.docker.io" rel="nofollow">https://index.docker.io</a> or on the command line,</p>
+<pre class="brush: bash; gutter: false; title: ; notranslate">
+$ docker search fedora
+</pre>
+<p>Try out a shell with,</p>
+<pre class="brush: bash; gutter: false; title: ; notranslate">
+$ docker run -i -t mattdm/fedora /bin/bash
+</pre><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/931/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/931/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=931&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
 
   <article>
     <header>
@@ -400,16 +436,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content">Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/14/your-api-is-a-feature-give-it-real-resource-management/">Your API is a feature, give it real resource management</a></h1>
-      <p class="meta">
-        <time datetime="2013-01-14T12:17:29Z" pubdate data-updated="true">Jan 14<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content">So much these days is about distributed resource management. That&#8217;s anything that can be created and destroyed in the cloud[0]. Proper management is especially important when the resource&#8217;s existence is tied to a real economy, e.g. your user&#8217;s credit card[1]. Above is a state machine required to ensure that resources created in AWS EC2 are [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=872&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
