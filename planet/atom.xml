@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-02T03:12:15-07:00</updated>
+  <updated>2014-01-03T03:16:20-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -463,19 +463,6 @@ Downloads page.
         <uri>http://osgtech.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[The Mean of the Modulus Does Not Equal the Modulus of the Mean]]></title>
-      <link href="http://erikerlandson.github.com/blog/2013/01/02/the-mean-of-the-modulus-does-not-equal-the-modulus-of-the-mean/"/>
-      <updated>2013-01-02T15:55:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2013/01/02/the-mean-of-the-modulus-does-not-equal-the-modulus-of-the-mean</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>I've been considering models for the effects of HTCondor negotiation cycle cadence on pool loading and accounting group starvation, which led me to thinking about the effects of taking the modulus of a random variable, for reasons I plan to discuss in future posts. [...]</p>
-]]></content>
     </entry>
   
 </feed>
