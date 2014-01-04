@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-03T03:16:20-07:00</updated>
+  <updated>2014-01-04T03:27:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -104,48 +104,7 @@ $ docker run -i -t mattdm/fedora /bin/bash
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <p>I'm currently on my way back from the first-ever <a href="http://spark-summit.org">Spark Summit</a>, where I presented a talk on some of my work with the <a href="https://fedoraproject.org/wiki/SIGs/bigdata">Fedora Big Data SIG</a> to package Apache Spark and its infrastructure for Fedora.  (<a href="http://spark-summit.org/wp-content/uploads/2013/10/E-Will-Benton-Redhat.pdf">My slides</a> are online, but they aren't particularly useful without the talk.  I'll post a link to the video when it's available, though.)</p>
-
-<p>If you're interested in learning more about Spark, a great place to start is the <a href="http://spark-summit.org/2013/exercises/">guided exercises</a> that the Spark team put together; simply follow their instructions to fire up an EC2 cluster with Spark installed and then work through the exercises.  In one of the exercises, you'll have <a href="http://spark-summit.org/2013/exercises/machine-learning-with-spark.html">an opportunity</a> to build up one of the classic Spark demos:  distributed k-means clustering in about a page of code.</p>
-
-<p>Implementing k-means on resilient distributed datasets is an excellent introduction to key Spark concepts and idioms. With recent releases of Spark, though, machine learning can be simpler still: <a href="http://spark.incubator.apache.org/docs/latest/mllib-guide.html">MLLib</a> includes an implementation of k-means clustering (as well as several other fundamental algorithms).  One of my spare-time projects has been experimenting with featurizing bicycling telemetry data (coordinates, altitude, mean maximal power, and heart rate) in order to aid self-coaching, and I've been using MLLib for this project.  I don't have any results yet that are interesting from a coaching perspective, but simply using GPS coordinates as feature vectors leads naturally to an expressive visualization:</p>
-
-<p><script src="https://gist.github.com/willb/161a3551dd8552075d91.js"></script><noscript>Visit this post in a browser with JavaScript support enabled to see the embedded map.</noscript></p>
-
-<p>The above map visualizes about six weeks of road rides in late summer and early fall.  It does so by plotting the centers of clusters; darker markers correspond to clusters that contain more trackpoints.  I've generated similar maps by hand <a href="http://blog.willbenton.com/2013/01/2012-cycling/">before</a>, and Strava offers <a href="http://blog.strava.com/new-premium-feature-personal-heatmaps-6719/">automatic activity heatmaps</a> now, but I like the clustering visualization since it can plot routes (when run with hundreds of clusters) or plot hot areas (when run with dozens of clusters).  </p>
-
-<p>Some fairly rough code to generate such a map is available in <a href="https://github.com/willb/sur-la-plaque">my cycling data analysis sandbox</a>; you can download and run the app yourself.  First, place a bunch of TCX files in a directory (here we're using "activities").  Then build and run the app, specifying the location of your activities directory with the "-d" parameter:</p>
-
-<pre><code>% sbt console
-scala&gt; com.freevariable.surlaplaque.GPSClusterApp.main(Array("-dactivities"))
-</code></pre>
-
-<p>You can influence the output and execution of the app with several environment variables:  <code>SLP_MASTER</code> sets the Spark master (defaults to local with 8 threads); <code>SLP_OUTPUT_FILE</code> sets the name of the GeoJSON output file (defaults to <code>slp.json</code>), <code>SLP_CLUSTERS</code> sets the number of clusters and <code>SLP_ITERATIONS</code> sets the number of k-means iterations.  Once you have the GeoJSON file, you can publish it by <a href="https://help.github.com/articles/mapping-geojson-files-on-github">posting it to GitHub</a> or your favorite map hosting service.</p>
-
-<p>To get started with MLLib in your own projects, make sure to add <code>spark-mllib</code> to your <code>build.sbt</code> file:</p>
-
-<pre><code>libraryDependencies += "org.apache.spark" % "spark-core_2.9.3" % "0.8.0-incubating"
-
-libraryDependencies += "org.apache.spark" % "spark-mllib_2.9.3" % "0.8.0-incubating"
-</code></pre>
-
-<p>From there, it's extremely straightforward to get k-means running; here are the relevant lines from my app (<code>vectors</code> is an <code>RDD</code> of <code>Array[Double]</code>):</p>
-
-<pre><code>val km = new KMeans()
-km.setK(numClusters)
-km.setMaxIterations(numIterations)
-
-val model = km.run(vectors)
-
-val labeledVectors = vectors.map((arr:Array[Double]) =&gt; (model.predict(arr), arr))
-</code></pre>
-
-<p>In just a few lines of code, this code initializes a k-means object, optimizes a model, and labels each trackpoint with the cluster the model expects it to belong to.  Since this functionality is blazing fast and available interactively from the Spark shell, we can easily experiment with different feature extraction policies and see what helps us get some insight from our data.</p>
-
-        
-
-    ]]></content>
+      <content type="html"><![CDATA[I'm currently on my way back from the first-ever Spark Summit, where I presented a talk on some of my work with the Fedora Big Data SIG to package Apache Spark and its infrastructure for Fedora. (My slides are online,...]]></content>
     </entry>
   
     <entry>
@@ -315,45 +274,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[The Impact of Negotiator Cycle Cadence on Slot Loading]]></title>
-      <link href="http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading/"/>
-      <updated>2013-03-21T22:10:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>The <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_1Introduction.html#8555">HTCondor negotiator</a> assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#20544">NEGOTIATOR_INTERVAL</a> parameter.  This interval (the cycle <em>cadence</em>) has a fundamental impact on a pool <em>loading factor</em> -- the fraction of time that slots are being productively utilized. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Smooth Gradients for Cubic Hermite Splines]]></title>
-      <link href="http://erikerlandson.github.com/blog/2013/03/16/smooth-gradients-for-cubic-hermite-splines/"/>
-      <updated>2013-03-16T14:39:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2013/03/16/smooth-gradients-for-cubic-hermite-splines</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>One of the advantages of cubic Hermite splines is that their interval interpolation formula is an explicit function of gradients \( m_0, m_1, ... m_{n-1} \) at knot-points: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Examining the Modulus of Random Variables]]></title>
-      <link href="http://erikerlandson.github.com/blog/2013/03/15/examining-the-modulus-of-random-variables/"/>
-      <updated>2013-03-15T19:03:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2013/03/15/examining-the-modulus-of-random-variables</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<h3>Motivation</h3> [...]
-]]></content>
     </entry>
   
     <entry>
