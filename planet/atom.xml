@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-04T03:27:15-07:00</updated>
+  <updated>2014-01-05T03:27:18-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -274,6 +274,45 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Impact of Negotiator Cycle Cadence on Slot Loading]]></title>
+      <link href="http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading/"/>
+      <updated>2013-03-21T22:10:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>The <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_1Introduction.html#8555">HTCondor negotiator</a> assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#20544">NEGOTIATOR_INTERVAL</a> parameter.  This interval (the cycle <em>cadence</em>) has a fundamental impact on a pool <em>loading factor</em> -- the fraction of time that slots are being productively utilized. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Smooth Gradients for Cubic Hermite Splines]]></title>
+      <link href="http://erikerlandson.github.com/blog/2013/03/16/smooth-gradients-for-cubic-hermite-splines/"/>
+      <updated>2013-03-16T14:39:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2013/03/16/smooth-gradients-for-cubic-hermite-splines</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>One of the advantages of cubic Hermite splines is that their interval interpolation formula is an explicit function of gradients \( m_0, m_1, ... m_{n-1} \) at knot-points: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Examining the Modulus of Random Variables]]></title>
+      <link href="http://erikerlandson.github.com/blog/2013/03/15/examining-the-modulus-of-random-variables/"/>
+      <updated>2013-03-15T19:03:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2013/03/15/examining-the-modulus-of-random-variables</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<h3>Motivation</h3> [...]
+]]></content>
     </entry>
   
     <entry>
