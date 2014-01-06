@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-05T03:27:18-07:00</updated>
+  <updated>2014-01-06T03:11:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -410,18 +410,6 @@ Downloads page.
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Fun with ClassAds]]></title>
-      <link href="http://osgtech.blogspot.com/2013/01/fun-with-classads.html"/>
-      <updated>2013-01-05T22:58:00Z</updated>
-      <id>tag:blogger.com,1999:blog-8803173202887660937.post-1674994974092153801</id>
-      <author>
-        <name><![CDATA[Brian Bockelman]]></name>
-        <uri>http://osgtech.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
