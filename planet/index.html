@@ -9,8 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor Team is pleased to announce the release of HTCondor version 8.1.3.
-This development release contains all the bug fixes from the stable &hellip;">
+  <meta name="description" content="I&#8217;m a fan of using the same OS image across multiple environments. So, I&#8217;m a fan of using cloud images, those with cloud-init installed, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,35 @@ This development release contains all the bug fixes from the stable &hellip;">
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2014/01/08/a-recipe-for-starting-cloud-images-with-virt-install/">A recipe for starting cloud images with virt-install</a></h1>
+      <p class="meta">
+        <time datetime="2014-01-08T12:17:17Z" pubdate data-updated="true">Jan 8<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>I&#8217;m a fan of using the same OS image across multiple environments. So, I&#8217;m a fan of using cloud images, those with cloud-init installed, even outside of a cloud.</p>
+<p>The trick to this is properly triggering the NoCloud datasource. It&#8217;s actually more of a pain than you would think, and not very well documented. Here&#8217;s my recipe (from Fedora 19),</p>
+<pre class="brush: bash; title: ; notranslate">
+wget http://download.fedoraproject.org/pub/fedora/linux/releases/test/20-Beta/Images/x86_64/Fedora-x86_64-20-Beta-20131106-sda.raw.xz
+xz -d Fedora-x86_64-20-Beta-20131106-sda.raw.xz
+
+echo &quot;#cloud-config\npassword: fedora\nchpasswd: {expire: False}\nssh_pwauth: True&quot; &gt; user-data
+
+NAME=node0
+cp Fedora-x86_64-20-Beta-20131106-sda.raw.xz $NAME.raw
+echo &quot;instance-id: $NAME; local-hostname: $NAME&quot; &gt; meta-data
+genisoimage -output $NAME-cidata.iso -volid cidata -joliet -rock user-data meta-data
+virt-install --import --name $NAME --ram 512 --vcpus 2 --disk $NAME.raw --disk $NAME-cidata.iso,device=cdrom --network bridge=virbr0
+</pre>
+<p>Login with username fedora and password fedora.</p>
+<p>You&#8217;ll also want to boost the amount of RAM if you plan on doing anything interesting in the guest.</p>
+<p>You can repeat lines 6 through 10 to start multiple guests, just make sure to change the name in line 6.</p>
+<p>If you want to ssh into the guest, you can use virsh console, login and use ifconfig / ip addr to find the address. Or, you can use arp -e and virsh dumpxml to match MAC addresses. Or just arp -e before and after starting the guest.</p>
+<p>Note, you need to follow the meta-data and user-data lines very closely. If you don&#8217;t you may not trigger the NoCloud datasource properly. It took me a number of tries to get it right. Also, the volid needs to be &#8220;cidata&#8221; or it won&#8217;t be found, which turns out to be a configurable parameter for NoCloud. The chpasswd bit is to prevent being prompted to change your password the first time you login.</p>
+<p>Consider becoming a fan of consistent OS images across your environments too!</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/940/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/940/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=940&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="manual/v8.1.3/10_3Development_Release.html"> HTCondor 8.1.3 released! ( December 23, 2013 )</a></h1>
       <p class="meta">
         <time datetime="2013-12-23T06:00:00Z" pubdate data-updated="true">Dec 23<span>rd</span>, 2013  &nbsp; &mdash; &nbsp; HTCondor Team</time>
@@ -119,33 +147,7 @@ Downloads page.
         <time datetime="2013-12-10T13:18:17Z" pubdate data-updated="true">Dec 10<span>th</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
       </p>
     </header>
-    <div class="entry-content"><p>It really is this simple,</p>
-<pre class="brush: bash; gutter: false; title: ; notranslate">
-1. sudo yum install -y docker-io
-
-2. sudo systemctl start docker
-
-3. sudo docker run mattdm/fedora cat /etc/system-release
-</pre>
-<hr />
-<p>Bonus, for when you want to go deeper -</p>
-<p>If you don&#8217;t want to use sudo all the time, which you shouldn&#8217;t want to do, you add yourself to the docker group,</p>
-<pre class="brush: bash; gutter: false; title: ; notranslate">
-$ sudo usermod -a -G docker $USER
-</pre>
-<p>If you don&#8217;t want to log out and back in, make your new group effective immediately,</p>
-<pre class="brush: bash; gutter: false; title: ; notranslate">
-$ su - $USER
-$ groups | grep -q docker &amp;&amp; echo Good job || echo Try again
-</pre>
-<p>If you want to run a known image, search for it on <a href="https://index.docker.io" rel="nofollow">https://index.docker.io</a> or on the command line,</p>
-<pre class="brush: bash; gutter: false; title: ; notranslate">
-$ docker search fedora
-</pre>
-<p>Try out a shell with,</p>
-<pre class="brush: bash; gutter: false; title: ; notranslate">
-$ docker run -i -t mattdm/fedora /bin/bash
-</pre><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/931/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/931/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=931&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
+    <div class="entry-content">It really is this simple, Bonus, for when you want to go deeper - If you don&#8217;t want to use sudo all the time, which you shouldn&#8217;t want to do, you add yourself to the docker group, If you don&#8217;t want to log out and back in, make your new group effective immediately, If you [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=931&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
   <article>
@@ -405,16 +407,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://spinningmatt.wordpress.com/2013/01/21/concurrency-limits-group-defaults/">Concurrency Limits: Group defaults</a></h1>
-      <p class="meta">
-        <time datetime="2013-01-21T12:47:07Z" pubdate data-updated="true">Jan 21<span>st</span>, 2013  &nbsp; &mdash; &nbsp; Matthew Farrellee</time>
-      </p>
-    </header>
-    <div class="entry-content">Concurrency limits allow for protecting resources by providing a way to cap the number of jobs requiring a specific resource that can run at one time. For instance, limit licenses and filer access at four regional data centers. Notice the repetition. In addition to the repetition, every license.* and filer.* must be known and recorded [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=895&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" /></div>
   </article>
 
 </div>
