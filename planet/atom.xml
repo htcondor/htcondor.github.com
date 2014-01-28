@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-28T03:35:35-07:00</updated>
+  <updated>2014-01-28T11:02:23-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -42,37 +42,6 @@ The opportunity to meet with HTCondor developers and other users
 
 	Information on registration and scheduling will be available soon.
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[A recipe for starting cloud images with virt-install]]></title>
-      <link href="http://spinningmatt.wordpress.com/2014/01/08/a-recipe-for-starting-cloud-images-with-virt-install/"/>
-      <updated>2014-01-08T12:17:17Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=940</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[<p>I&#8217;m a fan of using the same OS image across multiple environments. So, I&#8217;m a fan of using cloud images, those with cloud-init installed, even outside of a cloud.</p>
-<p>The trick to this is properly triggering the NoCloud datasource. It&#8217;s actually more of a pain than you would think, and not very well documented. Here&#8217;s my recipe (from Fedora 19),</p>
-<pre class="brush: bash; title: ; notranslate">
-wget http://download.fedoraproject.org/pub/fedora/linux/releases/test/20-Beta/Images/x86_64/Fedora-x86_64-20-Beta-20131106-sda.raw.xz
-xz -d Fedora-x86_64-20-Beta-20131106-sda.raw.xz
-
-echo &quot;#cloud-config\npassword: fedora\nchpasswd: {expire: False}\nssh_pwauth: True&quot; &gt; user-data
-
-NAME=node0
-cp Fedora-x86_64-20-Beta-20131106-sda.raw.xz $NAME.raw
-echo &quot;instance-id: $NAME; local-hostname: $NAME&quot; &gt; meta-data
-genisoimage -output $NAME-cidata.iso -volid cidata -joliet -rock user-data meta-data
-virt-install --import --name $NAME --ram 512 --vcpus 2 --disk $NAME.raw --disk $NAME-cidata.iso,device=cdrom --network bridge=virbr0
-</pre>
-<p>Login with username fedora and password fedora.</p>
-<p>You&#8217;ll also want to boost the amount of RAM if you plan on doing anything interesting in the guest.</p>
-<p>You can repeat lines 6 through 10 to start multiple guests, just make sure to change the name in line 6.</p>
-<p>If you want to ssh into the guest, you can use virsh console, login and use ifconfig / ip addr to find the address. Or, you can use arp -e and virsh dumpxml to match MAC addresses. Or just arp -e before and after starting the guest.</p>
-<p>Note, you need to follow the meta-data and user-data lines very closely. If you don&#8217;t you may not trigger the NoCloud datasource properly. It took me a number of tries to get it right. Also, the volid needs to be &#8220;cidata&#8221; or it won&#8217;t be found, which turns out to be a configurable parameter for NoCloud. The chpasswd bit is to prevent being prompted to change your password the first time you login.</p>
-<p>Consider becoming a fan of consistent OS images across your environments too!</p><br />  <a rel="nofollow" href="http://feeds.wordpress.com/1.0/gocomments/spinningmatt.wordpress.com/940/"><img alt="" border="0" src="http://feeds.wordpress.com/1.0/comments/spinningmatt.wordpress.com/940/" /></a> <img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=940&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -118,18 +87,6 @@ Version History.
 HTCondor 8.0.5 binaries and source code are available from our
 Downloads page.
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Hello Fedora with docker in 3 steps]]></title>
-      <link href="http://spinningmatt.wordpress.com/2013/12/10/hello-fedora-with-docker-in-3-steps/"/>
-      <updated>2013-12-10T13:18:17Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=931</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[It really is this simple, Bonus, for when you want to go deeper - If you don&#8217;t want to use sudo all the time, which you shouldn&#8217;t want to do, you add yourself to the docker group, If you don&#8217;t want to log out and back in, make your new group effective immediately, If you [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=931&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
     <entry>
@@ -382,18 +339,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[How accounting group configuration could work with Wallaby]]></title>
-      <link href="http://spinningmatt.wordpress.com/2013/02/05/how-accounting-group-configuration-could-work-with-wallaby/"/>
-      <updated>2013-02-05T11:46:28Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=917</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[Configuration of accounting groups in HTCondor is too often an expert task that requires coordination between administrators and their tools. Wallaby provides a coordination point, so long as a little convention is employed, and can provide a task specific interface to simplify configuration. Quick background, Wallaby provides semantic configuration for HTCondor. It models a pool [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=917&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Some htcondor-wiki stats]]></title>
       <link href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
       <updated>2013-01-29T11:36:06Z</updated>
@@ -403,18 +348,6 @@ Downloads page.
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Introducing the HTCondor-CE]]></title>
-      <link href="http://osgtech.blogspot.com/2013/01/introducing-htcondor-ce.html"/>
-      <updated>2013-01-28T15:33:00Z</updated>
-      <id>tag:blogger.com,1999:blog-8803173202887660937.post-1124494645797252707</id>
-      <author>
-        <name><![CDATA[Brian Bockelman]]></name>
-        <uri>http://osgtech.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
