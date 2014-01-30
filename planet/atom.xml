@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-01-29T03:38:21-07:00</updated>
+  <updated>2014-01-30T03:45:18-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -336,18 +336,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Some htcondor-wiki stats]]></title>
-      <link href="http://spinningmatt.wordpress.com/2013/01/29/some-htcondor-wiki-stats/"/>
-      <updated>2013-01-29T11:36:06Z</updated>
-      <id>http://spinningmatt.wordpress.com/?p=903</id>
-      <author>
-        <name><![CDATA[Matthew Farrellee]]></name>
-        <uri>http://spinningmatt.wordpress.com</uri>
-      </author>
-      <content type="html"><![CDATA[A few years ago I discovered Web Numbr, a service that will monitor a web page for a number and graph that number over time. I installed a handful of webnumbrs to track things at HTCondor&#8217;s gittrac instance. http://webnumbr.com/search?query=condor Thing such as - Tickets resolved with no destination: tickets that don&#8217;t indicate what version they [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=903&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
     </entry>
   
 </feed>
