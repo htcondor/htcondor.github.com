@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-02-05T08:45:16-07:00</updated>
+  <updated>2014-02-06T03:40:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -324,18 +324,6 @@ Downloads page.
         <uri>http://spinningmatt.wordpress.com</uri>
       </author>
       <content type="html"><![CDATA[Notice to HTCondor 7.8 users - Statistics implemented during the 7.5 series that landed in 7.7.0 were rewritten by the time 7.8 was released. If you were using the original statistics for monitoring and/or reporting, here is a table to help you map old (left column) to new (right column). See – 7.6 -&#62; 7.8 [&#8230;]<img alt="" border="0" src="http://stats.wordpress.com/b.gif?host=spinningmatt.wordpress.com&#038;blog=6870579&#038;post=925&#038;subd=spinningmatt&#038;ref=&#038;feed=1" width="1" height="1" />]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Using Bosco to submit to Amazon EC2]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/02/using-bosco-to-submit-to-amazon-ec2.html"/>
-      <updated>2013-02-06T04:27:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-4538100752405939638</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
