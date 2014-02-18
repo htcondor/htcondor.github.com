@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-02-17T03:22:15-07:00</updated>
+  <updated>2014-02-18T03:50:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -149,19 +149,6 @@ Downloads page.
         <uri>http://willbenton.com</uri>
       </author>
       <content type="html"><![CDATA[You probably already know that Apache Thrift is a framework for developing distributed services and clients to access these in multiple languages. You probably also knew that Thrift is extremely popular among the sorts of cool projects that those of...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Bootstrapping your MapReduce 2.X programming on Fedora 20]]></title>
-      <link href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/"/>
-      <updated>2013-09-14T15:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/> [...]</p>
-]]></content>
     </entry>
   
     <entry>
