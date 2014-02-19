@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-02-18T03:50:15-07:00</updated>
+  <updated>2014-02-19T03:35:59-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,147 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Hot Rod Hadoop with Tachyon on Fedora 21 (Rawhide)]]></title>
+      <link href="http://timothysc.github.com/blog/2014/02/17/bdas-tachyon/"/>
+      <updated>2014-02-17T16:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2014/02/17/bdas-tachyon</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/Tachyon.jpg" title="" ></p>
+
+<h2>Background</h2>
+
+<p>Within the last couple of years we&#8217;ve witnessed a natural evolution in
+the &#8220;Big Data&#8221; ecosystem.  Where the common theme that you&#8217;ve probably heard in the
+community that, &#8220;Memory is King&#8221;, and it is.  Therefore, if you are looking for performance
+optimization in your stack, an &#8220;in memory&#8221; layer should be part of
+the equation.  Enter <em>Tachyon</em>, which provides reliable file sharing across cluster
+frameworks.</p>
+
+<p>Tachyon can be used to support different framworks, as well as different filesystems.
+So to bound the scope of this post, we will outline how to setup Tachyon on a local installation
+to boost performance of map-reduce application whose data is stored in HDFS on Fedora 21.</p>
+
+<hr />
+
+<h2>Special Thanks</h2>
+
+<p>Tachyon is a recent addition to the Fedora channels, and it would not have been possible
+without the efforts of <a href="https://github.com/haoyuan">Haoyuan Li</a>, Gil Cattaneo,
+and <a href="http://chapeau.freevariable.com/">William Benton</a></p>
+
+<hr />
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://amplab.cs.berkeley.edu/software/">BDAS Stack</a></li>
+<li><a href="http://youtu.be/4lMAsd2LNEE">YouTube - Introduction to Tachyon</a></li>
+<li><a href="http://tachyon-project.org/">Tachyon project</a></li>
+<li><a href="https://fedoraproject.org/wiki/SIGs/bigdata">Fedora BIG Data SIG</a></li>
+<li><a href="http://labs.ericsson.com/blog/going-beyond-hadoop-some-insights-for-big-data-platforms">Going beyond Hadoop</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Prerequisites</h2>
+
+<ul>
+<li><a href="http://fedoraproject.org/en/get-fedora">Latest Fedora Machine</a></li>
+<li><a href="http://timothysc.github.io/blog/2013/09/14/hadoop-mapreduce/">Bootstrapping Your MapReduce 2.X Programming on Fedora 20</a></li>
+</ul>
+
+
+<hr />
+
+<h2>Installation and Setup</h2>
+
+<p>Prior to installing Tachyon please ensure that you have setup your hadoop installation
+as outlined in the pre-reqs.</p>
+
+<p>First you will need to install the tachyon package:</p>
+
+<pre><code>$ sudo yum install amplab-tachyon
+</code></pre>
+
+<p>Now you will need to update /etc/hadoop/core-site.xml configuration for hadoop to
+enable map-reduce to take advantage of tachyon, by appending the following snippet:</p>
+
+<pre><code>&lt;property&gt;
+  &lt;name&gt;fs.tachyon.impl&lt;/name&gt;
+  &lt;value&gt;tachyon.hadoop.TFS&lt;/value&gt;
+&lt;/property&gt;
+</code></pre>
+
+<p>Now that all the plumbing is in place you can restart hadoop</p>
+
+<pre><code>systemctl restart hadoop-namenode hadoop-datanode hadoop-nodemanager hadoop-resourcemanager
+</code></pre>
+
+<p>Next, make certain your local HDFS instance is up and running, then
+you will need to perform a tachyon format.</p>
+
+<pre><code>$ sudo runuser hdfs -s /bin/bash /bin/bash -c "tachyon.sh format"
+&gt; Formatting Tachyon @ localhost
+&gt; Deleting /var/lib/tachyon/journal/
+&gt; Formatting hdfs://localhost:8020/tachyon/data
+&gt; Formatting hdfs://localhost:8020/tachyon/workers
+</code></pre>
+
+<hr />
+
+<h3>Initialization</h3>
+
+<p>Prior to running the daemons you will need to mount the in-memory filesystem.</p>
+
+<pre><code>$ sudo tachyon-mount.sh SudoMount
+</code></pre>
+
+<p>Now you can start the daemons.</p>
+
+<pre><code>$ sudo systemctl start tachyon-master tachyon-slave
+</code></pre>
+
+<p>For completeness you can inspect the logs which are located in the standard system location</p>
+
+<pre><code>$ ls -la /var/log/tachyon
+</code></pre>
+
+<hr />
+
+<h3>Operation</h3>
+
+<p>Once you&#8217;ve verified tachyon is up and running, you can run a simple mapreduce application
+as seen below:</p>
+
+<pre><code>$ hadoop jar /usr/share/java/hadoop/hadoop-mapreduce-examples.jar wordcount
+  tachyon://localhost:19998/user/tstclair/input/constitution.txt
+  tachyon://localhost:19998/test1
+</code></pre>
+
+<p>You&#8217;ll notice tha tachyon prefix attached to the input and output locations.  This enables
+hadoop to start the TFS shim which will load and write to tachyon.  To verify you can run the following:</p>
+
+<pre><code>$ sudo runuser hdfs -s /bin/bash /bin/bash -c "tachyon.sh tfs ls /test1"
+&gt; 16.65 KB  02-17-2014 15:41:11:849  In Memory      /test1/part-r-00000
+&gt; 0.00 B    02-17-2014 15:41:12:366  In Memory      /test1/_SUCCESS
+</code></pre>
+
+<p>If you&#8217;re interested in grok&#8217;ing further you can probably find the part file under /mnt/ramdisk.</p>
+
+<h2>Summary</h2>
+
+<p>Tachyon provides reliable in memory file sharing across cluster frameworks, as we have seen
+in our simple example. It also enables some very interesting prospects for other back end filesystems.</p>
+
+<p>In future posts we&#8217;ll explore more elaborate configurations using tachyon atop different frameworks and filesystems.</p>
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.0.6 released! ( February 11, 2014 )]]></title>
@@ -149,6 +290,19 @@ Downloads page.
         <uri>http://willbenton.com</uri>
       </author>
       <content type="html"><![CDATA[You probably already know that Apache Thrift is a framework for developing distributed services and clients to access these in multiple languages. You probably also knew that Thrift is extremely popular among the sorts of cool projects that those of...]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Bootstrapping your MapReduce 2.X programming on Fedora 20]]></title>
+      <link href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/"/>
+      <updated>2013-09-14T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/> [...]</p>
+]]></content>
     </entry>
   
     <entry>
