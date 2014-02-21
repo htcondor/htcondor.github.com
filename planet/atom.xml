@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-02-20T03:06:29-07:00</updated>
+  <updated>2014-02-21T03:09:32-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[sbt is in Fedora 20]]></title>
+      <link href="http://chapeau.freevariable.com/2014/02/sbt-is-in-fedora-20.html"/>
+      <updated>2014-02-20T22:27:57Z</updated>
+      <id>tag:chapeau.freevariable.com,2014://1.44</id>
+      <author>
+        <name><![CDATA[Will Benton]]></name>
+        <uri>http://willbenton.com</uri>
+      </author>
+      <content type="html"><![CDATA[
+        <p>Longtime Chapeau readers may recall <a href="http://chapeau.freevariable.com/2013/08/making-fedora-a-better-place-for-scala.html">last summer&#8217;s lament</a> about the state of the Scala ecosystem in Fedora.  We&#8217;ve taken a lot of steps since then.  After a rough patch for the Fedora Scala package, <a href="https://github.com/willb/scala-packaging">Scala 2.10 is available</a> and works again on all current Fedora releases and Rawhide.  We&#8217;ve added more Scala packages to Fedora as well, including <a href="https://admin.fedoraproject.org/pkgdb/acls/name/scalacheck">scalacheck</a>, <a href="https://admin.fedoraproject.org/pkgdb/acls/name/sbinary">sbinary</a>, and <a href="https://admin.fedoraproject.org/pkgdb/acls/name/test-interface">test-interface</a>.  Today I&#8217;m especially pleased to announce that, by the time you read this, <a href="https://admin.fedoraproject.org/updates/sbt-0.13.1-4.fc20"><code>sbt</code> 0.13.1 will be available in Fedora 20 testing</a>.</p>
+
+<p>Having <code>sbt</code> available in Fedora means that we can start packaging more of the Scala ecosystem in Fedora.  In fact, the <code>sbt</code> package in Fedora is primarily intended for use building Scala packages for Fedora.  While you&#8217;ll be able to use it for general Scala development, it has several important limitations in order to comply with the Fedora packaging guidelines:  most notably, you won&#8217;t be able to cross-compile libraries for different Scala versions with it or launch different versions of <code>sbt</code> for different projects.  (I use <a href="https://github.com/paulp/sbt-extras"><code>sbt-extras</code></a>, which I&#8217;ve renamed to <code>xsbt</code>, for my general Scala development.)</p>
+
+<p>In the future (i.e. F21 and on), <code>sbt</code>-based Fedora builds will be greatly streamlined by improved Ivy support in an upcoming version of <code>xmvn</code>.  For now, we have to manage dependencies somewhat manually using scripts and macros, but it&#8217;s absolutely straightforward.    To get started building Scala projects for Fedora right now, <a href="https://fedoraproject.org/wiki/SIGs/bigdata/packaging/Sbt">check out these guidelines I wrote up for the Big Data SIG</a> and let me know if you have any trouble.  There are many example spec files using <code>sbt</code> available <a href="https://github.com/willb/">among my Github repositories</a>.</p>
+
+<p>This was a big effort and thanks are due to several people, including Mark Harrah, who offered a lot of advice on <code>sbt</code> itself and gave prompt and thorough feedback on my patches; Mikołaj Izdebski, who helped a lot with my understanding of Java dependency resolution in Fedora and implemented improved support for Ivy resolution in <code>xmvn</code>; Rob Rati, who took on the task of reviewing the <code>sbt</code> package and did a thoughtful and careful job; and the Fedora Packaging Committee for their quick and helpful response to my request for a bootstrap-binary exception.</p>
+
+<p>I&#8217;m looking forward to seeing new Scala projects packaged for Fedora soon!</p>
+
+        
+
+    ]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Consider presenting your work at HTCondor Week 2014 ( February 20, 2014 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2014/speaker_info.html"/>
+      <updated>2014-02-20T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[HTCondor Week attendees are interested in hearing about your efforts during
+our annual meeting, April 28-30.
+Please consider presenting.
+Details for adding your talk to the schedule are given in this page of
+Information for HTCondor Week Speakers.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[One weird trick to eviscerate open source licenses]]></title>
@@ -305,19 +347,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor assists in Einstein@Home discovery of a new radio pulsar ( November 4, 2013 )]]></title>
-      <link href="http://einstein.phys.uwm.edu/forum_thread.php?id=10397"/>
-      <updated>2013-11-04T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[We add our congratulations to James Drews of the University of Wisconsin - Madison for the discovery of J1859+03, a new radio pulsar, within data from the Arecibo Observatory PALFA survey.  James backfills the Computer Aided Engineering HTCondor pool with the Einstein@Home boinc client.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Apache Thrift in Fedora]]></title>
       <link href="http://chapeau.freevariable.com/2013/10/apache-thrift-in-fedora.html"/>
       <updated>2013-10-16T19:58:16Z</updated>
@@ -402,18 +431,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Installing Spark on Fedora 18]]></title>
-      <link href="http://chapeau.freevariable.com/2013/04/installing-spark-on-fedora-18.html"/>
-      <updated>2013-04-11T21:37:28Z</updated>
-      <id>tag:chapeau.freevariable.com,2013://1.39</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[The Spark project is an actively-developed open-source engine for data analytics on clusters using Scala, Python, or Java. It offers map, filter, and reduce operations over in-memory collections, data from local files, or data taken from HDFS, but unlike standard...]]></content>
     </entry>
   
     <entry>
