@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-03-05T03:09:17-07:00</updated>
+  <updated>2014-03-06T03:47:19-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -793,18 +793,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<h3>Motivation</h3> [...]
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Running Quantum Espresso on the OSG]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/03/running-quantum-espresso-on-osg.html"/>
-      <updated>2013-03-05T18:53:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-2337400839561942722</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
