@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-03-19T03:33:14-07:00</updated>
+  <updated>2014-03-20T03:38:14-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,18 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Submitting jobs to HTCondor using Python]]></title>
+      <link href="http://osgtech.blogspot.com/2014/03/submitting-jobs-to-htcondor-using-python.html"/>
+      <updated>2014-03-19T20:32:00Z</updated>
+      <id>tag:blogger.com,1999:blog-8803173202887660937.post-689352737761121268</id>
+      <author>
+        <name><![CDATA[Brian Bockelman]]></name>
+        <uri>http://osgtech.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[<div class="tr_bq">I've had several requests to for a tutorial on using the HTCondor python bindings; current documentation resources for these include:</div><br /><ul><li><a href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2013/presentations/Bockelman_Python.pdf">My presentation at the 2013 HTCondor week</a>.</li><li><a href="http://research.cs.wisc.edu/htcondor/manual/v8.1/6_7Python_Bindings.html">The HTCondor manual page</a>.</li><li>Python's built-in help() facility.</li><li>The HTCondor users mail list.</li></ul><br />However, more examples are always useful! &nbsp;This blog entry will attempt to cover the most common use cases - ClassAds, querying HTCondor, and submitting jobs.<br /><br /><h1>Why Python Bindings?</h1>Before we launch into the <i>how</i>, let's examine the <i>why</i>. &nbsp;The python bindings provide a developer-friendly mechanism for interacting with HTCondor. &nbsp;A few highlights:<br /><br /><ul><li>They call the HTCondor libraries directly, avoiding a fork/exec of a subprocess.</li><li>They provide a "pythonic" interaction with HTCondor; the design is meant to be familiar to a python programmer. &nbsp;Errors raise python exceptions.</li><li>They have thorough integration with ClassAds. &nbsp;Because they use the HTCondor implementation of ClassAds, the result is a very complete implementation of the ClassAd language. &nbsp;ClassAd expressions can be created cleanly without worrying about string quoting issues.</li><li>Most actions that can be performed through the HTCondor command-line tools are exposed via python.</li></ul><br /><br />The bindings themselves are compiled against the system version of python and a specific version of HTCondor. &nbsp;This limits the portability (you cannot reliably email compiled binaries to others), meaning they are most effective when they are installed onto the system by the sysadmin; that said, they are shipped with all HTCondor versions supported by UW except for Windows.<br /><br /><h1>Loading the modules</h1>The bindings are split into two python modules, <b>htcondor</b>&nbsp;and <b>classad</b>. &nbsp;To verify your environment is setup correctly, do the following in python:<br /><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">$ python</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">Python 2.7.5 (default, Aug 25 2013, 00:04:04)&nbsp;</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">[GCC 4.2.1 Compatible Apple LLVM 5.0 (clang-500.0.68)] on darwin</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">Type "help", "copyright", "credits" or "license" for more information.</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; import classad</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; import htcondor</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt;&nbsp;</span></div></blockquote>If no exception is thrown, you are ready to proceed to the next section! &nbsp;If an exception is thrown, check your HTCondor installation and the value of the <b>PYTHONPATH</b> environment variable if you are using a non-root install.<br /><br /><h1>Begin with the Basics: ClassAds</h1><a href="http://research.cs.wisc.edu/htcondor/classad/">ClassAds are the lingua franca of HTCondor</a>, and hence the basic essential data structure of the python bindings. &nbsp;Each ad is formed as a set of key-value pairs, where the value is a ClassAd expression (such as <b>2 + 2</b>). &nbsp;This differs from a JSON map, where the value must be a literal (<b>4</b>). &nbsp;When evaluating expressions, one can reference other attributes in the ClassAd.<br /><br />Consider the following ClassAd interaction:<br /><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad = ClassAd()</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad['foo'] = 1</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad['bar'] = 2</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad['baz'] = ExprTree("foo + bar")</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">[ baz = foo + bar; bar = 2; foo = 1 ]</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad['baz']</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">foo + bar</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ad['baz'].eval()</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">3L</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt;&nbsp;</span></div></blockquote>We first create an empty ClassAd, then do some value assignments in a manner similar to a Python dictionary. &nbsp;For the <b>baz</b>&nbsp;attribute, we create a new ExprTree (a ClassAd expression) object. &nbsp;The string given to the ExprTree constructor is parsed as a new python expression.<br /><br />Note that if we reference <b>baz</b>, the expression itself is returned; if we instead referenced <b>foo</b>, the python object 1 would be returned. &nbsp;The <b>classad</b>&nbsp;library will coerce references to python objects if possible; if not possible, it will return ExprTrees. &nbsp;To <i>force</i>&nbsp;the return of an ExprTree, use the <b>lookup</b>&nbsp;method of the ClassAd; to force the return of a python object, use the <b>eval</b>&nbsp;method.<br /><br />In 8.1.3, HTCondor introduced more convenient ways to build expressions. &nbsp;We could replace <b>ExprTree("foo + bar")</b> above with:<br /><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">Attribute("foo") + Attribute("bar")</span></blockquote>&nbsp;We believe that explicitly forming expressions in this manner is less likely to result in quoting issues (analogous to how one avoids SQL injection attacks).<br /><br />ClassAd expressions include the most common programming operators, lists, sub-ClassAds, attribute references, function calls, strings, numbers, and booleans. &nbsp;See the full language description for a thorough treatment.<br /><br /><h1>Querying HTCondor</h1>The two most common daemons to query in HTCondor are the collector (which holds descriptions for all daemons running in the pool) and the schedd (which maintains the job queue).<br /><br />We'll start with the collector. &nbsp;Begin by creating a <b>Collector</b> object:<br /><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; coll = Collector()</span></div></blockquote>The collector object will default to the collector daemon in the machine's configuration; alternately, the constructor accepts a hostname as a string argument.<br /><br />Once created, you can use the <b>query</b>&nbsp;method to get ClassAds from the collector:<br /><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ads = coll.query(htcondor.AdTypes.Startd)</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">len(ads)</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; len(ads)</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">4128</span></div></blockquote>This returns a Python list of ClassAds. &nbsp;By default all attributes for all ClassAds of a given type are returned by <b>query</b>; returning such a large amount of data can take a long amount of time. &nbsp;Further function arguments refine the amount of data returned:<br /><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ads = coll.query(htcondor.AdTypes.Startd, 'Machine =?= "red-d9n1.unl.edu"', ["Name", "RemoteOwner"])&nbsp;</span></div><div class="p2"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; len(ads)</span></div><div class="p2"><span style="font-family: Courier New, Courier, monospace;">15</span></div><div class="p2"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; ads[0]</span></div><div class="p2"><span style="font-family: Courier New, Courier, monospace;">[ Name = "slot1@red-d9n1.unl.edu"; MyType = "Machine"; TargetType = "Job"; CurrentTime = time() ]</span></div></blockquote>&nbsp;The second argument provides a ClassAd expression which serves as a filter; the third argument is a list of attributes to include. &nbsp;Note that the collector may add some default attributes and may not return a requested attribute if it is not present in the ad.<br /><br />The creation of a Schedd object can be done in a manner similar to the Collector for a local schedd:<br /><br /><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; schedd = htcondor.Schedd()</span></blockquote>Alternately, you can use the Collector's&nbsp;<b>locate</b> method to find a remote Schedd address:<br /><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; addr = coll.locate(htcondor.DaemonTypes.Schedd, "schedd.example.com")<br />&gt;&gt;&gt; schedd = htcondor.Schedd(addr)</span></blockquote><br /><div class="p1">Once the schedd object is created, the <b>query</b>&nbsp;method is used to list jobs:</div><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; jobs = schedd.query()<br />&gt;&gt;&gt; len(jobs)<br />2096</span></blockquote><div class="p1"></div><div class="p1">Again, additional arguments allow you to trim the number of ads and the number of attributes returned:</div><blockquote class="tr_bq"><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; jobs = schedd.query('Owner=?="cmsprod088"', ["ClusterId", "JobStatus"])</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; len(jobs)</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">336</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; jobs[0]</span></div><div class="p1"><span style="font-family: Courier New, Courier, monospace;">[ MyType = "Job"; JobStatus = 2; TargetType = "Machine"; ServerTime = 1395254896; CurrentTime = time(); ClusterId = 2940860 ]</span></div></blockquote>Starting in 8.1.5, the <b>xquery</b>&nbsp;method has been added. &nbsp;Instead of buffering all ads in memory in the form of a python list,&nbsp;&nbsp;<b>xquery</b>&nbsp;returns an iterator; reading through the iterator will block as ClassAds are returned by the schedd. &nbsp;This reduces total memory usage and allows the user to interleave several queries at once.<br /><br /><div class="p1"></div><h1>Submitting Jobs</h1><div class="p1">Submitting jobs is one of the more confusing aspects of the Python bindings for beginners. &nbsp;This is because job descriptions must be provided as a ClassAd instead of HTCondor submit file format. &nbsp;The submit file format is a macro substitution language evaluated at submit time.</div><div class="p1"><br /></div><div class="p1">For example, consider the following submit file:</div><blockquote class="tr_bq"><blockquote class="tr_bq"><span style="font-family: 'Courier New', Courier, monospace;">executable = test.sh</span><span style="font-family: Courier New, Courier, monospace;">arguments = foo bar&nbsp;</span><br /><span style="font-family: 'Courier New', Courier, monospace;">log = test.log</span><br /><span style="font-family: 'Courier New', Courier, monospace;">output = test.out.$(Process)</span><br /><span style="font-family: 'Courier New', Courier, monospace;">error = test.err</span><br /><span style="font-family: 'Courier New', Courier, monospace;">transfer_output_files = output</span><br /><span style="font-family: 'Courier New', Courier, monospace;">should_transfer_files = yes</span><br /><span style="font-family: 'Courier New', Courier, monospace;">queue 1</span></blockquote></blockquote>The equivalent submit ClassAd is:<br /><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">[<br />&nbsp; &nbsp;&nbsp;Cmd = "test.sh";<br />&nbsp; &nbsp;&nbsp;Arguments = "foo bar"<br />&nbsp; &nbsp;&nbsp;UserLog = "test.log";<br />&nbsp; &nbsp;&nbsp;Out = strcat("test.out",ProcId);<br />&nbsp; &nbsp; Err = "test.err";<br />&nbsp; &nbsp; TransferOutput = "output";<br />&nbsp; &nbsp;&nbsp;ShouldTransferFiles = "YES";<br />]</span></blockquote><br /><div class="p1">A few items of note for converting submit files to ClassAds:</div><div class="p1"></div><ul><li>The translation from the submit file commands to ClassAd attributes often results in different attribute names (<b>executable</b>&nbsp;corresponds to <b>Cmd</b>). &nbsp;An extensive, but not exhaustive, list of attribute is available in <a href="http://research.cs.wisc.edu/htcondor/manual/v8.1/12_Appendix_A.html">the HTCondor manual</a>.</li><li>Some submit file commands result in multiple attribute changes in the ClassAd. &nbsp;If you are unsure how a submit file command maps to a ClassAd, you can run <b>condor_submit -dump /dev/null test.submit</b>&nbsp;to have HTCondor dump the resulting ClassAd to stdout. &nbsp;This command includes <i>all</i>&nbsp;attributes, including ones that are auto-filled; do not copy the entire ad, but look just for the changes.</li><li>Submit file commands do not have a type and the quoting rules differs for different commands; you must properly quote strings in the ClassAd using the ClassAd language rules.</li><li>Macro substitution is not available by ClassAds. &nbsp;Notice how&nbsp;<span style="font-family: 'Courier New', Courier, monospace;">test.out.$(Process)</span>&nbsp;in the submit file is&nbsp;<span style="font-family: 'Courier New', Courier, monospace;">strcat("test.out",ProcId)</span>&nbsp;in the ClassAd; the latter is evaluated at runtime.</li></ul><div>Once you have your ClassAd prepared, submitting it is straightforward:</div><div><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; schedd = htcondor.Schedd()<br />&gt;&gt;&gt; schedd.submit(ad)<br />23498</span></blockquote><div class="p1">The return value is the Cluster ID. &nbsp;To submit multiple jobs in the same job cluster, you can pass a second argument to submit. &nbsp;For example, to submit 5 jobs:</div><blockquote class="tr_bq"><span style="font-family: Courier New, Courier, monospace;">&gt;&gt;&gt; schedd.submit(ad, 5)<br />23499</span></blockquote><br /><div class="p1"></div><h1>Parting Thoughts</h1><div class="p1">In this entry, we covered the basics of using the HTCondor python bindings. &nbsp;We covered only about 10% of the API; left untouched were advanced ClassAd topics, manipulating jobs, remote submission, and managing running daemons.</div><div class="p1"><br /></div><div class="p1">I hope to have a few more entries to cover other aspects of the API. &nbsp;Have a particular request? &nbsp;Leave a comment!</div></div><br /><div class="p1"></div>]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Moving from a Globus to an HTCondor Compute Element]]></title>
@@ -434,135 +446,7 @@ Information for HTCondor Week Speakers.
         <name><![CDATA[Timothy St. Clair]]></name>
         <uri>http://timothysc.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/Tachyon.jpg" title="" ></p>
-
-<h2>Background</h2>
-
-<p>Within the last couple of years we&#8217;ve witnessed a natural evolution in
-the &#8220;Big Data&#8221; ecosystem.  Where the common theme that you&#8217;ve probably heard in the
-community that, &#8220;Memory is King&#8221;, and it is.  Therefore, if you are looking for performance
-optimization in your stack, an &#8220;in memory&#8221; layer should be part of
-the equation.  Enter <em>Tachyon</em>, which provides reliable file sharing across cluster
-frameworks.</p>
-
-<p>Tachyon can be used to support different framworks, as well as different filesystems.
-So to bound the scope of this post, we will outline how to setup Tachyon on a local installation
-to boost performance of map-reduce application whose data is stored in HDFS on Fedora 21.</p>
-
-<hr />
-
-<h2>Special Thanks</h2>
-
-<p>Tachyon is a recent addition to the Fedora channels, and it would not have been possible
-without the efforts of <a href="https://github.com/haoyuan">Haoyuan Li</a>, Gil Cattaneo,
-and <a href="http://chapeau.freevariable.com/">William Benton</a></p>
-
-<hr />
-
-<h2>References</h2>
-
-<ul>
-<li><a href="https://amplab.cs.berkeley.edu/software/">BDAS Stack</a></li>
-<li><a href="http://youtu.be/4lMAsd2LNEE">YouTube - Introduction to Tachyon</a></li>
-<li><a href="http://tachyon-project.org/">Tachyon project</a></li>
-<li><a href="https://fedoraproject.org/wiki/SIGs/bigdata">Fedora BIG Data SIG</a></li>
-<li><a href="http://labs.ericsson.com/blog/going-beyond-hadoop-some-insights-for-big-data-platforms">Going beyond Hadoop</a></li>
-</ul>
-
-
-<hr />
-
-<h2>Prerequisites</h2>
-
-<ul>
-<li><a href="http://fedoraproject.org/en/get-fedora">Latest Fedora Machine</a></li>
-<li><a href="http://timothysc.github.io/blog/2013/09/14/hadoop-mapreduce/">Bootstrapping Your MapReduce 2.X Programming on Fedora 20</a></li>
-</ul>
-
-
-<hr />
-
-<h2>Installation and Setup</h2>
-
-<p>Prior to installing Tachyon please ensure that you have setup your hadoop installation
-as outlined in the pre-reqs.</p>
-
-<p>First you will need to install the tachyon package:</p>
-
-<pre><code>$ sudo yum install amplab-tachyon
-</code></pre>
-
-<p>Now you will need to update /etc/hadoop/core-site.xml configuration for hadoop to
-enable map-reduce to take advantage of tachyon, by appending the following snippet:</p>
-
-<pre><code>&lt;property&gt;
-  &lt;name&gt;fs.tachyon.impl&lt;/name&gt;
-  &lt;value&gt;tachyon.hadoop.TFS&lt;/value&gt;
-&lt;/property&gt;
-</code></pre>
-
-<p>Now that all the plumbing is in place you can restart hadoop</p>
-
-<pre><code>systemctl restart hadoop-namenode hadoop-datanode hadoop-nodemanager hadoop-resourcemanager
-</code></pre>
-
-<p>Next, make certain your local HDFS instance is up and running, then
-you will need to perform a tachyon format.</p>
-
-<pre><code>$ sudo runuser hdfs -s /bin/bash /bin/bash -c "tachyon.sh format"
-&gt; Formatting Tachyon @ localhost
-&gt; Deleting /var/lib/tachyon/journal/
-&gt; Formatting hdfs://localhost:8020/tachyon/data
-&gt; Formatting hdfs://localhost:8020/tachyon/workers
-</code></pre>
-
-<hr />
-
-<h3>Initialization</h3>
-
-<p>Prior to running the daemons you will need to mount the in-memory filesystem.</p>
-
-<pre><code>$ sudo tachyon-mount.sh SudoMount
-</code></pre>
-
-<p>Now you can start the daemons.</p>
-
-<pre><code>$ sudo systemctl start tachyon-master tachyon-slave
-</code></pre>
-
-<p>For completeness you can inspect the logs which are located in the standard system location</p>
-
-<pre><code>$ ls -la /var/log/tachyon
-</code></pre>
-
-<hr />
-
-<h3>Operation</h3>
-
-<p>Once you&#8217;ve verified tachyon is up and running, you can run a simple mapreduce application
-as seen below:</p>
-
-<pre><code>$ hadoop jar /usr/share/java/hadoop/hadoop-mapreduce-examples.jar wordcount
-  tachyon://localhost:19998/user/tstclair/input/constitution.txt
-  tachyon://localhost:19998/test1
-</code></pre>
-
-<p>You&#8217;ll notice tha tachyon prefix attached to the input and output locations.  This enables
-hadoop to start the TFS shim which will load and write to tachyon.  To verify you can run the following:</p>
-
-<pre><code>$ sudo runuser hdfs -s /bin/bash /bin/bash -c "tachyon.sh tfs ls /test1"
-&gt; 16.65 KB  02-17-2014 15:41:11:849  In Memory      /test1/part-r-00000
-&gt; 0.00 B    02-17-2014 15:41:12:366  In Memory      /test1/_SUCCESS
-</code></pre>
-
-<p>If you&#8217;re interested in grok&#8217;ing further you can probably find the part file under /mnt/ramdisk.</p>
-
-<h2>Summary</h2>
-
-<p>Tachyon provides reliable in memory file sharing across cluster frameworks, as we have seen
-in our simple example. It also enables some very interesting prospects for other back end filesystems.</p>
-
-<p>In future posts we&#8217;ll explore more elaborate configurations using tachyon atop different frameworks and filesystems.</p>
+      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/Tachyon.jpg" title="" > [...]</p>
 ]]></content>
     </entry>
   
