@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-03-21T03:38:14-07:00</updated>
+  <updated>2014-03-22T03:32:26-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -409,32 +409,7 @@ Information for HTCondor Week Speakers.
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <p>The GNU project&#8217;s <a href="http://www.gnu.org/philosophy/free-sw.html">Four Freedoms</a> present the essential components of Free software:  freedom to use the program for any purpose, freedom to study and change the program&#8217;s source code, freedom to redistribute the author&#8217;s version of the code, and freedom to distribute your modifications.  While not everyone who publishes their source code for others to use cares about freedom as the FSF defines it, these principles also <a href="http://opensource.org/docs/osd">motivate common open-source licenses</a>.  This post will discuss a surprisingly common obstacle to software freedom and show how you can avoid it in your own projects.</p>
-
-        <p>Most open-source licenses are designed to ensure freedom.  However, some developers insist on publishing their work under licenses that start from a well-known license and tack on some behavioral incentives.  These certainly don&#8217;t actually prevent software users from engaging in the proscribed behaviors; rather, they just prevent people — even those who are unlikely to be affected by the behavioral incentives — from using these projects.  These clauses are essentially flourishes of ego, pauses for laugh lines that are intended to force us to stop and acknowledge how clever the author is.  It&#8217;s not funny, though, that projects distributed under these novelty license agreements — and projects that depend on libraries so distributed — are unavailable to any users or developers who care about freedom (or those who care about the liability induced by vague contractual terms).</p>
-
-<h4>Some examples</h4>
-
-<p>Probably the most infamous example is the JSON.org license, which adds &#8220;This Software should be used for Good, not Evil&#8221; to the MIT license, and which <a href="http://innuendopoly.org/arch/functor/licensing">Douglas Crockford apparently intended as a joke about the absolutist moral language used to promote Bush-era foreign policy</a>.  (One must note that this joke was almost stale when he wrote the license in 2002; it certainly appears dated in 2014, now that American drone killings have been full of sophisticated nuance for years.)  I can&#8217;t imagine that this clause has prevented anyone from doing evil with serialized Javascript objects; rather, it just motivated attorneys to ask for exceptions to the license, forced other <a href="https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing#Bad_Licenses">developers to eschew Crockford&#8217;s library</a>, and inspired <a href="https://android.googlesource.com/platform/libcore/+/master/json">wheel-reinvention</a>.</p>
-
-<p>A more insidious example is the long-abandoned (but <a href="http://mvnrepository.com/artifact/colt/colt/1.2.0">surprisingly ubiquitous</a>) <a href="http://acs.lbl.gov/software/colt/">Colt library</a>, which bundles an old fork of the FreeHEP AIDA library that was apparently initially distributed under the LGPL with usage restrictions.  Since Colt isn&#8217;t compatible with the current upstream AIDA interfaces and since the usage restrictions make the license for Colt non-free, there is no way to include Colt or projects that require it in Fedora.  (As an aside, you obviously can&#8217;t add usage restrictions when redistributing something originally licensed under the LGPL; additional restrictions are incompatible with the LGPL.  If your goal is to distribute a new work with usage restrictions, the LGPL is probably an inappropriate starting point.)</p>
-
-<p>Finally, <a href="https://twitter.com/hguemar/status/435873770805264384">Haïkel Guemar reminds me</a> of an <a href="https://github.com/landondyer/kasm/blob/master/LICENSE">especially silly software license</a>, which allows completely unrestricted rights to everyone except Richard Stallman.  Stallman, however, is explicitly prohibited from using the software for any purpose.  (I&#8217;m sure Stallman is heartbroken that he&#8217;s unable to use a toy 6502 assembler.)</p>
-
-<h4>Conclusions</h4>
-
-<p>Behavioral incentives and other morality clauses have no place in open-source licensing.  (Put another way, if you can&#8217;t use the software for any purpose, why do you care whether or not you can distribute derivative works?)  If you care about making your work freely available, you should recoil at behavioral incentives in putatively open-source licenses in the same way you&#8217;d be horrified by:</p>
-
-<ol>
-<li>proprietary licenses for development tools that <a href="http://en.wikipedia.org/wiki/BitKeeper#License_concerns">prohibit you from working on certain kinds of software</a>,</li>
-<li>proprietary licenses for systems software that <a href="http://en.wikipedia.org/wiki/David_DeWitt#The_.22DeWitt_Clause.22">forbid you from talking about how well the system works</a> without clearing it with the manufacturer first, or</li>
-<li>laws that <a href="http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act">make trivial programs illegal</a> if they could be used to circumvent copy-protection measures.</li>
-</ol>
-
-<p>To ensure that anyone can freely use and build on your work, if that is your aim, don&#8217;t introduce incentives or morality clauses into your license.  License it under a free and open-source license.  Use a well-known license with well-understood legal implications; your bespoke license is unlikely to solve any new problems, but is likely to be vague enough to create uncertainty and inhibit adoption of your work.  Do not bundle code or libraries distributed under restrictive licenses.  (Not bundling code <em>at all</em> is actually a good practice.)  Finally, only (transitively or immediately) depend on libraries that are freely licensed.</p>
-
-    ]]></content>
+      <content type="html"><![CDATA[The GNU project’s Four Freedoms present the essential components of Free software: freedom to use the program for any purpose, freedom to study and change the program’s source code, freedom to redistribute the author’s version of the code, and freedom...]]></content>
     </entry>
   
     <entry>
@@ -638,19 +613,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[The Impact of Negotiator Cycle Cadence on Slot Loading]]></title>
-      <link href="http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading/"/>
-      <updated>2013-03-21T22:10:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2013/03/21/the-impact-of-negotiator-cycle-cadence-on-slot-loading</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>The <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_1Introduction.html#8555">HTCondor negotiator</a> assigns jobs (resource requests) to slots (compute resources) at regular intervals, configured by the <a href="http://research.cs.wisc.edu/htcondor/manual/v7.8/3_3Configuration.html#20544">NEGOTIATOR_INTERVAL</a> parameter.  This interval (the cycle <em>cadence</em>) has a fundamental impact on a pool <em>loading factor</em> -- the fraction of time that slots are being productively utilized. [...]</p>
-]]></content>
     </entry>
   
 </feed>
