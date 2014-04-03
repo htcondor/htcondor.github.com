@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-04-02T03:11:16-07:00</updated>
+  <updated>2014-04-03T03:47:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -343,18 +343,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<h2>Background</h2> [...]
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Reprocessing CMS events with Bosco]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/04/reprocessing-cms-events-with-bosco.html"/>
-      <updated>2013-04-02T19:38:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-9221383956864186778</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
