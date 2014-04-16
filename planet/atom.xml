@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-04-15T03:33:16-07:00</updated>
+  <updated>2014-04-16T03:31:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.1.5 released! ( April 15, 2014 )]]></title>
+      <link href="manual/v8.1.5/10_3Development_Release.html"/>
+      <updated>2014-04-15T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor version 8.1.5.
+Major new features include:
+a change to the default policy, such that it does not preempt jobs;
+several new instances of non-blocking I/O to improve performance;
+fewer server resources are used by the condor_schedd when handling condor_q requests;
+a bug fix, such that large submit description files do not cause condor_submit to crash;
+a bug fix, such that large configuration files do not cause the condor_master daemon to crash.
+A complete list of bugs fixed and features can be found in the
+Version History.
+HTCondor 8.1.5 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ OpenSSL vulnerability ( April 10, 2014 )]]></title>
@@ -217,38 +240,6 @@ A complete list of bugs fixed can be found in the
 Version History.
 HTCondor 8.0.6 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor Week 2014 Announced: April 28-30 (January 10, 2014)]]></title>
-      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2014/index.html"/>
-      <updated>2014-01-10T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[
-HTCondor Week 2014, our annual HTCondor user conference, is
-scheduled for April 28-April 30, 2014.  We will again host
-HTCondor Week at the Wisconsin Institutes for Discovery in
-beautiful Madison, Wisconsin.
-
-In a change from previous years, technical talks will begin on
-Monday.  See the web site for current details.
-
-At HTCondor Week, you can look forward to:
-
-
-Technical talks on usage and deployment from developers and
-  your fellow users
-Talks and tutorials on new HTCondor features
-Talks on future plans for HTCondor
-Introductory tutorials on using and administrating HTCondor
-The opportunity to meet with HTCondor developers and other users
-
-	Information on registration and scheduling will be available soon.
 ]]></content>
     </entry>
   
