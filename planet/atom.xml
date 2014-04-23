@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-04-22T03:38:14-07:00</updated>
+  <updated>2014-04-23T03:08:39-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -315,19 +315,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Configuring a Personal Hadoop Development Environment on Fedora 18]]></title>
-      <link href="http://timothysc.github.com/blog/2013/04/22/personalhadoop/"/>
-      <updated>2013-04-22T15:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2013/04/22/personalhadoop</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<h2>Background</h2> [...]
-]]></content>
     </entry>
   
 </feed>
