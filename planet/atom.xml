@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-05-01T18:49:15-07:00</updated>
+  <updated>2014-05-02T03:43:14-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -60,46 +60,7 @@ the post on the HTCondor-users mailing list.
         <name><![CDATA[Will Benton]]></name>
         <uri>http://willbenton.com</uri>
       </author>
-      <content type="html"><![CDATA[
-        <noscript><p>This post contains embedded maps; you&#8217;ll need to view it in a browser with JavaScript support in order to see them.</p></noscript>
-
-<p>One problem that a lot of enthusiastic amateur cyclists encounter is how to make sense of all the workout telemetry data that their smartphone or cycle computer captures.  Most riders have some sense of how their cadence, heart rate, speed, road grade, and wattage come into play at any given moment in a ride as it&#8217;s happening, but answering questions about the bigger picture about how these fit together over time remains more difficult.  I&#8217;ve been experimenting with <a href="http://chapeau.freevariable.com/2013/12/a-simple-machine-learning-app-with-spark.html">cycling data analytics using Apache Spark for some time now</a>, but I thought I&#8217;d share some visualizations that I put together recently to answer a question that&#8217;s been nagging me as the weather warms up here in Wisconsin.</p>
-
-<p>In my last post on using Spark to process fitness data, I presented a very simple visualization based on plotting the centers of clustered GPS traces.  By plotting darker center markers for denser clusters (and generating a large number of clusters), I was able to picture which roads and intersections I spent the most time riding on in the set of activities that I analyzed.  This time, however, I was more interested in a visualization that would tell me <em>what to do</em> rather than a visualization that would tell me <em>what I had already done</em>.</p>
-
-<h3>Background</h3>
-
-<p>One of the most useful tools for a cyclist who is interested in quantifying his or her performance and training is a direct-force power meter.  By measuring the actual force applied at some point on the bicycle drivetrain, these devices can accurately tell riders how many calories they&#8217;re burning in a ride, whether or not they&#8217;re &#8220;burning matches&#8221; (that is, using anaerobic metabolism instead of aerobic metabolism) at a given point in a race, how to pace long steady efforts to maximize performance, and precisely how hard to work in interval training in order to improve various kinds of fitness.  The last of these capabilities will be our focus in this post.</p>
-
-<p>It&#8217;s obvious that there is a difference between ultra-endurance efforts and sprint efforts; no one would try to sprint for an entire 40km time trial (or run a marathon at their 100m pace), and it would be pointless to do sprint-duration efforts at the sort of pace one could maintain for a 12-hour race.  More generally, every athlete has a power-duration curve of the best efforts they could produce over time:  one&#8217;s best 5-second power might be double their best one-minute power and four times their best one-hour power, for example.  There are several points where this curve changes for most people, and these correspond to various physiological systems (for example, the shift from anaerobic to aerobic metabolism).  By targeting interval workouts to certain power zones, athletes can improve the corresponding physiological systems.</p>
-
-<h3>Technique</h3>
-
-<p>I began by clustering points from GPS traces, but instead of plotting the cluster centers, I plotted the convex hulls of all of the points in each cluster.  By giving me polygons containing every point from my data set, this gave me a pretty good picture of where I&#8217;d actually been.  I then calculated my mean power for three durations &#8212; corresponding roughly to anaerobic, VO2max, and just-above-aerobic efforts &#8212; at every point in each activity.  In other words, I mapped each point in each ride to the mean power I was about to produce in that ride.  Then, for each duration, I found the best efforts starting in each cluster and used these data to shade the convex hulls so that hulls where better &#8220;best efforts&#8221; originated would thus appear more saturated.</p>
-
-<p>Because Spark is expressive and can work interactively, it was straightforward to experiment with various techniques and constant factors to make the most sense of these data.  Debugging is straightforward; since I stick to effect-free code as much as possible, I can test my logic without running it under Spark.  Furthermore, Spark is fast enough to make trying a bunch of different options completely painless, even on my desktop computer.</p>
-
-<h3>Results</h3>
-
-<p>I&#8217;m including here three plots of cluster hulls, shaded by the best mean power I achieved starting in that cluster for one minute (green), three minutes (blue), and ten minutes (red). With these visualizations (and with increasingly friendly road cycling weather here in Wisconsin), I can decide where to go to do interval workouts based on where I&#8217;ve had my best efforts in the past.  The data tell me that if I want to work on my one-minute power, I should focus on the Timber Lane climb up from Midtown; if I want to work on my three-minute power, it&#8217;s either Barlow Road or the east side of Indian Lake; and if I want to work on my ten-minute power, it&#8217;s off to Mounds Park Road <a href="http://www.usacycling.org/road-races-kick-off-2013-amateur-para-cycling-road-nationals.htm">for the same climb that made everyone suffer in the national championship road race</a> last year.</p>
-
-<p>(Click and drag or zoom to inspect any map; if one is missing polygons, drag and they should render.)</p>
-
-<script src="https://embed.github.com/view/geojson/willb/sur-la-plaque/examples-20140104/examples/slp60.json"></script>
-
-<script src="https://embed.github.com/view/geojson/willb/sur-la-plaque/examples-20140104/examples/slp180.json"></script>
-
-<script src="https://embed.github.com/view/geojson/willb/sur-la-plaque/examples-20140104/examples/slp600.json"></script>
-
-<h3>Future work</h3>
-
-<p>I have many ideas for where to take this work next and have some implementation in progress that is producing good results but not (yet) perspicuous visualizations.  However, even the more mundane things on my to-do list are pretty interesting:  among other things, I&#8217;d like to do some performance evaluation and see just how much cycling data we could feasibly process on a standard workstation or small cluster (my code is currently unoptimized); to add a web-based front end allowing more interactive analysis; and to improve my (currently very simple) computational geometry and power-analysis code to make better use of Spark&#8217;s abstractions and distributed execution.  (<a href="https://github.com/willb/sur-la-plaque/">The code itself</a>, of course, is available under the Apache license and I welcome your feedback or pull requests.)</p>
-
-<p>I love tools that make it easy to sketch solutions to hard problems interactively (indeed, I spent a lot of time in graduate school developing an <a href="http://web.willbenton.com/software/dimple">interactive tool for designing program analyses</a> &#8212; although in general it&#8217;s more fun to think about bicycling problems than whether or not two references alias one another), and Spark is one of the most impressive interactive environments I&#8217;ve seen for solving big problems.  I&#8217;m looking forward to prototyping and refining more tools for understanding cycling training and performance in the future.</p>
-
-        
-
-    ]]></content>
+      <content type="html"><![CDATA[This post contains embedded maps; you’ll need to view it in a browser with JavaScript support in order to see them. One problem that a lot of enthusiastic amateur cyclists encounter is how to make sense of all the workout...]]></content>
     </entry>
   
     <entry>
