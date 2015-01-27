@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2014-05-05T03:43:14-07:00</updated>
+  <updated>2015-01-27T14:34:53-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -13,54 +13,427 @@
 
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 8.1.5 released! ( April 15, 2014 )]]></title>
-      <link href="manual/v8.1.5/10_3Development_Release.html"/>
-      <updated>2014-04-15T05:00:00Z</updated>
+      <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
+      <updated>2015-01-25T15:59:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-5260378956420164105</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[In the <a href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html">previous post</a>, I discussed why we decided to make the HTCondor CacheD. &nbsp;This time, we will discuss the operation and design of the CacheD, as well as show an example utilizing a BLAST database.<br /><br />It is important to note that the CacheD is still very much "dissertation-ware." &nbsp;It functions enough to demonstrate the improvements, but not enough to be put into production.<br /><br /><h4>The Cache</h4><div>The fundamental unit that the CacheD works with is an immutable set of files in a cache. &nbsp;A user creates and uploads files into the cache. &nbsp;Once the upload is complete, the cache is committed and may not be altered at any time. &nbsp;The cache has a set of metadata associated with it as well, stored as classads in a durable storage database (using the same techniques as the SchedD job queue).</div><div><br /></div><div>The cache has a 'lease', or an expiration date. &nbsp;This lease is a given amount of time that the cache is guaranteed to be available from a particular CacheD. &nbsp;When creating the cache, the user provides a requested cache lifetime. &nbsp;The CacheD can either accept or reject the requested cache lifetime. &nbsp;Once the cache's lifetime expires, it can be deleted by the CacheD and is no longer guaranteed to be available. &nbsp;The user may request to extend the lifetime of a cache after it has already been committed, which the CacheD may or may not accept.</div><div><br /></div><div>The cache also has properties similar to a job. &nbsp;For example, the cache can have it's own set of requirements for which nodes it can be replicated to. &nbsp;By default, a cache is initialized with the requirement that a CacheD has enough disk space to hold the cache. &nbsp;Analogous to the HTCondor matching with jobs, the cache can have requirements, and the CacheD can have requirements. &nbsp;A CacheD requirements may be that the node has enough disk space to hold the matched cache. &nbsp;This two way matching guarantees that any local policies are enforced.</div><div><br /></div><div>The requirements attribute is especially useful when the user aligns the cache's requirements with the jobs that require the data. &nbsp;For example, if the user knows that their processing requires nodes with 8GB of ram available, then there is no point is replicating the cache to a node with less than 8GB of ram.</div><div><br /></div><h4>The CacheD</h4><div>The CacheD is the daemon that manages caches on the local node. &nbsp;Each CacheD is considered a peer to all other CacheD's, there is no further coordination daemon. &nbsp;Each cache serves multiple functions:</div><div><ol><li>Respond to user requests to create, query, update, and delete caches.</li><li>Send replication requests to CacheD's that match each cache's requirements.</li><li>Respond to replication requests from other CacheD's. &nbsp;Matching is done on the cache before transferring the data</li></ol><div>The CacheD keeps a database storing the metadata for each cache. &nbsp;The database is stored using the same techniques as the SchedD uses for jobs to maintain a durable database store. &nbsp;It also maintains a directory containing all of the caches stored on the node.</div></div><div><br /></div><div>The CacheD's user interface is primarily through python bindings, at least for the time being.</div><div><br /></div><h4>CacheD Usage</h4><div>The CacheD is used in conjunction with glideins. &nbsp;The CacheD is started along with other glidein daemons such as the HTCondor StartD.</div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://4.bp.blogspot.com/-0t61LNEhNP8/VMK3q55wm3I/AAAAAAAAC28/CdyFV9FXD3I/s1600/CachedInitialization.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://4.bp.blogspot.com/-0t61LNEhNP8/VMK3q55wm3I/AAAAAAAAC28/CdyFV9FXD3I/s1600/CachedInitialization.png" height="344" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">Initialization of cache as well as initial replication requests</td></tr></tbody></table><div>The user initializes the cache by creating and uploading it to the user's submit machine. &nbsp;The CacheD connects to remote CacheD's, sending replication requests.</div><div class="separator" style="clear: both; text-align: center;"></div><div><br /></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://1.bp.blogspot.com/-aZhjvd3F_M0/VMK8YMswJ9I/AAAAAAAAC3M/_pCf-OX1Q8k/s1600/CachedReplication.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://1.bp.blogspot.com/-aZhjvd3F_M0/VMK8YMswJ9I/AAAAAAAAC3M/_pCf-OX1Q8k/s1600/CachedReplication.png" height="314" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">The BitTorrent communication between nodes after accepting the replication request</td></tr></tbody></table><div>Once the CacheD's accept the replication request(s), BitTorrent protocol allows for communication between all nodes inside the cluster, as well with the user's submit machine. &nbsp;This graph only shows a single cluster, but this could be replicated to many clusters as well.</div><div><br /></div><h4>In Action&nbsp;</h4><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-AVc8_0W-tSk/VMLASPT5t8I/AAAAAAAAC3U/IDN7RG2DvkI/s1600/verbose_group.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://2.bp.blogspot.com/-AVc8_0W-tSk/VMLASPT5t8I/AAAAAAAAC3U/IDN7RG2DvkI/s1600/verbose_group.png" height="308" width="640" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">Partial graph showing data transfers. &nbsp;Due to overflowing the event queue, not all downloads are captured.</td></tr></tbody></table><div>The above graph shows the data transfer using the BitTorrent protocol between the nodes that have accepted the replication request and the Cache Origin, which is an external node. &nbsp;In this example, only 5 remote CacheD's where started on the cluster. &nbsp;Because of all of the traffic between nodes, this level of detail graph becomes unreadable very quickly when increasing the number of remote CacheD's.</div><div><br /></div><div>You will notice that the Cache Origin only transfers to 2 nodes inside the cluster. &nbsp;The BitTorrent protocol is complicated and difficult to predict, therefore this could be caused by many factors. &nbsp;For example, the two nodes could have found the CacheD origin first, therefore being the first nodes to download it. &nbsp;The other nodes would then have found the internal cluster nodes with portions of the cache, and begun to download from it.<br /><br />It is important to note that even though the ~15GB cache is transferred to all 5 nodes, totalling 75GB of transferred cache, only ~15Gb is transferred from the cache origin, and all of the rest of the transfers are between nodes in the cluster.<br /><br /><h4>Up Next</h4></div><div>In Part 3 of the series, I will look at timings of the transfers using data analysis of trial runs. &nbsp;As a hint, the BitTorrent protocol is slower than direct transfers for 1 to 1 transfers. &nbsp;But it really shines when increasing the number of downloaders and seeders.</div><div><br /></div>]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Monadic 'break' and 'continue' for Scala Sequence Comprehensions]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions/"/>
+      <updated>2015-01-24T18:54:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Scala <a href="http://docs.scala-lang.org/tutorials/tour/sequence-comprehensions.html">sequence comprehensions</a> are an excellent functional programming idiom for looping in Scala.  However, sequence comprehensions encompass much more than just looping -- they represent a powerful syntax for manipulating <em>all</em> monadic structures[1].</p>
+
+<p>The <code>break</code> and <code>continue</code> looping constructs are a popular framework for cleanly representing multiple loop halting and continuation conditions at differing stages in the execution flow.  Although there is no native support for <code>break</code> or <code>continue</code> in Scala control constructs, it is possible to implement them in a clean and idiomatic way for sequence comprehensions.</p>
+
+<p>In this post I will describe a lightweight and easy-to-use implementation of <code>break</code> and <code>continue</code> for use in Scala sequence comprehensions (aka <code>for</code> statements).  The entire implementation is as follows:</p>
+
+<pre><code>object Breakable {
+  // An iterator that can be halted via its 'break' method
+  class BreakableIterator[+A](itr: Iterator[A]) extends Iterator[A] {
+    var broken = false
+    def break { broken = true }
+
+    def hasNext = !broken &amp;&amp; itr.hasNext
+    def next = itr.next
+  }
+
+  // Continue to next iteration of enclosing loop if 'cond' evaluates to true
+  def continue(cond: =&gt; Boolean): Boolean = !cond
+
+  // Break one or more BreakableIterators, if the given condition 'cond'
+  // evaluates to true
+  def break(b: BreakableIterator[_], bRest: BreakableIterator[_]*)
+      (cond: =&gt; Boolean): Boolean = {
+    val br = cond
+    if (br) {
+      b.break
+      for (x &lt;- bRest) { x.break }
+    }
+    !br
+  }
+
+  // Factory that creates new BreakableIterator from any traversable object,
+  // e.g. sequence, iterator, range, etc
+  def apply[A](t1: TraversableOnce[A]): Iterator[BreakableIterator[A]] =
+    List(new BreakableIterator(t1.toIterator)).iterator
+}
+</code></pre>
+
+<p>The approach is based on a simple subclass of <code>Iterator</code> -- <code>BreakableIterator</code> -- that can be halted by 'breaking' it.  The function <code>break</code> accepts one or more instances of <code>BreakableIterator</code>, followed by a code block evaluating to a conditional.  If it evaluates to <code>true</code>, the loops embodied by the given iterators are immediately halted via the associated <code>if</code> guard, and the iterators are halted via their <code>break</code> method.  The <code>continue</code> function is mostly syntactic sugar for a standard <code>if</code> guard, simply with the condition inverted.</p>
+
+<p>The factory <code>Breakable(&lt;traversable-object&gt;)</code> returns an Iterator over a single <code>BreakableIterator</code> object.  Iterators are proper monadic structures, and so its output can be used with <code>&lt;-</code> at the start of a <code>for</code> construct in the usual way.  Note that this means the result of the <code>for</code> statement will also be an Iterator.</p>
+
+<p>Here is a simple example of <code>break</code> and <code>continue</code> in use:</p>
+
+<pre><code>object Main {
+  import Breakable._
+
+  def main(args: Array[String]) {
+
+    val r = for (
+      // generate a breakable sequence from some sequential input
+      loop &lt;- Breakable(1 to 1000);
+      // iterate over the breakable sequence
+      j &lt;- loop;
+      // print out at each iteration
+      _ = { println(s"iteration j= $j") };
+      // continue to next iteration when 'j' is even
+      if continue { j % 2 == 0 };
+      // break out of the loop when 'j' exceeds 5
+      if break(loop) { j &gt; 5 }
+    ) yield {
+      j
+    }
+    println(s"result= ${r.toList}")
+  }
+}
+</code></pre>
+
+<p>Notice that <code>break</code> and <code>continue</code> are applied via <code>if</code> guards.  That is how the code following those statements is skipped when their conditions become true.  The statement <code>if break(loop) {condition}</code> could be read as: "if {condition} then break(loop)".</p>
+
+<p>We can see from the resulting output that <code>break</code> and <code>continue</code> function in the usual way.  The <code>continue</code> clause ignores all subsequent code when <code>j</code> is even.  The <code>break</code> clause halts the loop when it sees its first value > 5, which is 7.  Only odd values &lt;= 5 are output from the <code>yield</code> statement:</p>
+
+<pre><code>$ scalac -d /home/eje/class monadic_break.scala
+$ scala -classpath /home/eje/class Main
+iteration j= 1
+iteration j= 2
+iteration j= 3
+iteration j= 4
+iteration j= 5
+iteration j= 6
+iteration j= 7
+result= List(1, 3, 5)
+</code></pre>
+
+<p>Breakable iterators can be nested in the way one would expect.  The following example shows an inner breakable loop nested inside an outer one:</p>
+
+<pre><code>object Main {
+  import Breakable._
+
+  def main(args: Array[String]) {
+    val r = for (
+      outer &lt;- Breakable(1 to 7);
+      j &lt;- outer;
+      _ = { println(s"outer  j= $j") };
+      if continue { j % 2 == 0 };
+      inner &lt;- Breakable(List("a", "b", "c", "d", "e"));
+      k &lt;- inner;
+      _ = { println(s"    inner  j= $j  k= $k") };
+      if break(inner) { k == "d" };
+      if break(inner, outer) { j == 5  &amp;&amp;  k == "c" }
+    ) yield {
+      (j, k)
+    }
+    println(s"result= ${r.toList}")
+  }
+}
+</code></pre>
+
+<p>The output demonstrates that the inner loop breaks whenever <code>k=="d"</code>, and so <code>"e"</code> is never present in the <code>yield</code> result.  When <code>j==5</code> and <code>k=="c"</code>, both the inner and outer loops are broken, and so we see that there is no <code>(5,"c")</code> pair in the result, nor does the outer loop ever iterate over 6 or 7:</p>
+
+<pre><code>$ scalac -d /home/eje/class monadic_break.scala
+$ scala -classpath /home/eje/class Main
+outer  j= 1
+    inner  j= 1  k= a
+    inner  j= 1  k= b
+    inner  j= 1  k= c
+    inner  j= 1  k= d
+outer  j= 2
+outer  j= 3
+    inner  j= 3  k= a
+    inner  j= 3  k= b
+    inner  j= 3  k= c
+    inner  j= 3  k= d
+outer  j= 4
+outer  j= 5
+    inner  j= 5  k= a
+    inner  j= 5  k= b
+    inner  j= 5  k= c
+result= List((1,a), (1,b), (1,c), (3,a), (3,b), (3,c), (5,a), (5,b))
+</code></pre>
+
+<p>Using <code>break</code> and <code>continue</code> with <code>BreakableIterator</code> for sequence comprehensions is that easy.  Enjoy!</p>
+
+<h5>References</h5>
+
+<p>[1] <em><a href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a></em>, Paul Chiusano and Runar Bjarnason, (section 6.6)</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Condor CacheD: Caching for HTC - Part 1]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html"/>
+      <updated>2015-01-22T16:00:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1889975382858537261</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[A typical job flow in the Open Science Grid is as follows:<br /><ol><li>Stage input files to worker node.</li><li>Start processing...</li><li>Stage output files back to submit host.</li></ol><div>In an ideal world, step 2 would take the longest. &nbsp;But, as data sizes increase, so to does the stage-in and stage-out of the files (primarily the stage-in). &nbsp;Additionally, we continue to recommend the same maximum job length to users, around 8 hours. <br /><br />Lets use a real world example. &nbsp;The nr blast database (Non-redundant GenBank CDS translations + PDB + SwissProt + PIR + PRF, excluding those in env_nr<span style="background-color: white; color: #333333; font-family: arial, tahoma, verdana, sans-serif; font-size: 13px; line-height: 19.9200000762939px;">) (<a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&amp;PAGE_TYPE=BlastDocs&amp;DOC_TYPE=ProgSelectionGuide">source</a>)</span>&nbsp;is currently ~15GB. &nbsp;When running blast, each query needs to run over the entire nr database, therefore it is required on every worker node that will run the query.<br /><br />It is easy to say... well a 1 Gbps connection can transfer 15GB in ~120 seconds. &nbsp;Two minutes doesn't seem unreasonable to stage-in data, especially if the job can be 8 hours long. &nbsp;But usually you have many queries, so you will want to run these queries across many jobs. &nbsp;So lets say you submit 10 jobs, each needing the 15GB. &nbsp;Well, that should mean that if they all transfer at the same time, it will take 20 minutes of stage in time before any processing begins. &nbsp;But that is only for 10 jobs, what if you are submitting 1,000 jobs, or 10,000 jobs? &nbsp;At 1,000 jobs, it takes 33 hours to transfer data for input files? &nbsp;Suddenly 2 minutes to transfer a database becomes hours. &nbsp;And your submit machine is doing nothing but transferring input files! &nbsp;Also, using some math (or a simple <a href="http://nbviewer.ipython.org/gist/djw8605/144729e82f0ef8313f6d">simulation</a>), you can see that if the jobs start sequentially, you are limited on the number of jobs that can run simultaneously.<br /><br />This increasing data size and static maximum job length have lead to compromises and innovations on the part of users and sites.<br /><br /><h4>Innovations</h4></div><div>Some users and sites have attempted to solve the larger input files. &nbsp;They can be typically broken into two categories:</div><div><ol><li>Bandwidth increases from the storage nodes.</li><li>Caching near the execution host.</li></ol><div><br /></div></div><div><h3>Lots O' Bandwidth</h3><a href="http://osgconnect.net/">OSG Connect's</a>&nbsp;<a href="http://stash.osgconnect.net/">Stash</a> attempts to ease the input file stage problem by providing a storage service with lots of bandwidth (10 Gbps), and support for site caching through HTTP. &nbsp;Certainly the higher bandwidth solution is the brute force method of decreasing the transfer time for files. &nbsp;But, 10 Gbps only knocks off a factor of 10 from all of the above times. &nbsp;This will certainly decrease the transfer time, but only if you can use all 10 Gbps.<br /><br />Numerous sites and users have tried to use high bandwidth storage services to solve the stage-in problem. &nbsp;Nebraska (and many other sites) even have their storage services connected to 100 Gbps network connections. &nbsp;But they tend to be limited not by the bandwidth available to the storage device, but by the bandwidth bottleneck at the boundary of each cluster to the outside world, usually a NAT.<br /><br /></div><div><h3>Caching</h3></div><div>With Stash's HTTP interface, users can use local site caching. &nbsp;When the site caching was designed, it was meant to be used for calibration data for detectors. &nbsp;This tends to be rather small data that is frequently accessed, the perfect use of a HTTP cache. &nbsp;But what about when you want to transfer 15GBs of files through the HTTP cache? &nbsp;A typical site may only have a few cache servers, therefore limiting the bandwidth available to download not on the available bandwidth of the hosting server, but the available bandwidth on the cache servers. &nbsp;I don't know of many sites that are putting 10Gbps connections on their caching servers.<br /><br />Additionally, site caching simply runs from the submit host to the remote caching host. &nbsp;In the last week, the 95% of OSG VO's CPU hours have been provided by ~25 unique sites (<a href="http://gratiaweb.grid.iu.edu/gratia/xml/facility_hours_bar_smry?facility=.*&amp;probe=.*&amp;resource-type=%5EBatch%24&amp;vo=osg&amp;user=.*&amp;endtime=2015-01-21+23%3A59%3A59&amp;exclude-vo=Unknown%7Cunknown%7Cother&amp;includeFailed=true&amp;exclude-role=NONE&amp;span=86400&amp;vo_set=%5Eosg%24&amp;role=.*&amp;starttime=2015-01-07+00%3A00%3A00&amp;exclude-facility=NONE%7CGeneric%7CObsolete&amp;exclude-user=NONE&amp;includeSuccess=true">source</a>, <a href="https://docs.google.com/spreadsheets/d/1hcOHDaXR-l78pufw4lM_dkAL1nIO68E6Rx0Cp1nOVrM/edit?usp=sharing">calculations</a>). &nbsp;This analogous to increasing the bandwidth of the submit host by 25 times (assuming 1gbps connections standard). &nbsp;This is a very cheap way to increase the bandwidth available to transfer &nbsp;input files. &nbsp;But the VO's usage is not split evenly amongst all 25 sites. &nbsp;6 sites account for ~50% of the OSG VO usage. &nbsp;On those 6 clusters, the transfer bandwidth is limited to what those 6 proxy servers can transfer to their cluster's nodes. &nbsp;Therefore, for 50% of your processing slots, you are only increasing the transfer speed by 6.</div><div><br /></div><div>The HTTP protocol and HTTP caching is not designed for such large files. &nbsp;HTTP will always be designed for the dominant users, browsers downloading relatively small webpages. &nbsp;Software designed to use HTTP are optimized for web sites, lots of small files. &nbsp;Therefore, any software that might be used in conjunction with HTTP may not be ideal for large files.</div><div><br /></div><h4>A New Hope</h4><div>Part of my PhD has been to develop a new way to handle large stage-in datasets. &nbsp;In the above problem statement, two areas where most often used to optimize transfer times, bandwidth and caching. &nbsp;My attempts to optimize both of these approaches using a daemon named the HTCondor CacheD.<br /><br /><h3>Bandwidth</h3></div><div>As noted above, HTTP is great for it's designed use: websites with lots of small files. &nbsp;But it is not designed or well optimized for larger files. &nbsp;Further, the bandwidth from the execution host to the storage servers are typically bottlenecked at the cluster boundary. &nbsp; Therefore another protocol was chosen that could better handle large files, BitTorrent.</div><br /><a href="https://en.wikipedia.org/wiki/BitTorrent">BitTorrent</a>&nbsp;was chosen since it contains many characteristics that make it ideal for transferring large files. &nbsp;In order to bypass the network bottlenecks in the remote clusters, BitTorrent allows for clients to transfer data between them while also downloading from the original source. &nbsp;This allows every worker node to become a cache for the rest of the cluster nodes. &nbsp;As we will see in the next post, BitTorrent works well because the vast majority of the traffic is between nodes inside the cluster, rather than to nodes outside the cluster.<br /><br /><h3>Caching</h3><div>The caching described above utilized a single cache on each site. &nbsp;From the usage breakdown, you can see that VO's that rely on few sites will find this a bottleneck. &nbsp;For campus users, which may only use 1 or 2 clusters, this can be as bad of a bottleneck as not using a cache at all. &nbsp;Also, this requires the site to have a caching server setup, which requires administrator cooperation.<br /><br />The CacheD instead uses local caches on each worker node. &nbsp;This local cache allows very fast transfers when the jobs begin. &nbsp;Further, the local cache acts as a seeder for the BitTorrent transfers described above.<br /><br />When a job is begins running on a node, the stage-in stage will request from the local cache a copy of the data files. &nbsp;If the data files are not already staged at the local node, the local cache will pull the data files using BitTorrent from the submit host (cache origin) and all other nodes in the cluster. &nbsp;When the local cache has cached the stage-in data files, it will transfer the cached files into the jobs sandbox and begin processing. &nbsp;Subsequent jobs that require the same stage-in data files will request then immediately receive the files since they are already cached locally.</div><div><br /></div><h4>Up Next</h4><div>In the next post, I will describe the design of the CacheD in more detail. &nbsp;Further, I will show usage of the CacheD with blast databases, and the improvement in job startup time resulting in optimized stage-in transfers.<br /><br />UPDATE: Link to Part 2, <a href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html">Architecture of the CacheD</a>.</div><br />]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.2 released! ( December 23, 2014 )]]></title>
+      <link href="manual/v8.3.2/10_3Development_Release.html"/>
+      <updated>2014-12-23T06:00:00Z</updated>
       <id></id>
       <author>
         <name><![CDATA[HTCondor Team]]></name>
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
-      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor version 8.1.5.
-Major new features include:
-a change to the default policy, such that it does not preempt jobs;
-several new instances of non-blocking I/O to improve performance;
-fewer server resources are used by the condor_schedd when handling condor_q requests;
-a bug fix, such that large submit description files do not cause condor_submit to crash;
-a bug fix, such that large configuration files do not cause the condor_master daemon to crash.
-A complete list of bugs fixed and features can be found in the
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.2.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.6
+stable release.
+This new version contains:
+the next installment of IPv4/IPv6 mixed mode support: a submit node can
+simultaneously interact with an IPv4 and an IPv6 HTCondor pool;
+scalability improvements: a reduced memory foot-print of daemons,
+a reduced number of TCP connections between submit and execute machines,
+and an improved responsiveness from a busy condor_schedd to queries.
+A complete list of new features and fixed bugs can be found in the
 Version History.
-HTCondor 8.1.5 binaries and source code are available from our
+HTCondor 8.3.2 binaries and source code are available from our
 Downloads page.
 ]]></content>
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ OpenSSL vulnerability ( April 10, 2014 )]]></title>
-      <link href="https://lists.cs.wisc.edu/archive/htcondor-users/2014-April/msg00054.shtml"/>
-      <updated>2014-04-10T05:00:00Z</updated>
+      <title type="html"><![CDATA[ HTCondor 8.2.6 released! ( December 16, 2014 )]]></title>
+      <link href="manual/v8.2.6/10_3Stable_Release.html"/>
+      <updated>2014-12-16T06:00:00Z</updated>
       <id></id>
       <author>
         <name><![CDATA[HTCondor Team]]></name>
         <uri>http://research.cs.wisc.edu/htcondor</uri>
       </author>
-      <content type="html"><![CDATA[HTCondor users who are using the SSL or GSI authentication methods, or
-submitting grid universe jobs may be vulnerable.  Please see
-
-the post on the HTCondor-users mailing list.
+      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor
+version 8.2.6.
+This new version contains:
+a bug fix to the log rotation of the condor_schedd on Linux platforms;
+transfer_input_files now works for directories on Windows platforms;
+a correction of the flags passed to the mail program on Linux platforms;
+a RHEL 7 platform fix of a directory permission that prevented daemons from starting.
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.6 binaries and source code are available from our
+Downloads page.
 ]]></content>
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[Fitness data visualization with Apache Spark]]></title>
-      <link href="http://chapeau.freevariable.com/2014/04/fitness-data-visualization-with-apache-spark.html"/>
-      <updated>2014-04-02T04:55:41Z</updated>
-      <id>tag:chapeau.freevariable.com,2014://1.45</id>
+      <title type="html"><![CDATA[Caveat censor]]></title>
+      <link href="http://chapeau.freevariable.com/2014/12/caveat-censor.html"/>
+      <updated>2014-12-02T16:12:22Z</updated>
+      <id>http://chapeau.freevariable.com/2014/12/caveat-censor</id>
       <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[This post contains embedded maps; you’ll need to view it in a browser with JavaScript support in order to see them. One problem that a lot of enthusiastic amateur cyclists encounter is how to make sense of all the workout...]]></content>
+      <content type="html"><![CDATA[<p>Over eight years ago, <a href="http://rwmj.wordpress.com">Richard WM Jones</a> wrote a <a href="http://web.archive.org/web/20071013190833/http://blog.merjis.com/2006/11/08/practical-ocaml/">great but disheartening article about his experience serving as a technical reviewer</a> for <a href="http://www.amazon.com/Practical-OCaml-Joshua-B-Smith/dp/159059620X">an infamous book about OCaml</a>.  The post made quite an impression on me at the time and I&rsquo;ve often recalled it over the years whenever opportunities to do prepress reviews have landed in my inbox.  Briefly, Jones was asked to use terrible tools (Microsoft Word) to deal with stilted, error-ridden prose surrounding unidiomatic and broken code.  For his trouble, he got an hourly wage that would have represented a slight raise over what I made mowing my neighbors&#8217; lawns in high school. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.5 released! ( December 1, 2014 )]]></title>
+      <link href="manual/v8.2.5/10_3Stable_Release.html"/>
+      <updated>2014-12-01T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor
+version 8.2.5.
+This new version contains:
+an updated RPM installation script that preserves a modified condor_config.local file;
+OpenSSL version 1.0.1j for Windows platforms.
+a complete list of fixed bugs and features can be found in the
+Version History.
+HTCondor 8.2.5 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Spark performance talk at ApacheCon EU]]></title>
+      <link href="http://chapeau.freevariable.com/2014/11/apachecon.html"/>
+      <updated>2014-11-18T10:12:40Z</updated>
+      <id>http://chapeau.freevariable.com/2014/11/apachecon</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Registration open for European HTCondor Pool Admin Workshop: Dec. 8th - Dec. 11th, 2014 ( November 18, 2014 )]]></title>
+      <link href="http://indico.cern.ch/event/272794/"/>
+      <updated>2014-11-18T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team, together with Worldwide LHC Computing Grid Deployment Board, is offering a
+four-day workshop the 8th through the 11th of December at CERN in Geneva, Switzerland, for HTCondor
+pool administrators.  Topics envisioned include pool configuration, management, theory of operation, sharing of best practices and experiences, and monitoring of individual HTCondor batch pools. Special subjects of emphasis may include: scheduling, pool policy selection, performance tuning, debugging failures, and previews of upcoming features of HTCondor. Time will be provided for question and answer sessions. Attendees should have some knowledge of Linux and network administration, but no HTCondor experience will be required.
+See the workshop's web site to register and for more details.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.4 released! ( November 12, 2014 )]]></title>
+      <link href="manual/v8.2.4/10_3Stable_Release.html"/>
+      <updated>2014-11-12T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor
+version 8.2.4.
+This new version contains:
+a bug fix for an 8.2.3 condor_schedd that could not obtain a claim from an 8.0.x condor_startd;
+a bug fix for removed jobs that return to the queue;
+a workaround for a condor_schedd performance issue when handling a large number of jobs;
+a bug fix to prevent the condor_kbdd from crashing on Windows;
+a bug fix to correct the reporting of available disk on Windows.
+a complete list of bugs fixed and features can be found in the
+Version History.
+HTCondor 8.2.4 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Algebraic types and schema inference]]></title>
+      <link href="http://chapeau.freevariable.com/2014/11/algebraic-types.html"/>
+      <updated>2014-11-03T01:55:10Z</updated>
+      <id>http://chapeau.freevariable.com/2014/11/algebraic-types</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>My <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">last post</a> covered some considerations for using Spark SQL on a real-world JSON dataset.  In particular, schema inference can suffer when you&rsquo;re ingesting a dataset of heterogeneous objects.  In this post, I&rsquo;d like to sketch out some ways to connect schema inference to type inference, in order to point to automated solutions to some of the problems we&rsquo;ve seen. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[fedmsg data and Spark SQL]]></title>
+      <link href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html"/>
+      <updated>2014-10-31T16:28:16Z</updated>
+      <id>http://chapeau.freevariable.com/2014/10/fedmsg-and-spark</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In this post, I&rsquo;ll briefly introduce <a href="http://www.fedmsg.com/en/latest/">fedmsg</a>, the federated message bus developed as part of the Fedora project&rsquo;s infrastructure, and discuss how to ingest fedmsg data for processing with Spark SQL.  While I hope you&rsquo;ll find the analytic possibilities of fedmsg data as interesting as I do, this post will also cover some possible pitfalls you might run into while ingesting complex JSON data or the contents of large SQL databases into Spark SQL more generally. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Notes from Strata + Hadoop World 2014]]></title>
+      <link href="http://chapeau.freevariable.com/2014/10/notes-from-strata-2014.html"/>
+      <updated>2014-10-21T16:38:11Z</updated>
+      <id>http://chapeau.freevariable.com/2014/10/notes-from-strata-2014</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I went to Strata + Hadoop World last week.  This event targets a pretty broad audience and is an interesting mix of trade show, data science conference, and software conference.  However, I&rsquo;ve been impressed by the quality and relevance of the technical program both of the years that I&rsquo;ve gone.  The key to finding good talks at this kind of event is to target talks focusing on applications, visualization, and fundamental techniques, rather than ostensibly technical talks.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>  In the rest of this post, I&rsquo;ll share some of my notes from the talks and tutorials I enjoyed the most. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Faster Random Samples With Gap Sampling]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling/"/>
+      <updated>2014-09-11T14:57:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Generating a random sample of a collection is, logically, a O(np) operation, where (n) is the sample size and (p) is the sampling probability.  For example, extracting a random sample, without replacement, from an array might look like this in pseudocode: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Getting Started with Mesos on Fedora 21 and CentOS 7]]></title>
+      <link href="http://timothysc.github.com/blog/2014/09/08/mesos-breeze/"/>
+      <updated>2014-09-08T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2014/09/08/mesos-breeze</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/mesos_logo.png"> [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Scala Iterator 'drop' Method Generates a Matryoshka Class Nesting]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method/"/>
+      <updated>2014-09-04T00:23:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>The Scala Iterator <code>drop</code> method has a complexity bug that shows up when one calls <code>drop</code> repeatedly, for example when traversing over an iterator in a loop. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing Parallel Prefix Scan as a Spark RDD Transform]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform/"/>
+      <updated>2014-08-12T18:37:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In my <a href="/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/">previous post</a>, I described how to implement the Scala <code>scanLeft</code> function as an RDD transform.  By definition <code>scanLeft</code> invokes a sequential-only prefix scan algorithm; it does not assume that either its input function <code>f</code> or its initial-value <code>z</code> can be applied in a parallel fashion.   Its companion function <code>scan</code>, however, computes a <em>parallel</em> prefix scan.  In this post I will describe an implementation of parallel prefix <code>scan</code> as an RDD transform. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing an RDD scanLeft Transform With Cascade RDDs]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/"/>
+      <updated>2014-08-09T16:10:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In Scala, sequence (and iterator) data types support the <code>scanLeft</code> method for computing a sequential prefix scan on sequence elements: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[GPUs on the OSG]]></title>
+      <link href="http://derekweitzel.blogspot.com/2014/06/gpus-on-osg.html"/>
+      <updated>2014-06-25T18:36:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6396978665247392483</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -88,85 +461,6 @@ the post on the HTCondor-users mailing list.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 8.1.4 released! ( February 27, 2014 )]]></title>
-      <link href="manual/v8.1.4/10_3Development_Release.html"/>
-      <updated>2014-02-27T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor version 8.1.4.
-This development release contains all the bug fixes from the stable release version 8.0.6.
-Major new features include:
-added grid universe support for Google Compute Engine;
-support for defining custom resources that easily manage GPUs;
-a new tool that does GPU discovery;
-improved scalability when using the shared port service;
-Python 3 support;
-enhanced resilience due to the prompt detection of network failures.
-A complete list of bugs fixed and features can be found in the
-Version History.
-HTCondor 8.1.4 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[A Bi-directional Variation of the O(NP) Edit Distance Algorithm]]></title>
-      <link href="http://erikerlandson.github.com/blog/2014/02/20/a-bi-directional-variation-of-the-o-np-edit-distance-algorithm/"/>
-      <updated>2014-02-21T02:51:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2014/02/20/a-bi-directional-variation-of-the-o-np-edit-distance-algorithm</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>The O(ND) edit distance algorithm <a href="#ref1">[1]</a> is a standard for efficient computation of the edit distance between two sequences, appearing in applications such as the GNU diff tool.  There is also a variation <a href="#ref2">[2]</a> that operates in O(NP) time, where P is the number of deletions in the shortest edit path.  This O(NP) algorithm has a lower computational cost, since P &lt;= D/2 (and may be &lt;&lt; D/2 in some circumstances) <a href="#ref3">[3]</a>.  In order to apply these algorithms to obtain an <em>edit script</em> in linear space, they must be adapted into a bidirectional form that enables recursive divide-and-conquer.   The basic principles of a bidirectional adaptation of the O(ND) algorithm are described in <a href="#ref1">[1]</a>.   However, no such discussion of a bidirectional O(NP) algorithm is provided in <a href="#ref2">[2]</a>.  Understanding this adaptation involves some observations that aren't immediately obvious.  In this post, I will describe these key observations. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[sbt is in Fedora 20]]></title>
-      <link href="http://chapeau.freevariable.com/2014/02/sbt-is-in-fedora-20.html"/>
-      <updated>2014-02-20T22:27:57Z</updated>
-      <id>tag:chapeau.freevariable.com,2014://1.44</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[Longtime Chapeau readers may recall last summer’s lament about the state of the Scala ecosystem in Fedora. We’ve taken a lot of steps since then. After a rough patch for the Fedora Scala package, Scala 2.10 is available and works...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ Consider presenting your work at HTCondor Week 2014 ( February 20, 2014 )]]></title>
-      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2014/speaker_info.html"/>
-      <updated>2014-02-20T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[HTCondor Week attendees are interested in hearing about your efforts during
-our annual meeting, April 28-30.
-Please consider presenting.
-Details for adding your talk to the schedule are given in this page of
-Information for HTCondor Week Speakers.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[One weird trick to eviscerate open source licenses]]></title>
-      <link href="http://chapeau.freevariable.com/2014/02/one-weird-trick-to-eviscerate-open-source-licenses.html"/>
-      <updated>2014-02-19T17:26:28Z</updated>
-      <id>tag:chapeau.freevariable.com,2014://1.43</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[The GNU project’s Four Freedoms present the essential components of Free software: freedom to use the program for any purpose, freedom to study and change the program’s source code, freedom to redistribute the author’s version of the code, and freedom...]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Hot Rod Hadoop with Tachyon on Fedora 21 (Rawhide)]]></title>
       <link href="http://timothysc.github.com/blog/2014/02/17/bdas-tachyon/"/>
       <updated>2014-02-17T16:00:00Z</updated>
@@ -177,105 +471,6 @@ Information for HTCondor Week Speakers.
       </author>
       <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/Tachyon.jpg" title="" > [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.0.6 released! ( February 11, 2014 )]]></title>
-      <link href="manual/v8.0.6/10_3Stable_Release.html"/>
-      <updated>2014-02-11T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.0.6.
-This new version contains a port of HTCondor for Red Hat Enterprise Linux 7.0 Beta on the x86_64 architecture that includes support for the standard universe.
-It also contains bug fixes for:
-transferring files larger then 4 GiB on Windows and 32-bit platforms;
-using a minimum of 1024-bit keys on proxy certificates generated by HTCondor;
-accepting DAG input files larger then 2 GiB;
-the Windows MSI installer setting up a proper configuration for the VM universe;
-honoring CPU affinity on Windows platforms;
-issues with a failing condor_schedd daemon, when HTCondor is compiled with gcc 4.8+, the default compiler on recent Fedora releases.
-A complete list of bugs fixed can be found in the
-Version History.
-HTCondor 8.0.6 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[A simple machine learning app with Spark]]></title>
-      <link href="http://chapeau.freevariable.com/2013/12/a-simple-machine-learning-app-with-spark.html"/>
-      <updated>2013-12-04T13:47:26Z</updated>
-      <id>tag:chapeau.freevariable.com,2013://1.42</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[I'm currently on my way back from the first-ever Spark Summit, where I presented a talk on some of my work with the Fedora Big Data SIG to package Apache Spark and its infrastructure for Fedora. (My slides are online,...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Apache Thrift in Fedora]]></title>
-      <link href="http://chapeau.freevariable.com/2013/10/apache-thrift-in-fedora.html"/>
-      <updated>2013-10-16T19:58:16Z</updated>
-      <id>tag:chapeau.freevariable.com,2013://1.41</id>
-      <author>
-        <name><![CDATA[Will Benton]]></name>
-        <uri>http://willbenton.com</uri>
-      </author>
-      <content type="html"><![CDATA[You probably already know that Apache Thrift is a framework for developing distributed services and clients to access these in multiple languages. You probably also knew that Thrift is extremely popular among the sorts of cool projects that those of...]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Bootstrapping your MapReduce 2.X programming on Fedora 20]]></title>
-      <link href="http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce/"/>
-      <updated>2013-09-14T15:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2013/09/14/hadoop-mapreduce</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p><img src="http://timothysc.github.com/images/ElephantCowboy.jpg" alt="Picture Courtesy of Mauro Flores jr"/> [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Creating a native Mac Installer for Bosco]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/07/creating-native-mac-installer-for-bosco.html"/>
-      <updated>2013-07-11T20:34:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-9151105712164146929</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Leveraging systemd cgroup integration to provide SLAs on Fedora 18 & 19]]></title>
-      <link href="http://timothysc.github.com/blog/2013/06/14/systemd-cgroup-sla/"/>
-      <updated>2013-06-14T15:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2013/06/14/systemd-cgroup-sla</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<h2>Background</h2> [...]
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Submitting R jobs with Bosco]]></title>
-      <link href="http://derekweitzel.blogspot.com/2013/05/submitting-r-jobs-with-bosco.html"/>
-      <updated>2013-05-20T14:51:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-9067247722276578550</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
