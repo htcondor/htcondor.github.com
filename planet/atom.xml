@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-02-05T03:28:19-07:00</updated>
+  <updated>2015-02-06T03:07:16-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor assisted the paleobiology application of DeepDive ( February 5, 2015 )]]></title>
+      <link href="http://www.news.wisc.edu/23330"/>
+      <updated>2015-02-05T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  UW Madison news article describes the paleobiology application of the DeepDive system, which used text-mining techniques to extract data from publications and build a database. The quality of the database contents equaled that achieved by scientists. HTCondor helped to provide the million hours of compute time needed to build the database from tens of thousands of publications.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
@@ -317,30 +330,6 @@ Downloads page.
 four-day workshop the 8th through the 11th of December at CERN in Geneva, Switzerland, for HTCondor
 pool administrators.  Topics envisioned include pool configuration, management, theory of operation, sharing of best practices and experiences, and monitoring of individual HTCondor batch pools. Special subjects of emphasis may include: scheduling, pool policy selection, performance tuning, debugging failures, and previews of upcoming features of HTCondor. Time will be provided for question and answer sessions. Attendees should have some knowledge of Linux and network administration, but no HTCondor experience will be required.
 See the workshop's web site to register and for more details.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.4 released! ( November 12, 2014 )]]></title>
-      <link href="manual/v8.2.4/10_3Stable_Release.html"/>
-      <updated>2014-11-12T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor
-version 8.2.4.
-This new version contains:
-a bug fix for an 8.2.3 condor_schedd that could not obtain a claim from an 8.0.x condor_startd;
-a bug fix for removed jobs that return to the queue;
-a workaround for a condor_schedd performance issue when handling a large number of jobs;
-a bug fix to prevent the condor_kbdd from crashing on Windows;
-a bug fix to correct the reporting of available disk on Windows.
-a complete list of bugs fixed and features can be found in the
-Version History.
-HTCondor 8.2.4 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
