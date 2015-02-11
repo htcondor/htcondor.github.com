@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-02-10T03:46:12-07:00</updated>
+  <updated>2015-02-11T03:11:17-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.7 released! ( February 10, 2015 )]]></title>
+      <link href="manual/v8.2.7/10_3Stable_Release.html"/>
+      <updated>2015-02-10T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor version 8.2.7.
+A stable series release contains significant bug and security fixes.
+This version contains:
+sendmail is used by default for sending notifications (CVE-2014-8126);
+corrected input validation, which prevents daemon crashes;
+an update, such that grid jobs work within the current Google Compute Engine;
+a bug fix to prevent an infinite loop in the python bindings;
+a bug fix to prevent infinite recursion when evaluating ClassAd attributes.
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.7 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor assisted the paleobiology application of DeepDive ( February 5, 2015 )]]></title>
@@ -314,22 +338,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ Registration open for European HTCondor Pool Admin Workshop: Dec. 8th - Dec. 11th, 2014 ( November 18, 2014 )]]></title>
-      <link href="http://indico.cern.ch/event/272794/"/>
-      <updated>2014-11-18T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team, together with Worldwide LHC Computing Grid Deployment Board, is offering a
-four-day workshop the 8th through the 11th of December at CERN in Geneva, Switzerland, for HTCondor
-pool administrators.  Topics envisioned include pool configuration, management, theory of operation, sharing of best practices and experiences, and monitoring of individual HTCondor batch pools. Special subjects of emphasis may include: scheduling, pool policy selection, performance tuning, debugging failures, and previews of upcoming features of HTCondor. Time will be provided for question and answer sessions. Attendees should have some knowledge of Linux and network administration, but no HTCondor experience will be required.
-See the workshop's web site to register and for more details.
 ]]></content>
     </entry>
   
