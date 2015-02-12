@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-02-11T03:11:17-07:00</updated>
+  <updated>2015-02-12T06:41:12-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor Week 2015 announced! ( February 11, 2015 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2015/"/>
+      <updated>2015-02-11T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[HTCondor Week 2015 is May 19â22, 2015 in Madison, Wisconsin.  Join other users, administrators, and deveopers for the opportunity to exchange ideas and experiences, to learn about the latest research, to experience live demos, and to influence our short and long term research and development directions.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.2.7 released! ( February 10, 2015 )]]></title>
@@ -304,27 +317,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Over eight years ago, <a href="http://rwmj.wordpress.com">Richard WM Jones</a> wrote a <a href="http://web.archive.org/web/20071013190833/http://blog.merjis.com/2006/11/08/practical-ocaml/">great but disheartening article about his experience serving as a technical reviewer</a> for <a href="http://www.amazon.com/Practical-OCaml-Joshua-B-Smith/dp/159059620X">an infamous book about OCaml</a>.  The post made quite an impression on me at the time and I&rsquo;ve often recalled it over the years whenever opportunities to do prepress reviews have landed in my inbox.  Briefly, Jones was asked to use terrible tools (Microsoft Word) to deal with stilted, error-ridden prose surrounding unidiomatic and broken code.  For his trouble, he got an hourly wage that would have represented a slight raise over what I made mowing my neighbors&#8217; lawns in high school. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.5 released! ( December 1, 2014 )]]></title>
-      <link href="manual/v8.2.5/10_3Stable_Release.html"/>
-      <updated>2014-12-01T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor Team is pleased to announce the release of HTCondor
-version 8.2.5.
-This new version contains:
-an updated RPM installation script that preserves a modified condor_config.local file;
-OpenSSL version 1.0.1j for Windows platforms.
-a complete list of fixed bugs and features can be found in the
-Version History.
-HTCondor 8.2.5 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
