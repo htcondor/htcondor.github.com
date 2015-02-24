@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Last night I had a crazy realization: I could probably replace the majority of what my team hopes to accomplish with standup meetings, design &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
+This development series release contains new features that are under &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,28 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.3/10_3Development_Release.html"> HTCondor 8.3.3 released! ( February 19, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-19T06:00:00Z" pubdate data-updated="true">Feb 19<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.7
+stable release.
+This new version contains:
+the ability to encrypt a job's directory on Linux execute hosts;
+enhancements to EC2 grid universe jobs;
+a more efficient query protocol, including the ability to query the condor_schedd daemon's autocluster set.
+A complete list of new features and fixed bugs can be found in the
+Version History.
+HTCondor 8.3.3 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -181,166 +204,7 @@ Downloads page.
         <time datetime="2015-01-24T18:54:00Z" pubdate data-updated="true">Jan 24<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>Author's note: I've since received some excellent feedback from the Scala community, which I included in some <a href="#notes">end notes</a>.</p>
-
-<p>Author's note the 2nd: I later realized I could apply an implicit conversion and mediator class to preserve the traditional ordering: the code has been updated with that approach.</p>
-
-<p>Author's note the 3rd: This concept has been submitted to the Scala project as JIRA <a href="https://issues.scala-lang.org/browse/SI-9120">SI-9120</a> (PR <a href="https://github.com/scala/scala/pull/4275">#4275</a>)</p>
-
-<p>Scala <a href="http://docs.scala-lang.org/tutorials/tour/sequence-comprehensions.html">sequence comprehensions</a> are an excellent functional programming idiom for looping in Scala.  However, sequence comprehensions encompass much more than just looping -- they represent a powerful syntax for manipulating <em>all</em> monadic structures<a href="#ref1">[1]</a>.</p>
-
-<p>The <code>break</code> and <code>continue</code> looping constructs are a popular framework for cleanly representing multiple loop halting and continuation conditions at differing stages in the execution flow.  Although there is no native support for <code>break</code> or <code>continue</code> in Scala control constructs, it is possible to implement them in a clean and idiomatic way for sequence comprehensions.</p>
-
-<p>In this post I will describe a lightweight and easy-to-use implementation of <code>break</code> and <code>continue</code> for use in Scala sequence comprehensions (aka <code>for</code> statements).  The entire implementation is as follows:</p>
-
-<pre><code>object BreakableGenerators {
-  import scala.language.implicitConversions
-
-  type Generator[+A] = Iterator[A]
-  type BreakableGenerator[+A] = BreakableIterator[A]
-
-  // Generates a new breakable generator from any traversable object.
-  def breakable[A](t1: TraversableOnce[A]): Generator[BreakableGenerator[A]] =
-    List(new BreakableIterator(t1.toIterator)).iterator
-
-  // Mediates boolean expression with 'break' and 'continue' invocations
-  case class BreakableGuardCondition(cond: Boolean) {
-    // Break the looping over one or more breakable generators, if 'cond' 
-    // evaluates to true.
-    def break(b: BreakableGenerator[_], bRest: BreakableGenerator[_]*): Boolean = {
-      if (cond) {
-        b.break
-        for (x &lt;- bRest) { x.break }
-      }
-      !cond
-    }
-
-    // Continue to next iteration of enclosing generator if 'cond' 
-    // evaluates to true.
-    def continue: Boolean = !cond
-  }
-
-  // implicit conversion of boolean values to breakable guard condition mediary
-  implicit def toBreakableGuardCondition(cond: Boolean) =
-    BreakableGuardCondition(cond)
-
-  // An iterator that can be halted via its 'break' method.  Not invoked directly
-  class BreakableIterator[+A](itr: Iterator[A]) extends Iterator[A] {
-    private var broken = false
-    private[BreakableGenerators] def break { broken = true }
-
-    def hasNext = !broken &amp;&amp; itr.hasNext
-    def next = itr.next
-  }
-}
-</code></pre>
-
-<p>The approach is based on a simple subclass of <code>Iterator</code> -- <code>BreakableIterator</code> -- that can be halted by 'breaking' it.  The function <code>breakable(&lt;traversable-object&gt;)</code> returns an Iterator over a single <code>BreakableIterator</code> object.  Iterators are monad-like structures in that they implement <code>map</code> and <code>flatMap</code>, and so its output can be used with <code>&lt;-</code> at the start of a <code>for</code> construct in the usual way.  Note that this means the result of the <code>for</code> statement will also be an Iterator.</p>
-
-<p>Whenever the boolean expression for an <code>if</code> guard is followed by either <code>break</code> or <code>continue</code>, it is implicitly converted to a "breakable guard condition" that supports those methods.  The function <code>break</code> accepts one or more instances of <code>BreakableIterator</code>.  If it evaluates to <code>true</code>, the loops embodied by the given iterators are immediately halted via the associated <code>if</code> guard, and the iterators are halted via their <code>break</code> method.  The <code>continue</code> function is mostly syntactic sugar for a standard <code>if</code> guard, simply with the condition inverted.</p>
-
-<p>Here is a simple example of <code>break</code> and <code>continue</code> in use:</p>
-
-<pre><code>object Main {
-  import BreakableGenerators._
-
-  def main(args: Array[String]) {
-
-    val r = for (
-      // generate a breakable sequence from some sequential input
-      loop &lt;- breakable(1 to 1000);
-      // iterate over the breakable sequence
-      j &lt;- loop;
-      // print out at each iteration
-      _ = { println(s"iteration j= $j") };
-      // continue to next iteration when 'j' is even
-      if { j % 2 == 0 } continue;
-      // break out of the loop when 'j' exceeds 5
-      if { j &gt; 5 } break(loop)
-    ) yield {
-      j
-    }
-    println(s"result= ${r.toList}")
-  }
-}
-</code></pre>
-
-<p>We can see from the resulting output that <code>break</code> and <code>continue</code> function in the usual way.  The <code>continue</code> clause ignores all subsequent code when <code>j</code> is even.  The <code>break</code> clause halts the loop when it sees its first value > 5, which is 7.  Only odd values &lt;= 5 are output from the <code>yield</code> statement:</p>
-
-<pre><code>$ scalac -d /home/eje/class monadic_break.scala
-$ scala -classpath /home/eje/class Main
-iteration j= 1
-iteration j= 2
-iteration j= 3
-iteration j= 4
-iteration j= 5
-iteration j= 6
-iteration j= 7
-result= List(1, 3, 5)
-</code></pre>
-
-<p>Breakable iterators can be nested in the way one would expect.  The following example shows an inner breakable loop nested inside an outer one:</p>
-
-<pre><code>object Main {
-  import BreakableGenerators._
-
-  def main(args: Array[String]) {
-    val r = for (
-      outer &lt;- breakable(1 to 7);
-      j &lt;- outer;
-      _ = { println(s"outer  j= $j") };
-      if { j % 2 == 0 } continue;
-      inner &lt;- breakable(List("a", "b", "c", "d", "e"));
-      k &lt;- inner;
-      _ = { println(s"    inner  j= $j  k= $k") };
-      if { k == "d" } break(inner);
-      if { j == 5  &amp;&amp;  k == "c" } break(inner, outer)
-    ) yield {
-      (j, k)
-    }
-    println(s"result= ${r.toList}")
-  }
-}
-</code></pre>
-
-<p>The output demonstrates that the inner loop breaks whenever <code>k=="d"</code>, and so <code>"e"</code> is never present in the <code>yield</code> result.  When <code>j==5</code> and <code>k=="c"</code>, both the inner and outer loops are broken, and so we see that there is no <code>(5,"c")</code> pair in the result, nor does the outer loop ever iterate over 6 or 7:</p>
-
-<pre><code>$ scalac -d /home/eje/class monadic_break.scala
-$ scala -classpath /home/eje/class Main
-outer  j= 1
-    inner  j= 1  k= a
-    inner  j= 1  k= b
-    inner  j= 1  k= c
-    inner  j= 1  k= d
-outer  j= 2
-outer  j= 3
-    inner  j= 3  k= a
-    inner  j= 3  k= b
-    inner  j= 3  k= c
-    inner  j= 3  k= d
-outer  j= 4
-outer  j= 5
-    inner  j= 5  k= a
-    inner  j= 5  k= b
-    inner  j= 5  k= c
-result= List((1,a), (1,b), (1,c), (3,a), (3,b), (3,c), (5,a), (5,b))
-</code></pre>
-
-<p>Using <code>break</code> and <code>continue</code> with <code>BreakableIterator</code> for sequence comprehensions is that easy.  Enjoy!</p>
-
-<p><a name="notesname" id="notes"></a></p>
-
-<h5>Notes</h5>
-
-<p>The helpful community on freenode #scala made some excellent observations:</p>
-
-<p>1: Iterators in Scala are not strictly monadic -- it would be more accurate to say they're "things with a flatMap and map method, also they can use filter or withFilter sometimes."  However, I personally still prefer to think of them as "monadic in spirit if not law."</p>
-
-<p>2: The <code>break</code> function, as described in this post, is not truly functional in the sense of referential transparency, as the invocation <code>if break(loop) { condition }</code> involves a side-effect on the variable <code>loop</code>.  I would say that it does maintain "scoped functionality."  That is, the break in non-referential transparency is scoped by the variables in question.  The <code>for</code> statement containing them is referentially transparent with respect to its inputs (provided no other code is breaking referential transparency, of course).</p>
-
-<h5>References</h5>
-
-<p><a name="ref1name" id="ref1">[1] </a><em><a href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a></em>, Paul Chiusano and Runar Bjarnason, (section 6.6)</p>
+    <div class="entry-content"><p>Author's note: I've since received some excellent feedback from the Scala community, which I included in some <a href="#notes">end notes</a>. [...]</p>
 </div>
   </article>
 
@@ -374,27 +238,6 @@ and an improved responsiveness from a busy condor_schedd to queries.
 A complete list of new features and fixed bugs can be found in the
 Version History.
 HTCondor 8.3.2 binaries and source code are available from our
-Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.2.6/10_3Stable_Release.html"> HTCondor 8.2.6 released! ( December 16, 2014 )</a></h1>
-      <p class="meta">
-        <time datetime="2014-12-16T06:00:00Z" pubdate data-updated="true">Dec 16<span>th</span>, 2014  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor Team is pleased to announce the release of HTCondor
-version 8.2.6.
-This new version contains:
-a bug fix to the log rotation of the condor_schedd on Linux platforms;
-transfer_input_files now works for directories on Windows platforms;
-a correction of the flags passed to the mail program on Linux platforms;
-a RHEL 7 platform fix of a directory permission that prevented daemons from starting.
-A complete list of fixed bugs can be found in the
-Version History.
-HTCondor 8.2.6 binaries and source code are available from our
 Downloads page.
 </div>
   </article>
