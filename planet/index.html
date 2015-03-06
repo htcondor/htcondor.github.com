@@ -9,8 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
-This development series release contains new features that are under &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
+This development release contains a single bug fix for a problem introduced &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,28 @@ This development series release contains new features that are under &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.4/10_3Development_Release.html"> HTCondor 8.3.4 released! ( March 5, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-03-05T06:00:00Z" pubdate data-updated="true">Mar 5<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
+This development release contains a single bug fix for a problem introduced
+in version 8.3.3 that can cause jobs to not be matched to resources when the
+condor_schedd is flocking.
+This 8.3.4 release also has a known issue which prevents a mixed mode,
+IPv4 and IPv6 HTCondor installation from starting jobs. If using IPv4
+and IPv6 in mixed mode communication is required, please continue using
+HTCondor version 8.3.2. The issue will be fixed in version 8.3.5.
+Further details can be found in the
+Version History.
+HTCondor 8.3.4 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -216,30 +238,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.3.2/10_3Development_Release.html"> HTCondor 8.3.2 released! ( December 23, 2014 )</a></h1>
-      <p class="meta">
-        <time datetime="2014-12-23T06:00:00Z" pubdate data-updated="true">Dec 23<span>rd</span>, 2014  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.2.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.2.6
-stable release.
-This new version contains:
-the next installment of IPv4/IPv6 mixed mode support: a submit node can
-simultaneously interact with an IPv4 and an IPv6 HTCondor pool;
-scalability improvements: a reduced memory foot-print of daemons,
-a reduced number of TCP connections between submit and execute machines,
-and an improved responsiveness from a busy condor_schedd to queries.
-A complete list of new features and fixed bugs can be found in the
-Version History.
-HTCondor 8.3.2 binaries and source code are available from our
-Downloads page.
-</div>
   </article>
 
   <article>
