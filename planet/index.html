@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content=" Planet HTCondor Planet HTCondor Members ">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
+This development release contains a single bug fix for a problem introduced &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,10 +71,259 @@
 
 <div class=\"blog-index\">
 
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.4/10_3Development_Release.html"> HTCondor 8.3.4 released! ( March 5, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-03-05T06:00:00Z" pubdate data-updated="true">Mar 5<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
+This development release contains a single bug fix for a problem introduced
+in version 8.3.3 that can cause jobs to not be matched to resources when the
+condor_schedd is flocking.
+This 8.3.4 release also has a known issue which prevents a mixed mode,
+IPv4 and IPv6 HTCondor installation from starting jobs. If using IPv4
+and IPv6 in mixed mode communication is required, please continue using
+HTCondor version 8.3.2. The issue will be fixed in version 8.3.5.
+Further details can be found in the
+Version History.
+HTCondor 8.3.4 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.3/10_3Development_Release.html"> HTCondor 8.3.3 released! ( February 19, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-19T06:00:00Z" pubdate data-updated="true">Feb 19<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.7
+stable release.
+This new version contains:
+the ability to encrypt a job's directory on Linux execute hosts;
+enhancements to EC2 grid universe jobs;
+a more efficient query protocol, including the ability to query the condor_schedd daemon's autocluster set.
+A complete list of new features and fixed bugs can be found in the
+Version History.
+HTCondor 8.3.3 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/02/shared-decks.html">Your next favorite collaboration tool</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-13T16:50:17Z" pubdate data-updated="true">Feb 13<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Last night I had a crazy realization:  I could probably replace the majority of what my team hopes to accomplish with standup meetings, design documents, project management apps, and social code sharing features with a single tool. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2015/"> HTCondor Week 2015 announced! ( February 11, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-11T06:00:00Z" pubdate data-updated="true">Feb 11<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">HTCondor Week 2015 is May 19â22, 2015 in Madison, Wisconsin.  Join other users, administrators, and deveopers for the opportunity to exchange ideas and experiences, to learn about the latest research, to experience live demos, and to influence our short and long term research and development directions.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.2.7/10_3Stable_Release.html"> HTCondor 8.2.7 released! ( February 10, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-10T06:00:00Z" pubdate data-updated="true">Feb 10<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor version 8.2.7.
+A stable series release contains significant bug and security fixes.
+This version contains:
+sendmail is used by default for sending notifications (CVE-2014-8126);
+corrected input validation, which prevents daemon crashes;
+an update, such that grid jobs work within the current Google Compute Engine;
+a bug fix to prevent an infinite loop in the python bindings;
+a bug fix to prevent infinite recursion when evaluating ClassAd attributes.
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.7 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://www.news.wisc.edu/23330"> HTCondor assisted the paleobiology application of DeepDive ( February 5, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-02-05T06:00:00Z" pubdate data-updated="true">Feb 5<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">This  UW Madison news article describes the paleobiology application of the DeepDive system, which used text-mining techniques to extract data from publications and build a database. The quality of the database contents equaled that achieved by scientists. HTCondor helped to provide the million hours of compute time needed to build the database from tens of thousands of publications.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html">HTCondor CacheD: Caching for HTC - Part 2</a></h1>
+      <p class="meta">
+        <time datetime="2015-01-25T15:59:00Z" pubdate data-updated="true">Jan 25<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions/">Monadic 'break' and 'continue' for Scala Sequence Comprehensions</a></h1>
+      <p class="meta">
+        <time datetime="2015-01-24T18:54:00Z" pubdate data-updated="true">Jan 24<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Author's note: I've since received some excellent feedback from the Scala community, which I included in some <a href="#notes">end notes</a>. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html">Condor CacheD: Caching for HTC - Part 1</a></h1>
+      <p class="meta">
+        <time datetime="2015-01-22T16:00:00Z" pubdate data-updated="true">Jan 22<span>nd</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/12/caveat-censor.html">Caveat censor</a></h1>
+      <p class="meta">
+        <time datetime="2014-12-02T16:12:22Z" pubdate data-updated="true">Dec 2<span>nd</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Over eight years ago, <a href="http://rwmj.wordpress.com">Richard WM Jones</a> wrote a <a href="http://web.archive.org/web/20071013190833/http://blog.merjis.com/2006/11/08/practical-ocaml/">great but disheartening article about his experience serving as a technical reviewer</a> for <a href="http://www.amazon.com/Practical-OCaml-Joshua-B-Smith/dp/159059620X">an infamous book about OCaml</a>.  The post made quite an impression on me at the time and I&rsquo;ve often recalled it over the years whenever opportunities to do prepress reviews have landed in my inbox.  Briefly, Jones was asked to use terrible tools (Microsoft Word) to deal with stilted, error-ridden prose surrounding unidiomatic and broken code.  For his trouble, he got an hourly wage that would have represented a slight raise over what I made mowing my neighbors&#8217; lawns in high school. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/11/apachecon.html">Spark performance talk at ApacheCon EU</a></h1>
+      <p class="meta">
+        <time datetime="2014-11-18T10:12:40Z" pubdate data-updated="true">Nov 18<span>th</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/11/algebraic-types.html">Algebraic types and schema inference</a></h1>
+      <p class="meta">
+        <time datetime="2014-11-03T01:55:10Z" pubdate data-updated="true">Nov 3<span>rd</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>My <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">last post</a> covered some considerations for using Spark SQL on a real-world JSON dataset.  In particular, schema inference can suffer when you&rsquo;re ingesting a dataset of heterogeneous objects.  In this post, I&rsquo;d like to sketch out some ways to connect schema inference to type inference, in order to point to automated solutions to some of the problems we&rsquo;ve seen. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">fedmsg data and Spark SQL</a></h1>
+      <p class="meta">
+        <time datetime="2014-10-31T16:28:16Z" pubdate data-updated="true">Oct 31<span>st</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In this post, I&rsquo;ll briefly introduce <a href="http://www.fedmsg.com/en/latest/">fedmsg</a>, the federated message bus developed as part of the Fedora project&rsquo;s infrastructure, and discuss how to ingest fedmsg data for processing with Spark SQL.  While I hope you&rsquo;ll find the analytic possibilities of fedmsg data as interesting as I do, this post will also cover some possible pitfalls you might run into while ingesting complex JSON data or the contents of large SQL databases into Spark SQL more generally. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling/">Faster Random Samples With Gap Sampling</a></h1>
+      <p class="meta">
+        <time datetime="2014-09-11T14:57:00Z" pubdate data-updated="true">Sep 11<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Generating a random sample of a collection is, logically, a O(np) operation, where (n) is the sample size and (p) is the sampling probability.  For example, extracting a random sample, without replacement, from an array might look like this in pseudocode: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://timothysc.github.com/blog/2014/09/08/mesos-breeze/">Getting Started with Mesos on Fedora 21 and CentOS 7</a></h1>
+      <p class="meta">
+        <time datetime="2014-09-08T15:00:00Z" pubdate data-updated="true">Sep 8<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Timothy St. Clair</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><img class="left" src="http://timothysc.github.com/images/mesos_logo.png"> [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method/">The Scala Iterator 'drop' Method Generates a Matryoshka Class Nesting</a></h1>
+      <p class="meta">
+        <time datetime="2014-09-04T00:23:00Z" pubdate data-updated="true">Sep 4<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>The Scala Iterator <code>drop</code> method has a complexity bug that shows up when one calls <code>drop</code> repeatedly, for example when traversing over an iterator in a loop. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform/">Implementing Parallel Prefix Scan as a Spark RDD Transform</a></h1>
+      <p class="meta">
+        <time datetime="2014-08-12T18:37:00Z" pubdate data-updated="true">Aug 12<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In my <a href="/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/">previous post</a>, I described how to implement the Scala <code>scanLeft</code> function as an RDD transform.  By definition <code>scanLeft</code> invokes a sequential-only prefix scan algorithm; it does not assume that either its input function <code>f</code> or its initial-value <code>z</code> can be applied in a parallel fashion.   Its companion function <code>scan</code>, however, computes a <em>parallel</em> prefix scan.  In this post I will describe an implementation of parallel prefix <code>scan</code> as an RDD transform. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/">Implementing an RDD scanLeft Transform With Cascade RDDs</a></h1>
+      <p class="meta">
+        <time datetime="2014-08-09T16:10:00Z" pubdate data-updated="true">Aug 9<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In Scala, sequence (and iterator) data types support the <code>scanLeft</code> method for computing a sequential prefix scan on sequence elements: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2014/06/gpus-on-osg.html">GPUs on the OSG</a></h1>
+      <p class="meta">
+        <time datetime="2014-06-25T18:36:00Z" pubdate data-updated="true">Jun 25<span>th</span>, 2014  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
 </div>
 <aside class="sidebar">
   <section>
     <h1>Planet HTCondor Members</h1>
+    
+      <a href="http://chapeau.freevariable.com/"> William Benton</a><br>
+    
+      <a href="http://erikerlandson.github.com/"> Erik Erlandson</a><br>
+    
+      <a href="http://timothysc.github.com/"> Timothy St. Clair</a><br>
+    
+      <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
+    
+      <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
     
   </section>
 </aside>

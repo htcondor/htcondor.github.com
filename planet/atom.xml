@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-03-19T07:47:14-07:00</updated>
+  <updated>2015-03-20T06:21:08-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,5 +11,282 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.4 released! ( March 5, 2015 )]]></title>
+      <link href="manual/v8.3.4/10_3Development_Release.html"/>
+      <updated>2015-03-05T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
+This development release contains a single bug fix for a problem introduced
+in version 8.3.3 that can cause jobs to not be matched to resources when the
+condor_schedd is flocking.
+This 8.3.4 release also has a known issue which prevents a mixed mode,
+IPv4 and IPv6 HTCondor installation from starting jobs. If using IPv4
+and IPv6 in mixed mode communication is required, please continue using
+HTCondor version 8.3.2. The issue will be fixed in version 8.3.5.
+Further details can be found in the
+Version History.
+HTCondor 8.3.4 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.3 released! ( February 19, 2015 )]]></title>
+      <link href="manual/v8.3.3/10_3Development_Release.html"/>
+      <updated>2015-02-19T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.7
+stable release.
+This new version contains:
+the ability to encrypt a job's directory on Linux execute hosts;
+enhancements to EC2 grid universe jobs;
+a more efficient query protocol, including the ability to query the condor_schedd daemon's autocluster set.
+A complete list of new features and fixed bugs can be found in the
+Version History.
+HTCondor 8.3.3 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Your next favorite collaboration tool]]></title>
+      <link href="http://chapeau.freevariable.com/2015/02/shared-decks.html"/>
+      <updated>2015-02-13T16:50:17Z</updated>
+      <id>http://chapeau.freevariable.com/2015/02/shared-decks</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Last night I had a crazy realization:  I could probably replace the majority of what my team hopes to accomplish with standup meetings, design documents, project management apps, and social code sharing features with a single tool. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor Week 2015 announced! ( February 11, 2015 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2015/"/>
+      <updated>2015-02-11T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[HTCondor Week 2015 is May 19â22, 2015 in Madison, Wisconsin.  Join other users, administrators, and deveopers for the opportunity to exchange ideas and experiences, to learn about the latest research, to experience live demos, and to influence our short and long term research and development directions.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.7 released! ( February 10, 2015 )]]></title>
+      <link href="manual/v8.2.7/10_3Stable_Release.html"/>
+      <updated>2015-02-10T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor version 8.2.7.
+A stable series release contains significant bug and security fixes.
+This version contains:
+sendmail is used by default for sending notifications (CVE-2014-8126);
+corrected input validation, which prevents daemon crashes;
+an update, such that grid jobs work within the current Google Compute Engine;
+a bug fix to prevent an infinite loop in the python bindings;
+a bug fix to prevent infinite recursion when evaluating ClassAd attributes.
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.7 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor assisted the paleobiology application of DeepDive ( February 5, 2015 )]]></title>
+      <link href="http://www.news.wisc.edu/23330"/>
+      <updated>2015-02-05T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  UW Madison news article describes the paleobiology application of the DeepDive system, which used text-mining techniques to extract data from publications and build a database. The quality of the database contents equaled that achieved by scientists. HTCondor helped to provide the million hours of compute time needed to build the database from tens of thousands of publications.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
+      <updated>2015-01-25T15:59:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-5260378956420164105</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Monadic 'break' and 'continue' for Scala Sequence Comprehensions]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions/"/>
+      <updated>2015-01-24T18:54:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Author's note: I've since received some excellent feedback from the Scala community, which I included in some <a href="#notes">end notes</a>. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Condor CacheD: Caching for HTC - Part 1]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html"/>
+      <updated>2015-01-22T16:00:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1889975382858537261</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Caveat censor]]></title>
+      <link href="http://chapeau.freevariable.com/2014/12/caveat-censor.html"/>
+      <updated>2014-12-02T16:12:22Z</updated>
+      <id>http://chapeau.freevariable.com/2014/12/caveat-censor</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Over eight years ago, <a href="http://rwmj.wordpress.com">Richard WM Jones</a> wrote a <a href="http://web.archive.org/web/20071013190833/http://blog.merjis.com/2006/11/08/practical-ocaml/">great but disheartening article about his experience serving as a technical reviewer</a> for <a href="http://www.amazon.com/Practical-OCaml-Joshua-B-Smith/dp/159059620X">an infamous book about OCaml</a>.  The post made quite an impression on me at the time and I&rsquo;ve often recalled it over the years whenever opportunities to do prepress reviews have landed in my inbox.  Briefly, Jones was asked to use terrible tools (Microsoft Word) to deal with stilted, error-ridden prose surrounding unidiomatic and broken code.  For his trouble, he got an hourly wage that would have represented a slight raise over what I made mowing my neighbors&#8217; lawns in high school. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Spark performance talk at ApacheCon EU]]></title>
+      <link href="http://chapeau.freevariable.com/2014/11/apachecon.html"/>
+      <updated>2014-11-18T10:12:40Z</updated>
+      <id>http://chapeau.freevariable.com/2014/11/apachecon</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Algebraic types and schema inference]]></title>
+      <link href="http://chapeau.freevariable.com/2014/11/algebraic-types.html"/>
+      <updated>2014-11-03T01:55:10Z</updated>
+      <id>http://chapeau.freevariable.com/2014/11/algebraic-types</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>My <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">last post</a> covered some considerations for using Spark SQL on a real-world JSON dataset.  In particular, schema inference can suffer when you&rsquo;re ingesting a dataset of heterogeneous objects.  In this post, I&rsquo;d like to sketch out some ways to connect schema inference to type inference, in order to point to automated solutions to some of the problems we&rsquo;ve seen. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[fedmsg data and Spark SQL]]></title>
+      <link href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html"/>
+      <updated>2014-10-31T16:28:16Z</updated>
+      <id>http://chapeau.freevariable.com/2014/10/fedmsg-and-spark</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In this post, I&rsquo;ll briefly introduce <a href="http://www.fedmsg.com/en/latest/">fedmsg</a>, the federated message bus developed as part of the Fedora project&rsquo;s infrastructure, and discuss how to ingest fedmsg data for processing with Spark SQL.  While I hope you&rsquo;ll find the analytic possibilities of fedmsg data as interesting as I do, this post will also cover some possible pitfalls you might run into while ingesting complex JSON data or the contents of large SQL databases into Spark SQL more generally. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Faster Random Samples With Gap Sampling]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling/"/>
+      <updated>2014-09-11T14:57:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Generating a random sample of a collection is, logically, a O(np) operation, where (n) is the sample size and (p) is the sampling probability.  For example, extracting a random sample, without replacement, from an array might look like this in pseudocode: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Getting Started with Mesos on Fedora 21 and CentOS 7]]></title>
+      <link href="http://timothysc.github.com/blog/2014/09/08/mesos-breeze/"/>
+      <updated>2014-09-08T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2014/09/08/mesos-breeze</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/mesos_logo.png"> [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Scala Iterator 'drop' Method Generates a Matryoshka Class Nesting]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method/"/>
+      <updated>2014-09-04T00:23:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>The Scala Iterator <code>drop</code> method has a complexity bug that shows up when one calls <code>drop</code> repeatedly, for example when traversing over an iterator in a loop. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing Parallel Prefix Scan as a Spark RDD Transform]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform/"/>
+      <updated>2014-08-12T18:37:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In my <a href="/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/">previous post</a>, I described how to implement the Scala <code>scanLeft</code> function as an RDD transform.  By definition <code>scanLeft</code> invokes a sequential-only prefix scan algorithm; it does not assume that either its input function <code>f</code> or its initial-value <code>z</code> can be applied in a parallel fashion.   Its companion function <code>scan</code>, however, computes a <em>parallel</em> prefix scan.  In this post I will describe an implementation of parallel prefix <code>scan</code> as an RDD transform. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing an RDD scanLeft Transform With Cascade RDDs]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/"/>
+      <updated>2014-08-09T16:10:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In Scala, sequence (and iterator) data types support the <code>scanLeft</code> method for computing a sequential prefix scan on sequence elements: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[GPUs on the OSG]]></title>
+      <link href="http://derekweitzel.blogspot.com/2014/06/gpus-on-osg.html"/>
+      <updated>2014-06-25T18:36:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6396978665247392483</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
   
 </feed>
