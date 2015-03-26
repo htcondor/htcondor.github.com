@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-03-25T03:31:09-07:00</updated>
+  <updated>2015-03-26T03:06:13-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor Week 2015 Registration Open (March 25, 2015 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2015/"/>
+      <updated>2015-03-25T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[We invite HTCondor users, administrators, and developers to HTCondor Week 2015, our annual HTCondor user conference, in beautiful Madison, Wisconsin, May 19-22, 2015. HTCondor Week features tutorials and talks from HTCondor developers, administrators, and users.  It also provides an opportunity for one-on-one or small group collaborations throughout the week.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.3.4 released! ( March 5, 2015 )]]></title>
@@ -74,19 +87,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor Week 2015 announced! ( February 11, 2015 )]]></title>
-      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2015/"/>
-      <updated>2015-02-11T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[HTCondor Week 2015 is May 19â22, 2015 in Madison, Wisconsin.  Join other users, administrators, and deveopers for the opportunity to exchange ideas and experiences, to learn about the latest research, to experience live demos, and to influence our short and long term research and development directions.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[ HTCondor 8.2.7 released! ( February 10, 2015 )]]></title>
       <link href="manual/v8.2.7/10_3Stable_Release.html"/>
       <updated>2015-02-10T06:00:00Z</updated>
@@ -107,19 +107,6 @@ A complete list of fixed bugs can be found in the
 Version History.
 HTCondor 8.2.7 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor assisted the paleobiology application of DeepDive ( February 5, 2015 )]]></title>
-      <link href="http://www.news.wisc.edu/23330"/>
-      <updated>2015-02-05T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  UW Madison news article describes the paleobiology application of the DeepDive system, which used text-mining techniques to extract data from publications and build a database. The quality of the database contents equaled that achieved by scientists. HTCondor helped to provide the million hours of compute time needed to build the database from tens of thousands of publications.
 ]]></content>
     </entry>
   
