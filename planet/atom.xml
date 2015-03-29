@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-03-28T03:06:12-07:00</updated>
+  <updated>2015-03-29T03:12:10-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -112,6 +112,19 @@ Downloads page.
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[Monadic 'break' and 'continue' for Scala Sequence Comprehensions]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions/"/>
+      <updated>2015-01-24T18:54:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/01/24/monadic-break-and-continue-for-scala-sequence-comprehensions</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Author's note: I've since received some excellent feedback from the Scala community, which I included in some <a href="#notes">end notes</a>. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[Condor CacheD: Caching for HTC - Part 1]]></title>
       <link href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html"/>
       <updated>2015-01-22T16:00:00Z</updated>
@@ -172,6 +185,71 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>In this post, I&rsquo;ll briefly introduce <a href="http://www.fedmsg.com/en/latest/">fedmsg</a>, the federated message bus developed as part of the Fedora project&rsquo;s infrastructure, and discuss how to ingest fedmsg data for processing with Spark SQL.  While I hope you&rsquo;ll find the analytic possibilities of fedmsg data as interesting as I do, this post will also cover some possible pitfalls you might run into while ingesting complex JSON data or the contents of large SQL databases into Spark SQL more generally. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Faster Random Samples With Gap Sampling]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling/"/>
+      <updated>2014-09-11T14:57:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/11/faster-random-samples-with-gap-sampling</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Generating a random sample of a collection is, logically, a O(np) operation, where (n) is the sample size and (p) is the sampling probability.  For example, extracting a random sample, without replacement, from an array might look like this in pseudocode: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Getting Started with Mesos on Fedora 21 and CentOS 7]]></title>
+      <link href="http://timothysc.github.com/blog/2014/09/08/mesos-breeze/"/>
+      <updated>2014-09-08T15:00:00Z</updated>
+      <id>http://timothysc.github.com/blog/2014/09/08/mesos-breeze</id>
+      <author>
+        <name><![CDATA[Timothy St. Clair]]></name>
+        <uri>http://timothysc.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/mesos_logo.png"> [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Scala Iterator 'drop' Method Generates a Matryoshka Class Nesting]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method/"/>
+      <updated>2014-09-04T00:23:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/09/03/matryoshka-class-construction-from-the-scala-iterator-drop-method</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>The Scala Iterator <code>drop</code> method has a complexity bug that shows up when one calls <code>drop</code> repeatedly, for example when traversing over an iterator in a loop. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing Parallel Prefix Scan as a Spark RDD Transform]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform/"/>
+      <updated>2014-08-12T18:37:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/12/implementing-parallel-prefix-scan-as-a-spark-rdd-transform</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In my <a href="/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/">previous post</a>, I described how to implement the Scala <code>scanLeft</code> function as an RDD transform.  By definition <code>scanLeft</code> invokes a sequential-only prefix scan algorithm; it does not assume that either its input function <code>f</code> or its initial-value <code>z</code> can be applied in a parallel fashion.   Its companion function <code>scan</code>, however, computes a <em>parallel</em> prefix scan.  In this post I will describe an implementation of parallel prefix <code>scan</code> as an RDD transform. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Implementing an RDD scanLeft Transform With Cascade RDDs]]></title>
+      <link href="http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds/"/>
+      <updated>2014-08-09T16:10:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2014/08/09/implementing-an-rdd-scanleft-transform-with-cascade-rdds</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In Scala, sequence (and iterator) data types support the <code>scanLeft</code> method for computing a sequential prefix scan on sequence elements: [...]</p>
 ]]></content>
     </entry>
   
