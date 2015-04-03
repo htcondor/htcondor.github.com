@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="In most use cases of Scala closures, what you see is what you get, but there are exceptions where looks can be deceiving and this can have a big &hellip;">
+  <meta name="description" content="One of the great things about Apache Spark is that you can experiment with new analyses interactively. In the past, I&rsquo;ve used the sbt console &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,131 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/04/spark-sql-repl.html">Interactively using Spark SQL and DataFrames from sbt projects</a></h1>
+      <p class="meta">
+        <time datetime="2015-04-02T16:12:17Z" pubdate data-updated="true">Apr 2<span>nd</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>One of the great things about Apache Spark is that you can experiment with new analyses interactively.  In the past, I&rsquo;ve used the <code>sbt</code> console to try out new data transformations and models; the console is especially convenient since you <a href="http://chapeau.freevariable.com/2014/09/interactive-sbt.html">can set it up as a custom Scala REPL with your libraries loaded and some test fixtures already created</a>.</p>
+
+<p>However, some of Spark&rsquo;s coolest new functionality depends on some aspects of Scala reflection that <a href="http://mail-archives.apache.org/mod_mbox/spark-user/201503.mbox/%3cCAAswR-62WgqYMt=HNLd3-JQmWgW5p+_6-hLDngjC3ABH1Lun0A@mail.gmail.com%3e">aren&rsquo;t compatible with how <code>sbt</code> uses classloaders for tasks</a>, so you&rsquo;re liable to see <code>MissingRequirementError</code> exceptions when you try and run code that exercises parts of Spark SQL or the DataFrame API from the <code>sbt</code> console.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>You can certainly run a regular Scala REPL or the <code>spark-shell</code>, but doing so sacrifices a lot of the flexibility of running from <code>sbt</code>:  every time your code or dependencies change, you&rsquo;ll need to package your application and set your classpath, ensuring that all of your application classes and dependencies are available to the REPL application.</p>
+
+<p>Fortunately, there&rsquo;s an easier way:  you can make a small application that runs a Scala REPL set up the way you like and ask <code>sbt</code> how to set its classpath.  First, write up a simple custom Scala REPL, like this one:</p>
+
+<figure class='code'><figcaption><span>ReplApp.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">ReplApp</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">scala.tools.nsc.interpreter._</span>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">scala.tools.nsc.Settings</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">repl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ILoop</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">override</span> <span class="k">def</span> <span class="n">loop</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// ConsoleApp is just a simple container for a Spark context</span>
+</span><span class='line'>        <span class="c1">// and configuration</span>
+</span><span class='line'>        <span class="k">val</span> <span class="n">app</span> <span class="k">=</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="n">redhat</span><span class="o">.</span><span class="n">et</span><span class="o">.</span><span class="n">silex</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="nc">ConsoleApp</span><span class="o">()</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">addImports</span><span class="o">(</span><span class="s">&quot;org.apache.spark.SparkConf&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">addImports</span><span class="o">(</span><span class="s">&quot;org.apache.spark.SparkContext&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">addImports</span><span class="o">(</span><span class="s">&quot;org.apache.spark.SparkContext._&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">addImports</span><span class="o">(</span><span class="s">&quot;org.apache.spark.rdd.RDD&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span><span class="s">&quot;app&quot;</span><span class="o">,</span> <span class="n">app</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span><span class="s">&quot;spark&quot;</span><span class="o">,</span> <span class="n">app</span><span class="o">.</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span><span class="s">&quot;sqlc&quot;</span><span class="o">,</span> <span class="n">app</span><span class="o">.</span><span class="n">sqlContext</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">intp</span><span class="o">.</span><span class="n">addImports</span><span class="o">(</span><span class="s">&quot;sqlc._&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">super</span><span class="o">.</span><span class="n">loop</span><span class="o">()</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">settings</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Settings</span>
+</span><span class='line'>    <span class="n">settings</span><span class="o">.</span><span class="nc">Yreplsync</span><span class="o">.</span><span class="n">value</span> <span class="k">=</span> <span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">settings</span><span class="o">.</span><span class="n">usejavacp</span><span class="o">.</span><span class="n">value</span> <span class="k">=</span> <span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">repl</span><span class="o">.</span><span class="n">process</span><span class="o">(</span><span class="n">settings</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>ReplApp</code> application sets up a Scala REPL with imports for some common Spark classes and bindings to a <code>SparkContext</code> and <code>SqlContext</code>.  (The <code>ConsoleApp</code> object is just a simple wrapper for Spark context and configuration; see the <a href="https://github.com/willb/silex">Silex project</a>, where my team is collecting and generalizing infrastructure code from Spark applications, for more details &mdash; or just change this code to set up a <code>SparkContext</code> as you see fit.)</p>
+
+<p>In order to run this application, you&rsquo;ll need to set its classpath, and <code>sbt</code> gives you a way to do find out exactly what environment it would be using so you can run the application manually.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>  First, make sure you have a copy of <a href="https://github.com/paulp/sbt-extras/blob/master/sbt"><code>sbt-extras</code></a> either in your repository or somewhere pointed to by <code>SBT</code> in your environment.  Then, create a shell script that looks like this:</p>
+
+<figure class='code'><figcaption><span>repl.sh</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># set SBT to the location of a current sbt-extras script,</span>
+</span><span class='line'><span class="c"># or bundle one in your repository</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">SBT</span><span class="o">=</span><span class="k">${</span><span class="nv">SBT</span><span class="k">:-</span><span class="p">./sbt</span><span class="k">}</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">SCALA_VERSION</span><span class="o">=</span><span class="k">$(${</span><span class="nv">SBT</span><span class="k">}</span> <span class="s2">&quot;export scalaVersion&quot;</span> <span class="p">|</span> tail -1<span class="k">)</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">APP_CP</span><span class="o">=</span><span class="k">$(${</span><span class="nv">SBT</span><span class="k">}</span> -batch -q <span class="s2">&quot;export compile:dependencyClasspath&quot;</span> <span class="p">|</span> tail -1<span class="k">)</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">JLINE_CP</span><span class="o">=</span><span class="k">$(</span>find <span class="nv">$HOME</span>/.ivy2 <span class="p">|</span> grep org.scala-lang/jline <span class="p">|</span> grep <span class="k">${</span><span class="nv">SCALA_VERSION</span><span class="k">}</span>.jar<span class="nv">$ </span><span class="p">|</span> tail -1<span class="k">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">${</span><span class="nv">SBT</span><span class="k">}</span> package <span class="o">&amp;&amp;</span> java -cp <span class="k">${</span><span class="nv">APP_CP</span><span class="k">}</span>:<span class="k">${</span><span class="nv">JLINE_CP</span><span class="k">}</span> ReplApp
+</span><span class='line'>stty sane
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then run <code>repl.sh</code> and get a Scala REPL that has all of your app&rsquo;s dependencies and classes loaded <em>and</em> will let you experiment with structured data manipulation in Spark.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Frustratingly, apps that use these features will work, since the classes Scala reflection depends on will be loaded by the bootstrap classloader, and test cases will work as long as you have <code>sbt</code> fork a new JVM to execute them!  Unfortunately, <code>sbt</code> <a href="https://github.com/sbt/sbt/issues/1918">cannot currently fork a new JVM to run a console</a>.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>The <code>run-main</code> task is the right way to run most applications from <code>sbt</code>, but it seems to be somewhat flaky when launching interactive console applications.<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+  </article>
 
   <article>
     <header>
@@ -346,17 +471,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"><p>My <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">last post</a> covered some considerations for using Spark SQL on a real-world JSON dataset.  In particular, schema inference can suffer when you&rsquo;re ingesting a dataset of heterogeneous objects.  In this post, I&rsquo;d like to sketch out some ways to connect schema inference to type inference, in order to point to automated solutions to some of the problems we&rsquo;ve seen. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">fedmsg data and Spark SQL</a></h1>
-      <p class="meta">
-        <time datetime="2014-10-31T16:28:16Z" pubdate data-updated="true">Oct 31<span>st</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>In this post, I&rsquo;ll briefly introduce <a href="http://www.fedmsg.com/en/latest/">fedmsg</a>, the federated message bus developed as part of the Fedora project&rsquo;s infrastructure, and discuss how to ingest fedmsg data for processing with Spark SQL.  While I hope you&rsquo;ll find the analytic possibilities of fedmsg data as interesting as I do, this post will also cover some possible pitfalls you might run into while ingesting complex JSON data or the contents of large SQL databases into Spark SQL more generally. [...]</p>
 </div>
   </article>
 
