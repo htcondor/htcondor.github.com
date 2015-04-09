@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="One of the great things about Apache Spark is that you can experiment with new analyses interactively. In the past, I&rsquo;ve used the sbt console &hellip;">
+  <meta name="description" content="Natural join is a useful special case of the relational join operation (and is extremely common when denormalizing data pulled in from a relational &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,147 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/04/natural-join-for-spark-dataframes.html">Natural join for data frames in Spark</a></h1>
+      <p class="meta">
+        <time datetime="2015-04-08T21:21:21Z" pubdate data-updated="true">Apr 8<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><a href="http://en.wikipedia.org/wiki/Relational_algebra#Natural_join_.28.E2.8B.88.29">Natural join</a> is a useful special case of the relational join operation (and is extremely common when denormalizing data pulled in from a relational database).  Spark&rsquo;s DataFrame API provides an expressive way to specify arbitrary joins, but it would be nice to have some machinery to make the simple case of natural join as easy as possible.  Here&rsquo;s what a natural join needs to do:</p>
+
+<ol>
+<li>For relations <em>R</em> and <em>S</em>, identify the columns they have in common, say <em>c1</em> and <em>c2</em>;</li>
+<li>join <em>R</em> and <em>S</em> on the condition that <em>R.c1</em> == <em>S.c1</em> and <em>R.c2</em> == <em>S.c2</em>; and</li>
+<li>project away the duplicated columns.</li>
+</ol>
+
+
+<p>so, in Spark, a natural join would look like this:</p>
+
+<figure class='code'><figcaption><span>natJoinExample.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="cm">/* r and s are DataFrames, declared elsewhere */</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">joined</span> <span class="k">=</span> <span class="n">r</span><span class="o">.</span><span class="n">join</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">r</span><span class="o">(</span><span class="s">&quot;c1&quot;</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">(</span><span class="s">&quot;c1&quot;</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">r</span><span class="o">(</span><span class="s">&quot;c2&quot;</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">(</span><span class="s">&quot;c2&quot;</span><span class="o">))</span>
+</span><span class='line'><span class="k">val</span> <span class="n">common</span> <span class="k">=</span> <span class="nc">Set</span><span class="o">(</span><span class="s">&quot;c1&quot;</span><span class="o">,</span> <span class="s">&quot;c2&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">outputColumns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">r</span><span class="o">(</span><span class="s">&quot;c1&quot;</span><span class="o">),</span> <span class="n">r</span><span class="o">(</span><span class="s">&quot;c2&quot;</span><span class="o">))</span> <span class="o">++</span>
+</span><span class='line'>                    <span class="n">r</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">c</span> <span class="k">if</span> <span class="o">!</span><span class="n">common</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">r</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>                    <span class="n">s</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">c</span> <span class="k">if</span> <span class="o">!</span><span class="n">common</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">s</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'><span class="k">val</span> <span class="n">projected</span> <span class="k">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="n">outputColumns</span> <span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can generalize this as follows (note that joining two frames with no columns in common will produce an empty frame):</p>
+
+<figure class='code'><figcaption><span>natjoin.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.sql.DataFrame</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.language.implicitConversions</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">trait</span> <span class="nc">NaturalJoining</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.spark.sql.functions._</span>
+</span><span class='line'>  <span class="k">import</span> <span class="nn">org.apache.spark.sql.types._</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">   * Performs a natural join of two data frames.</span>
+</span><span class='line'><span class="cm">   *</span>
+</span><span class='line'><span class="cm">   * The frames are joined by equality on all of the columns they have in common.</span>
+</span><span class='line'><span class="cm">   * The resulting frame has the common columns (in the order they appeared in &lt;code&gt;left&lt;/code&gt;), </span>
+</span><span class='line'><span class="cm">   * followed by the columns that only exist in &lt;code&gt;left&lt;/code&gt;, followed by the columns that </span>
+</span><span class='line'><span class="cm">   * only exist in &lt;code&gt;right&lt;/code&gt;.</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">natjoin</span><span class="o">(</span><span class="n">left</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">,</span> <span class="n">right</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">)</span><span class="k">:</span> <span class="kt">DataFrame</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">leftCols</span> <span class="k">=</span> <span class="n">left</span><span class="o">.</span><span class="n">columns</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">rightCols</span> <span class="k">=</span> <span class="n">right</span><span class="o">.</span><span class="n">columns</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">val</span> <span class="n">commonCols</span> <span class="k">=</span> <span class="n">leftCols</span><span class="o">.</span><span class="n">toSet</span> <span class="n">intersect</span> <span class="n">rightCols</span><span class="o">.</span><span class="n">toSet</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span><span class="o">(</span><span class="n">commonCols</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span>
+</span><span class='line'>      <span class="n">left</span><span class="o">.</span><span class="n">limit</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="n">join</span><span class="o">(</span><span class="n">right</span><span class="o">.</span><span class="n">limit</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">left</span>
+</span><span class='line'>        <span class="o">.</span><span class="n">join</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">commonCols</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span><span class="n">col</span> <span class="k">=&gt;</span> <span class="n">left</span><span class="o">(</span><span class="n">col</span><span class="o">)</span> <span class="o">===</span> <span class="n">right</span><span class="o">(</span><span class="n">col</span><span class="o">)</span> <span class="o">}.</span><span class="n">reduce</span><span class="o">(</span><span class="k">_</span> <span class="o">&amp;&amp;</span> <span class="k">_</span><span class="o">))</span>
+</span><span class='line'>        <span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="n">leftCols</span><span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">c</span> <span class="k">if</span> <span class="n">commonCols</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">left</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>                <span class="n">leftCols</span><span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">c</span> <span class="k">if</span> <span class="o">!</span><span class="n">commonCols</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">left</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">}</span> <span class="o">++</span>
+</span><span class='line'>                <span class="n">rightCols</span><span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">c</span> <span class="k">if</span> <span class="o">!</span><span class="n">commonCols</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">right</span><span class="o">(</span><span class="n">c</span><span class="o">)</span> <span class="o">}</span> <span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Furthermore, we can make this operation available to any <code>DataFrame</code> via implicit conversions:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">DFWithNatJoin</span><span class="o">(</span><span class="n">df</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">NaturalJoining</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">natjoin</span><span class="o">(</span><span class="n">other</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">)</span><span class="k">:</span> <span class="kt">DataFrame</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="n">natjoin</span><span class="o">(</span><span class="n">df</span><span class="o">,</span> <span class="n">other</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/** </span>
+</span><span class='line'><span class="cm"> * Module for natural join functionality.  Import &lt;code&gt;NaturalJoin._&lt;/code&gt; for static access </span>
+</span><span class='line'><span class="cm"> * to the &lt;code&gt;natjoin&lt;/code&gt; method, or import &lt;code&gt;NaturalJoin.implicits._&lt;/code&gt; to pimp </span>
+</span><span class='line'><span class="cm"> * Spark DataFrames with a &lt;code&gt;natjoin&lt;/code&gt; member method. </span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="k">object</span> <span class="nc">NaturalJoin</span> <span class="k">extends</span> <span class="nc">NaturalJoining</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">object</span> <span class="nc">implicits</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">implicit</span> <span class="k">def</span> <span class="n">dfWithNatJoin</span><span class="o">(</span><span class="n">df</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">)</span> <span class="k">=</span> <span class="nc">DFWithNatJoin</span><span class="o">(</span><span class="n">df</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you&rsquo;re interested in using this code in your own projects, simply add <a href="https://github.com/willb/silex">the Silex library</a> to your project and <code>import com.redhat.et.silex.frame._</code>.  (You can also get Silex via <a href="https://bintray.com/willb/maven/silex/view">bintray</a>.)</p>
+</div>
+  </article>
 
   <article>
     <header>
@@ -460,17 +601,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"><p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2014/11/algebraic-types.html">Algebraic types and schema inference</a></h1>
-      <p class="meta">
-        <time datetime="2014-11-03T01:55:10Z" pubdate data-updated="true">Nov 3<span>rd</span>, 2014  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>My <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">last post</a> covered some considerations for using Spark SQL on a real-world JSON dataset.  In particular, schema inference can suffer when you&rsquo;re ingesting a dataset of heterogeneous objects.  In this post, I&rsquo;d like to sketch out some ways to connect schema inference to type inference, in order to point to automated solutions to some of the problems we&rsquo;ve seen. [...]</p>
 </div>
   </article>
 
