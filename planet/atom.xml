@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-04-14T03:19:08-07:00</updated>
+  <updated>2015-04-15T03:20:13-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -152,6 +152,27 @@
 
 
 <p>If you&rsquo;re interested in using this code in your own projects, simply add <a href="https://github.com/willb/silex">the Silex library</a> to your project and <code>import com.redhat.et.silex.frame._</code>.  (You can also get Silex via <a href="https://bintray.com/willb/maven/silex/view">bintray</a>.)</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.8 released! ( April 7, 2015 )]]></title>
+      <link href="manual/v8.2.8/10_3Stable_Release.html"/>
+      <updated>2015-04-07T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor version 8.2.8.
+A stable series release contains significant bug and security fixes.
+This version contains:
+a bug fix to reconnect a TCP session when an HTCondorView collector restarts;
+a bug fix to avoid starting too many jobs, only to kill some chosen at random.
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.8 binaries and source code are available from our
+Downloads page.
 ]]></content>
     </entry>
   
