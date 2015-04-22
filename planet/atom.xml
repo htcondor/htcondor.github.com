@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-04-21T03:15:08-07:00</updated>
+  <updated>2015-04-22T03:35:18-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,163 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Effective continuous integration for Spark projects]]></title>
+      <link href="http://chapeau.freevariable.com/2015/04/spark-apps-and-ci.html"/>
+      <updated>2015-04-21T20:57:24Z</updated>
+      <id>http://chapeau.freevariable.com/2015/04/spark-apps-and-ci</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><a href="http://silex.freevariable.com">Silex</a> is a small library of helper code intended to make it easier to build real-world Spark applications;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> most of it is factored out from applications we&rsquo;ve developed internally at Red Hat.  We have a couple of long-term goals for the Silex project:</p>
+
+<ul>
+<li>We want to make it very easy for us to spin up on new data-processing problems without spending a lot of time dealing with accidental complexity, and</li>
+<li>we want to have a generally-useful standard library atop Spark that provides primitives and solutions to simplify common tasks and reflects best practices as we discover them.</li>
+</ul>
+
+
+<p>Part of having a library that people will want to use is having a quality test suite and continuous integration.  There are some tricks to developing automated tests for Spark applications, but even keeping those in mind may not be sufficient to let you test your Spark apps in a hosted CI environment.  This post will show you how to bridge the gap.</p>
+
+<h3>Continuous integration challenges</h3>
+
+<p>Since we want to make it easy to review contributions to Silex, I set up <a href="https://travis-ci.org/willb/silex">Travis CI</a> to watch branches and pull requests.  Travis CI is a great service, but if you&rsquo;re used to running tests locally, you might have some problems running Spark-based tests under hosted CI environments.  Here&rsquo;s what we learned:</p>
+
+<ul>
+<li>When running tests locally, creating a Spark context with <code>local[*]</code> (in order to use all of the available cores on your machine) might be a good idea.  However, a hosted CI environment may offer you a lot of cores but relatively little memory, so your tests might be killed because each Spark executor has nontrivial memory overhead.  Instead, consider limiting your code to use fewer cores.</li>
+<li>If you&rsquo;re using Kryo serialization and have set the <code>spark.kryoserializer.buffer.mb</code> property to something large (perhaps because you often have serialization buffer crashes in production), don&rsquo;t be surprised if you run out of memory while running in CI.  Spark doesn&rsquo;t share serializers between threads, so you could be allocating a huge buffer for each thread even if your test code doesn&rsquo;t need to serialize anything all that large.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></li>
+<li>Spark SQL (at least as of version 1.3.1) defaults to creating 200 partitions for shuffles.  This is probably a good starting place for real-world data, but it&rsquo;s overkill for test cases running on a single machine.  Furthermore, since each partition has some extra memory overhead, it&rsquo;s another possible cause of OOMEs.</li>
+</ul>
+
+
+<h3>Fixing the problems</h3>
+
+<p>Silex provides an <a href="http://silex.freevariable.com/latest/api/#com.redhat.et.silex.app.AppCommon">application skeleton trait</a>, and we use a <a href="https://github.com/willb/silex/blob/c61995689ca6c76e920af64d7fe9306cdcbcc98d/src/main/scala/com/redhat/et/silex/app/app.scala#L121">class extending this trait</a> to package up Spark and SQL contexts for test cases.  That class isn&rsquo;t currently part of the public Silex API, but you can see what it looks like here:</p>
+
+<figure class='code'><figcaption><span>excerpt from app.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">private</span> <span class="o">[</span><span class="kt">silex</span><span class="o">]</span> <span class="k">class</span> <span class="nc">TestConsoleApp</span><span class="o">(</span><span class="k">val</span> <span class="n">suppliedMaster</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;local[2]&quot;</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AppCommon</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">master</span> <span class="k">=</span> <span class="n">suppliedMaster</span>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">appName</span> <span class="k">=</span> <span class="s">&quot;console&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">addConfig</span><span class="o">(</span> <span class="o">{(</span><span class="n">conf</span><span class="k">:</span> <span class="kt">SparkConf</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">&quot;spark.kryoserializer.buffer.mb&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">)})</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">appMain</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// this never runs</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, we allow users to specify a Spark master URL but default to using two cores locally.  Furthermore, we use the <code>addConfig</code> function from <code>AppCommon</code> &mdash; which takes a <code>SparkConf</code> and returns a modified <code>SparkConf</code> &mdash; to ensure that our Kryo buffer size is the Spark default of 2 mb, rather than the larger Silex default.</p>
+
+<p>If you&rsquo;re used to writing test code that exercises Spark, you probably already have boilerplate (using something like ScalaTest&rsquo;s <code>BeforeAndAfterEach</code>) to set up and tear down a Spark context for each test case.  We set the Spark SQL property to control parallelism in data frame and SQL shuffles in the <a href="https://github.com/willb/silex/blob/3155174e52c392086b44c438fbf5c29d7af9fd3e/src/test/scala/com/redhat/et/silex/testing/sparkFixtures.scala">test setup code</a> itself:</p>
+
+<figure class='code'><figcaption><span>excerpt from app.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.scalatest._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">com.redhat.et.silex.app.TestConsoleApp</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">trait</span> <span class="nc">PerTestSparkContext</span> <span class="k">extends</span> <span class="nc">BeforeAndAfterEach</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">self</span><span class="k">:</span> <span class="kt">BeforeAndAfterEach</span> <span class="kt">with</span> <span class="kt">Suite</span> <span class="o">=&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">app</span><span class="k">:</span> <span class="kt">TestConsoleApp</span> <span class="o">=</span> <span class="kc">null</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">context</span> <span class="k">=</span> <span class="n">app</span><span class="o">.</span><span class="n">context</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">sqlContext</span> <span class="k">=</span> <span class="n">app</span><span class="o">.</span><span class="n">sqlContext</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">beforeEach</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">app</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TestConsoleApp</span><span class="o">()</span>
+</span><span class='line'>    <span class="nc">System</span><span class="o">.</span><span class="n">clearProperty</span><span class="o">(</span><span class="s">&quot;spark.master.port&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">sqlContext</span><span class="o">.</span><span class="n">setConf</span><span class="o">(</span><span class="s">&quot;spark.sql.shuffle.partitions&quot;</span><span class="o">,</span> <span class="s">&quot;10&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">context</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">afterEach</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">stop</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Conclusion</h3>
+
+<p>Good CI is one of those things that makes it fun to develop software, but the accidental differences between a hosted environment and your local environment can be totally frustrating.  By taking into account the constraints you&rsquo;re likely to see when running in a resource-limited container on a CI server, you can help to ensure that your tests only fail when your code is actually broken.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>&ldquo;Silex&rdquo; is Latin for &ldquo;flint,&rdquo; which seemed like a good name for something that was intended to help people make things with sparks.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p>Thanks to <a href="http://erikerlandson.github.io">Erik Erlandson</a> for noticing this (it even affected him in a test case he was running locally).<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.5 released! ( April 20, 2015 )]]></title>
+      <link href="manual/v8.3.5/10_3Development_Release.html"/>
+      <updated>2015-04-20T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.5.
+A development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.8
+stable release.
+A few of the enhancements in this release include:
+new features that increase the power of job specification in the
+submit description file;
+RPMs for Red Hat Enterprise Linux 6 and 7 are modularized and only
+distributed via our YUM repository;
+The new condor-all RPM requires
+the other HTCondor RPMs of a typical HTCondor installation.
+Further details can be found in the
+Version History.
+HTCondor 8.3.5 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Natural join for data frames in Spark]]></title>
@@ -494,30 +651,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 8.3.3 released! ( February 19, 2015 )]]></title>
-      <link href="manual/v8.3.3/10_3Development_Release.html"/>
-      <updated>2015-02-19T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.3.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.2.7
-stable release.
-This new version contains:
-the ability to encrypt a job's directory on Linux execute hosts;
-enhancements to EC2 grid universe jobs;
-a more efficient query protocol, including the ability to query the condor_schedd daemon's autocluster set.
-A complete list of new features and fixed bugs can be found in the
-Version History.
-HTCondor 8.3.3 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[Your next favorite collaboration tool]]></title>
       <link href="http://chapeau.freevariable.com/2015/02/shared-decks.html"/>
       <updated>2015-02-13T16:50:17Z</updated>
@@ -577,19 +710,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Over eight years ago, <a href="http://rwmj.wordpress.com">Richard WM Jones</a> wrote a <a href="http://web.archive.org/web/20071013190833/http://blog.merjis.com/2006/11/08/practical-ocaml/">great but disheartening article about his experience serving as a technical reviewer</a> for <a href="http://www.amazon.com/Practical-OCaml-Joshua-B-Smith/dp/159059620X">an infamous book about OCaml</a>.  The post made quite an impression on me at the time and I&rsquo;ve often recalled it over the years whenever opportunities to do prepress reviews have landed in my inbox.  Briefly, Jones was asked to use terrible tools (Microsoft Word) to deal with stilted, error-ridden prose surrounding unidiomatic and broken code.  For his trouble, he got an hourly wage that would have represented a slight raise over what I made mowing my neighbors&#8217; lawns in high school. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Spark performance talk at ApacheCon EU]]></title>
-      <link href="http://chapeau.freevariable.com/2014/11/apachecon.html"/>
-      <updated>2014-11-18T10:12:40Z</updated>
-      <id>http://chapeau.freevariable.com/2014/11/apachecon</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>I&rsquo;ll be speaking <a href="http://apacheconeu2014.sched.org/event/d4dac3bfd7e7ec1ed42bc4fb349a070b#.VGsb-UQo4d8">later this afternoon at ApacheCon EU</a>.  The title of my talk is &ldquo;Iteratively Improving Spark Application Performance.&rdquo; The great thing about Apache Spark is that simple prototype applications are very easy to develop, and even a first attempt at realizing a new analysis will usually work well enough so that it&rsquo;s not frustrating to evaluate it on real data.  However, simple prototypes can often exhibit performance problems that aren&rsquo;t obvious until you know where to look. [...]</p>
 ]]></content>
     </entry>
   
