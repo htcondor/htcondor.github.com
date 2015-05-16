@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Scala supplies a parallel collections library that was designed to make it easy for a programmer to add parallel computing over the elements in a &hellip;">
+  <meta name="description" content="Most people set personal and professional goals. If you work in software, your near-term professional goals might sound like this: Ship the next &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,69 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/05/process-goals.html">Planning your career like a racing season</a></h1>
+      <p class="meta">
+        <time datetime="2015-05-14T21:04:20Z" pubdate data-updated="true">May 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Most people set personal and professional goals.  If you work in software, your near-term professional goals might sound like this:</p>
+
+<ul>
+<li>Ship the next version of our team&rsquo;s product without any undiscovered crashing bugs</li>
+<li>Improve the performance of the caching layer by 10%</li>
+<li>Become a committer on some particular open-source project</li>
+</ul>
+
+
+<p>Those probably sound pretty reasonable, right?  They aren&rsquo;t vague wishes, they&rsquo;re goals.  They probably aren&rsquo;t totally unrealistic, and you&rsquo;ll know you&rsquo;ve achieved them when some objective, measurable thing happens.  (They&rsquo;re <a href="http://en.wikipedia.org/wiki/SMART_criteria">SMART</a>, in other words.)</p>
+
+<p>We&rsquo;ll come back to these goals.  First, though, I&rsquo;d like digress and talk about bike racing, and specifically about the kinds of goals an amateur racer might set for a year.  Maybe those would look like this:</p>
+
+<ul>
+<li>Stay healthy and avoid injuries all season</li>
+<li>Improve my one-minute power output by 0.5 W/kg</li>
+<li>Upgrade my racing category</li>
+</ul>
+
+
+<p>These are more or less analogous to the professional goals.  They&rsquo;re objective, measurable, and reasonable.  However, they&rsquo;re also at least partially out of your control.  You can&rsquo;t totally prevent yourself from getting sick or crashing.  Your one-minute power might be right at the limits of your genetic capabilities (or maybe your season shapes up so that it makes more sense to focus on improving other aspects of your fitness).  And the category upgrade is up to an official in your local cycling association &mdash; you can get an automatic upgrade by winning races, but whether or not you win is also largely out of your control.</p>
+
+<p>I first read about the idea of <a href="http://velonews.competitor.com/2013/10/training-center/setting-goals-finding-your-perfect-process_306088"><em>process and outcome goals</em></a> in Joe Friel&rsquo;s <em>The Cyclist&rsquo;s Training Bible</em>, but I&rsquo;ve found them extremely helpful in talking about professional goals as well.  The idea is that there are two kinds of goals:  outcome goals, which are results, and process goals, which relate to how you prepare and execute.  Of course, you&rsquo;re ultimately interested in outcomes (winning races, shipping great products, becoming recognized as an authority in your field), but outcomes are always to some extent out of your control.</p>
+
+<p>Instead of focusing on outcomes for goals, it makes more sense to focus on what you can control:  the processes that support those outcomes.  So, in the bike case, you could recast the outcome goals as:</p>
+
+<ul>
+<li>Make sure I get at least 7 hours of sleep a night and avoid sketchy racers in corners or sprints</li>
+<li>Do plyometric exercises at least twice a week in the offseason</li>
+<li>Identify key races that I can do well in and make sure to show up for them well-rested and with adequate nutrition; then focus on avoiding particular tactical mistakes I&rsquo;ve made in past races</li>
+</ul>
+
+
+<p>The software goals I mentioned at the beginning of the article are also outcome goals.  You can&rsquo;t guarantee that your product won&rsquo;t have any undiscovered crashing bugs, but you can sure put processes in place so that you&rsquo;re more likely to discover crashing bugs before you ship.  Similarly, a 10% performance improvement sounds great, but it might require unjustifiable effort or be unachievable (conversely, it might turn out that 10% improvement is insufficient to improve the behavior of the whole system)!  Community leadership positions always involve political as well as meritocratic considerations; while you can make a case for yourself as a good candidate, you can&rsquo;t force people to vote for you.</p>
+
+<p>Recast as process goals, the software goals might look like this:</p>
+
+<ul>
+<li>Ensure that no new commit to our product introduces untested code, use property-based tests for all internal data structures, and incorporate <a href="http://en.wikipedia.org/wiki/Fuzz_testing">fuzzing</a> of every public interface into the QA process.</li>
+<li>Profile the caching layer under a range of conditions and document the hot spots, identifying algorithmic and implementation-level avenues for performance improvement.  Add performance testing to CI.</li>
+<li>Participate in the project community, answering questions on the mailing list every week and submitting at least one nontrivial patch a week.</li>
+</ul>
+
+
+<p>It&rsquo;s easy to imagine the rest of your career and think about outcomes you want to see:  earning a prestigious position, achieving acknowledged impact in your department or company, or writing a popular framework (or book).<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>  But those goals are often pretty far off from what you need to do to get there.  Setting process goals supports the outcomes that you want to achieve.  But the really remarkable thing is that they do so much more than that.  By focusing on improving your preparation and execution, you&rsquo;re making yourself a better engineer (or bike racer) even if you don&rsquo;t get the outcomes you want right away &mdash; and making it more likely you&rsquo;ll see great outcomes in the future.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Outcome goals are a particularly dangerous trap if you&rsquo;re coming from an environment like academia or open-source development, where outcome-related metrics like tenure, citation count, and number of GitHub &ldquo;stars&rdquo; are never far from your evaluation of your own career.  (The frictionless recognitions afforded by social media &ldquo;likes&rdquo; and &ldquo;favorites&rdquo; bring this headache to a much broader audience.)<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+  </article>
 
   <article>
     <header>
@@ -779,17 +842,6 @@ Further details can be found in the
 Version History.
 HTCondor 8.3.4 binaries and source code are available from our
 Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/02/shared-decks.html">Your next favorite collaboration tool</a></h1>
-      <p class="meta">
-        <time datetime="2015-02-13T16:50:17Z" pubdate data-updated="true">Feb 13<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Last night I had a crazy realization:  I could probably replace the majority of what my team hopes to accomplish with standup meetings, design documents, project management apps, and social code sharing features with a single tool. [...]</p>
 </div>
   </article>
 
