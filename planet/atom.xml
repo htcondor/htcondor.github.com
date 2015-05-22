@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-05-21T08:06:10-07:00</updated>
+  <updated>2015-05-22T03:06:09-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,149 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Bokeh plots from Spark]]></title>
+      <link href="http://chapeau.freevariable.com/2015/05/bokeh-plots-from-spark.html"/>
+      <updated>2015-05-21T16:05:10Z</updated>
+      <id>http://chapeau.freevariable.com/2015/05/bokeh-plots-from-spark</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>This post will show you an extremely simple way to make quick-and-dirty <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> plots from data you&rsquo;ve generated in Spark, but the basic technique is generally applicable to any data that you&rsquo;re generating in some application that doesn&rsquo;t necessarily link in the Bokeh libraries.</p>
+
+<h3>Getting started</h3>
+
+<p>We&rsquo;ll need to have a recent version of Bokeh installed and some place to put our data.  If you don&rsquo;t already have Bokeh installed, use <code>virtualenv</code> to get it set up:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>virtualenv ~/.bokeh-venv
+</span><span class='line'><span class="nb">source</span> ~/.bokeh-venv/bin/activate
+</span><span class='line'>pip install bokeh numpy pandas
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will download and build a nontrivial percentage of the Internet.  Consider getting some coffee or catching up with a colleague while it does its thing.</p>
+
+<p>The next thing we&rsquo;ll need is some place to stash data we&rsquo;ve generated.  I&rsquo;ll use <a href="https://github.com/willb/firkin">a very simple service</a> that I developed just for this kind of application, but you can use whatever you want as long as it will let you store and retrieve JSON data from a given URL.</p>
+
+<p>With all that in place, we&rsquo;re ready to make a simple plot.</p>
+
+<h3>A basic static-HTML plot</h3>
+
+<p>We&rsquo;re going to use Bokeh to construct a basic line graph in a static HTML file.  The catch is that instead of specifying the data statically, we&rsquo;re going to specify it as a URL, which the page will poll so it can update the plot when it changes.  Here&rsquo;s what a script to construct that kind of plot looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">show</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bokeh.models.sources</span> <span class="kn">import</span> <span class="n">AjaxDataSource</span>
+</span><span class='line'><span class="n">output_file</span><span class="p">(</span><span class="s">&quot;json.html&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;data polling example&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">source</span> <span class="o">=</span> <span class="n">AjaxDataSource</span><span class="p">(</span><span class="n">data_url</span><span class="o">=</span><span class="s">&quot;http://localhost:4091/tag/foo&quot;</span><span class="p">,</span> <span class="n">polling_interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">()</span>
+</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+</span><span class='line'><span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that the above example assumes you&rsquo;re using the Firkin service as your data store.  If you&rsquo;re using something else, you will probably need to change the <code>data_url</code> parameter to the <code>AjaxDataSource</code> constructor.</p>
+
+<h3>Publishing and updating data</h3>
+
+<p>Now we&rsquo;ll fire up the Firkin server and post some data.  From a checkout of the Firkin code, run <code>sbt server/console</code> and then create a connection to the server using the client library:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="n">freevariable</span><span class="o">.</span><span class="n">firkin</span><span class="o">.</span><span class="nc">Client</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">4091</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can now supply some values for <code>x</code> and <code>y</code>.  We&rsquo;ll start simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="cm">/* publish an object to http://localhost:4091/tag/foo */</span>
+</span><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;&quot;{&quot;x&quot;: [1,2,3,4,5,6,7,8,9,10], &quot;y&quot;: [2,4,6,8,10,12,14,16,18,20]}&quot;&quot;&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you don&rsquo;t already have <code>json.html</code> from the previous step loaded in your browser, fire it up.  You should see a plot that looks like this:</p>
+
+<p><img src="http://chapeau.freevariable.com/static/201505/bokeh1.png" alt="plot of y=2x for 1..10" /></p>
+
+<p>If we update the data stored at this URL, the plot will update automatically.  Try it out; publish a new data set:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;&quot;{&quot;x&quot;: [1,2,3,4,5,6,7,8,9,10], &quot;y&quot;: [2,4,6,8,10,12,14,16,18,30]}&quot;&quot;&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The plot will refresh, reflecting the updated <code>y</code> value:</p>
+
+<p><img src="http://chapeau.freevariable.com/static/201505/bokeh2.png" alt="plot of y=2x for 1..9 and y=3x for x=10" /></p>
+
+<p>(Again, if you&rsquo;re using some other JSON object cache to store your data sets, the principles will be the same but the syntax won&rsquo;t be.)</p>
+
+<h3>Connecting Bokeh to Spark</h3>
+
+<p>Once we have a sink for JSON data, it&rsquo;s straightforward to publish data to it from Spark code.  Here&rsquo;s a simple example, using <a href="https://github.com/json4s/json4s"><code>json4s</code></a> to serialize the RDDs:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.json4s.JsonDSL._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.json4s.jackson.JsonMethods._</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// assume that spark is a SparkContext object, declared elsewhere</span>
+</span><span class='line'><span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">parallelize</span><span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">100</span><span class="o">)</span>
+</span><span class='line'><span class="c1">// x: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at &lt;console&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">y</span> <span class="k">=</span> <span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="mi">4</span><span class="o">)</span>
+</span><span class='line'><span class="n">y</span><span class="k">:</span> <span class="kt">org.apache.spark.rdd.RDD</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">MapPartitionsRDD</span><span class="o">[</span><span class="err">1</span><span class="o">]</span> <span class="n">at</span> <span class="n">map</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">console</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">json</span> <span class="k">=</span> <span class="o">(</span><span class="s">&quot;x&quot;</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">collect</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span> <span class="o">~</span> <span class="o">(</span><span class="s">&quot;y&quot;</span> <span class="o">-&gt;</span> <span class="n">y</span><span class="o">.</span><span class="n">collect</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="n">freevariable</span><span class="o">.</span><span class="n">firkin</span><span class="o">.</span><span class="nc">Client</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">4091</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;data&quot;</span><span class="o">,</span> <span class="n">compact</span><span class="o">(</span><span class="n">render</span><span class="o">(</span><span class="n">json</span><span class="o">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After we do this, the data will be available at <code>http://localhost:4091/tag/data</code>.</p>
+
+<h3>Alternate approaches</h3>
+
+<p>The approach described so far in this post was designed to provide the simplest possible way to make a basic plot backed by a relatively small amount of dynamic data.  (If we have data to plot that we can&rsquo;t store in memory on a single node, we&rsquo;ll need something more sophisticated.)  It is suitable for prototyping or internal use.  Other approaches, like the two below, might make more sense for other situations:</p>
+
+<ol>
+<li>Bokeh offers several <a href="http://bokeh.pydata.org/en/latest/docs/dev_guide/bindings.html">alternate language bindings</a>, including <a href="https://github.com/bokeh/bokeh-scala">one for Scala</a>.  This means that you can define plots and supply data for them from within applications that link these libraries in.  This is the approach that <a href="https://github.com/andypetrella/spark-notebook">spark-notebook</a> takes, for example.</li>
+<li>Another possibility is setting up the <a href="http://bokeh.pydata.org/en/0.8.1/docs/user_guide/server.html">Bokeh server</a> and publishing plots and data to it.  The Bokeh server offers several additional capabilities, including support for scalable visualizations (e.g., via sampling large datasets) and support for multiple authenticated users.</li>
+</ol>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Planning your career like a racing season]]></title>
@@ -553,124 +696,7 @@
         <name><![CDATA[William Benton]]></name>
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p><a href="http://silex.freevariable.com">Silex</a> is a small library of helper code intended to make it easier to build real-world Spark applications;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> most of it is factored out from applications we&rsquo;ve developed internally at Red Hat.  We have a couple of long-term goals for the Silex project:</p>
-
-<ul>
-<li>We want to make it very easy for us to spin up on new data-processing problems without spending a lot of time dealing with accidental complexity, and</li>
-<li>we want to have a generally-useful standard library atop Spark that provides primitives and solutions to simplify common tasks and reflects best practices as we discover them.</li>
-</ul>
-
-
-<p>Part of having a library that people will want to use is having a quality test suite and continuous integration.  There are some tricks to developing automated tests for Spark applications, but even keeping those in mind may not be sufficient to let you test your Spark apps in a hosted CI environment.  This post will show you how to bridge the gap.</p>
-
-<h3>Continuous integration challenges</h3>
-
-<p>Since we want to make it easy to review contributions to Silex, I set up <a href="https://travis-ci.org/willb/silex">Travis CI</a> to watch branches and pull requests.  Travis CI is a great service, but if you&rsquo;re used to running tests locally, you might have some problems running Spark-based tests under hosted CI environments.  Here&rsquo;s what we learned:</p>
-
-<ul>
-<li>When running tests locally, creating a Spark context with <code>local[*]</code> (in order to use all of the available cores on your machine) might be a good idea.  However, a hosted CI environment may offer you a lot of cores but relatively little memory, so your tests might be killed because each Spark executor has nontrivial memory overhead.  Instead, consider limiting your code to use fewer cores.</li>
-<li>If you&rsquo;re using Kryo serialization and have set the <code>spark.kryoserializer.buffer.mb</code> property to something large (perhaps because you often have serialization buffer crashes in production), don&rsquo;t be surprised if you run out of memory while running in CI.  Spark doesn&rsquo;t share serializers between threads, so you could be allocating a huge buffer for each thread even if your test code doesn&rsquo;t need to serialize anything all that large.<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></li>
-<li>Spark SQL (at least as of version 1.3.1) defaults to creating 200 partitions for shuffles.  This is probably a good starting place for real-world data, but it&rsquo;s overkill for test cases running on a single machine.  Furthermore, since each partition has some extra memory overhead, it&rsquo;s another possible cause of OOMEs.</li>
-</ul>
-
-
-<h3>Fixing the problems</h3>
-
-<p>Silex provides an <a href="http://silex.freevariable.com/latest/api/#com.redhat.et.silex.app.AppCommon">application skeleton trait</a>, and we use a <a href="https://github.com/willb/silex/blob/c61995689ca6c76e920af64d7fe9306cdcbcc98d/src/main/scala/com/redhat/et/silex/app/app.scala#L121">class extending this trait</a> to package up Spark and SQL contexts for test cases.  That class isn&rsquo;t currently part of the public Silex API, but you can see what it looks like here:</p>
-
-<figure class='code'><figcaption><span>excerpt from app.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">private</span> <span class="o">[</span><span class="kt">silex</span><span class="o">]</span> <span class="k">class</span> <span class="nc">TestConsoleApp</span><span class="o">(</span><span class="k">val</span> <span class="n">suppliedMaster</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">&quot;local[2]&quot;</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AppCommon</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">master</span> <span class="k">=</span> <span class="n">suppliedMaster</span>
-</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">appName</span> <span class="k">=</span> <span class="s">&quot;console&quot;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">addConfig</span><span class="o">(</span> <span class="o">{(</span><span class="n">conf</span><span class="k">:</span> <span class="kt">SparkConf</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">&quot;spark.kryoserializer.buffer.mb&quot;</span><span class="o">,</span> <span class="s">&quot;2&quot;</span><span class="o">)})</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">appMain</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// this never runs</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As you can see, we allow users to specify a Spark master URL but default to using two cores locally.  Furthermore, we use the <code>addConfig</code> function from <code>AppCommon</code> &mdash; which takes a <code>SparkConf</code> and returns a modified <code>SparkConf</code> &mdash; to ensure that our Kryo buffer size is the Spark default of 2 mb, rather than the larger Silex default.</p>
-
-<p>If you&rsquo;re used to writing test code that exercises Spark, you probably already have boilerplate (using something like ScalaTest&rsquo;s <code>BeforeAndAfterEach</code>) to set up and tear down a Spark context for each test case.  We set the Spark SQL property to control parallelism in data frame and SQL shuffles in the <a href="https://github.com/willb/silex/blob/3155174e52c392086b44c438fbf5c29d7af9fd3e/src/test/scala/com/redhat/et/silex/testing/sparkFixtures.scala">test setup code</a> itself:</p>
-
-<figure class='code'><figcaption><span>excerpt from app.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.scalatest._</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">import</span> <span class="nn">com.redhat.et.silex.app.TestConsoleApp</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">trait</span> <span class="nc">PerTestSparkContext</span> <span class="k">extends</span> <span class="nc">BeforeAndAfterEach</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">self</span><span class="k">:</span> <span class="kt">BeforeAndAfterEach</span> <span class="kt">with</span> <span class="kt">Suite</span> <span class="o">=&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">private</span> <span class="k">var</span> <span class="n">app</span><span class="k">:</span> <span class="kt">TestConsoleApp</span> <span class="o">=</span> <span class="kc">null</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">context</span> <span class="k">=</span> <span class="n">app</span><span class="o">.</span><span class="n">context</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">sqlContext</span> <span class="k">=</span> <span class="n">app</span><span class="o">.</span><span class="n">sqlContext</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">beforeEach</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">app</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TestConsoleApp</span><span class="o">()</span>
-</span><span class='line'>    <span class="nc">System</span><span class="o">.</span><span class="n">clearProperty</span><span class="o">(</span><span class="s">&quot;spark.master.port&quot;</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">sqlContext</span><span class="o">.</span><span class="n">setConf</span><span class="o">(</span><span class="s">&quot;spark.sql.shuffle.partitions&quot;</span><span class="o">,</span> <span class="s">&quot;10&quot;</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">context</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">override</span> <span class="k">def</span> <span class="n">afterEach</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">app</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">stop</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Conclusion</h3>
-
-<p>Good CI is one of those things that makes it fun to develop software, but the accidental differences between a hosted environment and your local environment can be totally frustrating.  By taking into account the constraints you&rsquo;re likely to see when running in a resource-limited container on a CI server, you can help to ensure that your tests only fail when your code is actually broken.</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>&ldquo;Silex&rdquo; is Latin for &ldquo;flint,&rdquo; which seemed like a good name for something that was intended to help people make things with sparks.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-<li id="fn:2">
-<p>Thanks to <a href="http://erikerlandson.github.io">Erik Erlandson</a> for noticing this (it even affected him in a test case he was running locally).<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
+      <content type="html"><![CDATA[<p><a href="http://silex.freevariable.com">Silex</a> is a small library of helper code intended to make it easier to build real-world Spark applications;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> most of it is factored out from applications we&rsquo;ve developed internally at Red Hat.  We have a couple of long-term goals for the Silex project: [...]</p>
 ]]></content>
     </entry>
   
@@ -732,19 +758,6 @@ A complete list of fixed bugs can be found in the
 Version History.
 HTCondor 8.2.8 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Interactively using Spark SQL and DataFrames from sbt projects]]></title>
-      <link href="http://chapeau.freevariable.com/2015/04/spark-sql-repl.html"/>
-      <updated>2015-04-02T16:12:17Z</updated>
-      <id>http://chapeau.freevariable.com/2015/04/spark-sql-repl</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>One of the great things about Apache Spark is that you can experiment with new analyses interactively.  In the past, I&rsquo;ve used the <code>sbt</code> console to try out new data transformations and models; the console is especially convenient since you <a href="http://chapeau.freevariable.com/2014/09/interactive-sbt.html">can set it up as a custom Scala REPL with your libraries loaded and some test fixtures already created</a>. [...]</p>
 ]]></content>
     </entry>
   
