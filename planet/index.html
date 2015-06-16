@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="This post will show you an extremely simple way to make quick-and-dirty Bokeh plots from data you&rsquo;ve generated in Spark, but the basic &hellip;">
+  <meta name="description" content="I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project. Here are some links to further &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,156 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/06/summit-fedmsg.html">fedmsg talk at Spark Summit</a></h1>
+      <p class="meta">
+        <time datetime="2015-06-15T15:05:27Z" pubdate data-updated="true">Jun 15<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk:</p>
+
+<ul>
+<li><a href="http://chapeau.freevariable.com/static/201506/fedmsg-spark.pdf">My talk slides</a> are online</li>
+<li>An earlier post provides <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">some background on fedmsg and Spark</a></li>
+<li>You may also be interested in <a href="http://chapeau.freevariable.com/2014/11/algebraic-types.html">a higher-level discussion of issues with schema inference</a> from the perspective of type theory</li>
+<li>Here&rsquo;s the annotated <a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">source code for the ML pipeline transformer</a> I discussed in my talk</li>
+</ul>
+
+
+<p>You should also check out my team&rsquo;s <a href="http://silex.freevariable.com">Silex library</a>, which contains useful code factored out of real Spark applications we&rsquo;ve built in Red Hat&rsquo;s Emerging Technology group.  It includes a lot of cool functionality, but the part I mentioned in the talk is <a href="http://silex.freevariable.com/latest/api/#com.redhat.et.silex.rdd.json.JSONTransform$">this handy interface</a> for preprocessing JSON data before inferring a schema.</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">Using Spark ML Pipeline transformers</a></h1>
+      <p class="meta">
+        <time datetime="2015-06-14T00:07:58Z" pubdate data-updated="true">Jun 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In this post, we&rsquo;ll see how to make a simple transformer for <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark ML Pipelines</a>.  The transformer we&rsquo;ll design will generate a sparse binary feature vector from an array-valued field representing a set.</p>
+
+<h3>Preliminaries</h3>
+
+<p>The first thing we&rsquo;ll need to do is expose Spark&rsquo;s user-defined type for vectors.  This will enable us to write a user-defined data frame function that returns a Spark vector.  (We could also implement our own user-defined type, but reusing Spark&rsquo;s, which is currently private to Spark, will save us some time.  By the time you read this, the type may be part of Spark&rsquo;s public API &mdash; be sure to double-check!)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">package</span> <span class="nn">org.apache.spark.hacks</span> <span class="o">{</span>
+</span><span class='line'>  <span class="c1">// make VectorUDT available outside of Spark code</span>
+</span><span class='line'>  <span class="k">type</span> <span class="kt">VectorType</span> <span class="o">=</span> <span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">mllib</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="nc">VectorUDT</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Imports</h3>
+
+<p>Here are the imports we&rsquo;ll need for the transformer and support code.  I&rsquo;ll use <code>VEC</code> for Spark vectors to avoid confusion with Scala&rsquo;s <code>Vector</code> type.  We&rsquo;ll assume that the <code>VectorType</code> code from above is available on your project&rsquo;s classpath.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.sql._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.sql.types._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.sql.functions._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.ml.param._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.ml.Transformer</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.mllib.linalg.</span><span class="o">{</span><span class="nc">Vector</span> <span class="k">=&gt;</span> <span class="nc">VEC</span><span class="o">,</span> <span class="nc">Vectors</span><span class="o">}</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.sql.types._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.hacks.VectorType</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Transformer and support code</h3>
+
+<p>Most of the ML pipeline classes distributed with Spark follow the convention of putting groups of related pipeline stage parameters in a trait.  We&rsquo;ll do this as well, declaring a trait for the three parameters that our transformer will use:  the name of the input column, the name of the output column, and the maximum number of elements our sparse vector can hold.  We&rsquo;ll also define a convenience method to return a triple of the parameter values we care about.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">trait</span> <span class="nc">SVParams</span> <span class="k">extends</span> <span class="nc">Params</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">inputCol</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Param</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;inputCol&quot;</span><span class="o">,</span> <span class="s">&quot;input column&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">outputCol</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Param</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;outputCol&quot;</span><span class="o">,</span> <span class="s">&quot;output column&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">vecSize</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">IntParam</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;vecSize&quot;</span><span class="o">,</span> <span class="s">&quot;maximum sparse vector size&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">pvals</span><span class="o">(</span><span class="n">pm</span><span class="k">:</span> <span class="kt">ParamMap</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span>
+</span><span class='line'>    <span class="c1">// this code can be cleaner in versions of Spark after 1.3</span>
+</span><span class='line'>    <span class="n">paramMap</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">inputCol</span><span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;topicSet&quot;</span><span class="o">),</span>
+</span><span class='line'>    <span class="n">paramMap</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">outputCol</span><span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;features&quot;</span><span class="o">),</span>
+</span><span class='line'>    <span class="n">paramMap</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">vecSize</span><span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span><span class="mi">128</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that Spark 1.4 supports calling <code>getOrElse</code> directly on a <code>ParamMap</code> instance, so you can slightly simplify the code in <code>pvals</code> if you don&rsquo;t care about source compatibility with Spark 1.3.</p>
+
+<p>Here&rsquo;s what the actual transformer implementation looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">SetVectorizer</span><span class="o">(</span><span class="k">override</span> <span class="k">val</span> <span class="n">uid</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">extends</span> <span class="nc">Transformer</span> <span class="k">with</span> <span class="nc">SVParams</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="nc">VT</span> <span class="k">=</span> <span class="k">new</span> <span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">hacks</span><span class="o">.</span><span class="nc">VectorType</span><span class="o">()</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">transformSchema</span><span class="o">(</span><span class="n">schema</span><span class="k">:</span> <span class="kt">StructType</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">ParamMap</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">outc</span> <span class="k">=</span> <span class="n">paramMap</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">outputCol</span><span class="o">).</span><span class="n">getOrElse</span><span class="o">(</span><span class="s">&quot;features&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="nc">StructType</span><span class="o">(</span><span class="n">schema</span><span class="o">.</span><span class="n">fields</span> <span class="o">++</span> <span class="nc">Seq</span><span class="o">(</span><span class="nc">StructField</span><span class="o">(</span><span class="n">outc</span><span class="o">,</span> <span class="nc">VT</span><span class="o">,</span> <span class="kc">true</span><span class="o">)))</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">df</span><span class="k">:</span> <span class="kt">DataFrame</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">ParamMap</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="o">(</span><span class="n">inCol</span><span class="o">,</span> <span class="n">outCol</span><span class="o">,</span> <span class="n">maxSize</span><span class="o">)</span> <span class="k">=</span> <span class="n">pvals</span><span class="o">(</span><span class="n">paramMap</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="o">(</span><span class="n">outCol</span><span class="o">,</span> <span class="n">callUDF</span><span class="o">({</span> <span class="n">a</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=&gt;</span>
+</span><span class='line'>      <span class="nc">Vectors</span><span class="o">.</span><span class="n">sparse</span><span class="o">(</span><span class="n">maxSize</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">toArray</span><span class="o">,</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="o">)(</span><span class="mf">1.0</span><span class="o">))</span>
+</span><span class='line'>    <span class="o">},</span> <span class="nc">VT</span><span class="o">,</span> <span class="n">df</span><span class="o">(</span><span class="n">inCol</span><span class="o">)))</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first thing we do in the transformer class is declare an instance of <code>VectorType</code> to use in other data frame type declarations later in the class.  The <code>transformSchema</code> method returns the schema after applying this transformer to a given data frame; it creates a new data frame schema that includes all of the fields from the original frame as well as a <code>Vector</code>-valued field whose name is the parameter specified in the <code>outputCol</code> parameter.  Finally, the <code>transform</code> method creates a new data frame with an additional column (again, named with the value of the <code>outputCol</code> parameter); its values result of applying a user-defined function to each row in the data frame, taking arguments from the input column.  The function itself simply creates a sparse binary vector from an array-backed set, so that the array-backed set <code>Array(1,2,4,8)</code> would become a sparse vector with the first, second, fourth, and eighth elements set to 1 and everything else set to 0.</p>
+
+<p>The code above is a reasonable starting point for your own transformers, but you&rsquo;ll want to add error checking to code you use in production:  at a minimum, you&rsquo;d need to validate the schema of the input data frame (to ensure that expected columns exist and are of the correct type), verify that the output column name doesn&rsquo;t already exist in the data frame, and make sure no input array has more than <code>vecSize</code> elements.  I hope this code is helpful as you develop your own pipeline stages!</p>
+</div>
+  </article>
 
   <article>
     <header>
@@ -246,17 +396,6 @@
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/04/spark-apps-and-ci.html">Effective continuous integration for Spark projects</a></h1>
-      <p class="meta">
-        <time datetime="2015-04-21T20:57:24Z" pubdate data-updated="true">Apr 21<span>st</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p><a href="http://silex.freevariable.com">Silex</a> is a small library of helper code intended to make it easier to build real-world Spark applications;<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> most of it is factored out from applications we&rsquo;ve developed internally at Red Hat.  We have a couple of long-term goals for the Silex project: [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
       <h1 class="entry-title"><a href="manual/v8.3.5/10_3Development_Release.html"> HTCondor 8.3.5 released! ( April 20, 2015 )</a></h1>
       <p class="meta">
         <time datetime="2015-04-20T05:00:00Z" pubdate data-updated="true">Apr 20<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
@@ -277,17 +416,6 @@ Further details can be found in the
 Version History.
 HTCondor 8.3.5 binaries and source code are available from our
 Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/04/natural-join-for-spark-dataframes.html">Natural join for data frames in Spark</a></h1>
-      <p class="meta">
-        <time datetime="2015-04-08T21:21:21Z" pubdate data-updated="true">Apr 8<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p><a href="http://en.wikipedia.org/wiki/Relational_algebra#Natural_join_.28.E2.8B.88.29">Natural join</a> is a useful special case of the relational join operation (and is extremely common when denormalizing data pulled in from a relational database).  Spark&rsquo;s DataFrame API provides an expressive way to specify arbitrary joins, but it would be nice to have some machinery to make the simple case of natural join as easy as possible.  Here&rsquo;s what a natural join needs to do: [...]</p>
 </div>
   </article>
 
