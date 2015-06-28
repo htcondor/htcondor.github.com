@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-06-16T11:26:34-07:00</updated>
+  <updated>2015-06-28T16:09:33-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.6 released! ( June 23, 2015 )]]></title>
+      <link href="manual/v8.3.6/10_3Development_Release.html"/>
+      <updated>2015-06-23T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.6.
+This development series release contains new features that are under
+development.
+
+Enhancements in the release include:
+initial Docker universe support;
+IPv4/IPv6 mixed mode support.
+
+Further details can be found in the
+Version History.
+HTCondor 8.3.6 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[fedmsg talk at Spark Summit]]></title>
@@ -24,7 +48,7 @@
       <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk:</p>
 
 <ul>
-<li><a href="http://chapeau.freevariable.com/static/201506/fedmsg-spark.pdf">My talk slides</a> are online</li>
+<li><a href="http://chapeau.freevariable.com/static/201506/fedmsg-spark.pdf">My talk slides are online</a>; the online deck includes some extra slides that I skipped in the talk as delivered</li>
 <li>An earlier post provides <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">some background on fedmsg and Spark</a></li>
 <li>You may also be interested in <a href="http://chapeau.freevariable.com/2014/11/algebraic-types.html">a higher-level discussion of issues with schema inference</a> from the perspective of type theory</li>
 <li>Here&rsquo;s the annotated <a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">source code for the ML pipeline transformer</a> I discussed in my talk</li>
@@ -175,137 +199,7 @@
         <name><![CDATA[William Benton]]></name>
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>This post will show you an extremely simple way to make quick-and-dirty <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> plots from data you&rsquo;ve generated in Spark, but the basic technique is generally applicable to any data that you&rsquo;re generating in some application that doesn&rsquo;t necessarily link in the Bokeh libraries.</p>
-
-<h3>Getting started</h3>
-
-<p>We&rsquo;ll need to have a recent version of Bokeh installed and some place to put our data.  If you don&rsquo;t already have Bokeh installed, use <code>virtualenv</code> to get it set up:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>virtualenv ~/.bokeh-venv
-</span><span class='line'><span class="nb">source</span> ~/.bokeh-venv/bin/activate
-</span><span class='line'>pip install bokeh numpy pandas
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will download and build a nontrivial percentage of the Internet.  Consider getting some coffee or catching up with a colleague while it does its thing.</p>
-
-<p>The next thing we&rsquo;ll need is some place to stash data we&rsquo;ve generated.  I&rsquo;ll use <a href="https://github.com/willb/firkin">a very simple service</a> that I developed just for this kind of application, but you can use whatever you want as long as it will let you store and retrieve JSON data from a given URL.</p>
-
-<p>With all that in place, we&rsquo;re ready to make a simple plot.</p>
-
-<h3>A basic static-HTML plot</h3>
-
-<p>We&rsquo;re going to use Bokeh to construct a basic line graph in a static HTML file.  The catch is that instead of specifying the data statically, we&rsquo;re going to specify it as a URL, which the page will poll so it can update the plot when it changes.  Here&rsquo;s what a script to construct that kind of plot looks like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
-</span><span class='line'>
-</span><span class='line'><span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">show</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">bokeh.models.sources</span> <span class="kn">import</span> <span class="n">AjaxDataSource</span>
-</span><span class='line'><span class="n">output_file</span><span class="p">(</span><span class="s">&quot;json.html&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;data polling example&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="n">source</span> <span class="o">=</span> <span class="n">AjaxDataSource</span><span class="p">(</span><span class="n">data_url</span><span class="o">=</span><span class="s">&quot;http://localhost:4091/tag/foo&quot;</span><span class="p">,</span> <span class="n">polling_interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">()</span>
-</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
-</span><span class='line'><span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Note that the above example assumes you&rsquo;re using the Firkin service as your data store.  If you&rsquo;re using something else, you will probably need to change the <code>data_url</code> parameter to the <code>AjaxDataSource</code> constructor.</p>
-
-<h3>Publishing and updating data</h3>
-
-<p>Now we&rsquo;ll fire up the Firkin server and post some data.  From a checkout of the Firkin code, run <code>sbt server/console</code> and then create a connection to the server using the client library:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="n">freevariable</span><span class="o">.</span><span class="n">firkin</span><span class="o">.</span><span class="nc">Client</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">4091</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You can now supply some values for <code>x</code> and <code>y</code>.  We&rsquo;ll start simple:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="cm">/* publish an object to http://localhost:4091/tag/foo */</span>
-</span><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;&quot;{&quot;x&quot;: [1,2,3,4,5,6,7,8,9,10], &quot;y&quot;: [2,4,6,8,10,12,14,16,18,20]}&quot;&quot;&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you don&rsquo;t already have <code>json.html</code> from the previous step loaded in your browser, fire it up.  You should see a plot that looks like this:</p>
-
-<p><img src="http://chapeau.freevariable.com/static/201505/bokeh1.png" alt="plot of y=2x for 1..10" /></p>
-
-<p>If we update the data stored at this URL, the plot will update automatically.  Try it out; publish a new data set:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;foo&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;&quot;{&quot;x&quot;: [1,2,3,4,5,6,7,8,9,10], &quot;y&quot;: [2,4,6,8,10,12,14,16,18,30]}&quot;&quot;&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The plot will refresh, reflecting the updated <code>y</code> value:</p>
-
-<p><img src="http://chapeau.freevariable.com/static/201505/bokeh2.png" alt="plot of y=2x for 1..9 and y=3x for x=10" /></p>
-
-<p>(Again, if you&rsquo;re using some other JSON object cache to store your data sets, the principles will be the same but the syntax won&rsquo;t be.)</p>
-
-<h3>Connecting Bokeh to Spark</h3>
-
-<p>Once we have a sink for JSON data, it&rsquo;s straightforward to publish data to it from Spark code.  Here&rsquo;s a simple example, using <a href="https://github.com/json4s/json4s"><code>json4s</code></a> to serialize the RDDs:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.json4s.JsonDSL._</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">org.json4s.jackson.JsonMethods._</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// assume that spark is a SparkContext object, declared elsewhere</span>
-</span><span class='line'><span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">parallelize</span><span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">100</span><span class="o">)</span>
-</span><span class='line'><span class="c1">// x: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at &lt;console&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">val</span> <span class="n">y</span> <span class="k">=</span> <span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="mi">4</span><span class="o">)</span>
-</span><span class='line'><span class="n">y</span><span class="k">:</span> <span class="kt">org.apache.spark.rdd.RDD</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">MapPartitionsRDD</span><span class="o">[</span><span class="err">1</span><span class="o">]</span> <span class="n">at</span> <span class="n">map</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">console</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">val</span> <span class="n">json</span> <span class="k">=</span> <span class="o">(</span><span class="s">&quot;x&quot;</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">collect</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span> <span class="o">~</span> <span class="o">(</span><span class="s">&quot;y&quot;</span> <span class="o">-&gt;</span> <span class="n">y</span><span class="o">.</span><span class="n">collect</span><span class="o">.</span><span class="n">toList</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="n">freevariable</span><span class="o">.</span><span class="n">firkin</span><span class="o">.</span><span class="nc">Client</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">,</span> <span class="mi">4091</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="o">(</span><span class="s">&quot;data&quot;</span><span class="o">,</span> <span class="n">compact</span><span class="o">(</span><span class="n">render</span><span class="o">(</span><span class="n">json</span><span class="o">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>After we do this, the data will be available at <code>http://localhost:4091/tag/data</code>.</p>
-
-<h3>Alternate approaches</h3>
-
-<p>The approach described so far in this post was designed to provide the simplest possible way to make a basic plot backed by a relatively small amount of dynamic data.  (If we have data to plot that we can&rsquo;t store in memory on a single node, we&rsquo;ll need something more sophisticated.)  It is suitable for prototyping or internal use.  Other approaches, like the two below, might make more sense for other situations:</p>
-
-<ol>
-<li>Bokeh offers several <a href="http://bokeh.pydata.org/en/latest/docs/dev_guide/bindings.html">alternate language bindings</a>, including <a href="https://github.com/bokeh/bokeh-scala">one for Scala</a>.  This means that you can define plots and supply data for them from within applications that link these libraries in.  This is the approach that <a href="https://github.com/andypetrella/spark-notebook">spark-notebook</a> takes, for example.</li>
-<li>Another possibility is setting up the <a href="http://bokeh.pydata.org/en/0.8.1/docs/user_guide/server.html">Bokeh server</a> and publishing plots and data to it.  The Bokeh server offers several additional capabilities, including support for scalable visualizations (e.g., via sampling large datasets) and support for multiple authenticated users.</li>
-</ol>
-
+      <content type="html"><![CDATA[<p>This post will show you an extremely simple way to make quick-and-dirty <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> plots from data you&rsquo;ve generated in Spark, but the basic technique is generally applicable to any data that you&rsquo;re generating in some application that doesn&rsquo;t necessarily link in the Bokeh libraries. [...]</p>
 ]]></content>
     </entry>
   
@@ -436,30 +330,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 8.3.4 released! ( March 5, 2015 )]]></title>
-      <link href="manual/v8.3.4/10_3Development_Release.html"/>
-      <updated>2015-03-05T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.4.
-This development release contains a single bug fix for a problem introduced
-in version 8.3.3 that can cause jobs to not be matched to resources when the
-condor_schedd is flocking.
-This 8.3.4 release also has a known issue which prevents a mixed mode,
-IPv4 and IPv6 HTCondor installation from starting jobs. If using IPv4
-and IPv6 in mixed mode communication is required, please continue using
-HTCondor version 8.3.2. The issue will be fixed in version 8.3.5.
-Further details can be found in the
-Version History.
-HTCondor 8.3.4 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
       <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
       <updated>2015-01-25T15:59:00Z</updated>
@@ -533,18 +403,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<p>The Scala Iterator <code>drop</code> method has a complexity bug that shows up when one calls <code>drop</code> repeatedly, for example when traversing over an iterator in a loop. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[GPUs on the OSG]]></title>
-      <link href="http://derekweitzel.blogspot.com/2014/06/gpus-on-osg.html"/>
-      <updated>2014-06-25T18:36:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6396978665247392483</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
