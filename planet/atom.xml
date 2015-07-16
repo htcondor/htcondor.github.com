@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-07-15T03:09:22-07:00</updated>
+  <updated>2015-07-16T03:37:15-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -45,17 +45,7 @@ Downloads page.
         <name><![CDATA[William Benton]]></name>
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk:</p>
-
-<ul>
-<li><a href="http://chapeau.freevariable.com/static/201506/fedmsg-spark.pdf">My talk slides are online</a>; the online deck includes some extra slides that I skipped in the talk as delivered</li>
-<li>An earlier post provides <a href="http://chapeau.freevariable.com/2014/10/fedmsg-and-spark.html">some background on fedmsg and Spark</a></li>
-<li>You may also be interested in <a href="http://chapeau.freevariable.com/2014/11/algebraic-types.html">a higher-level discussion of issues with schema inference</a> from the perspective of type theory</li>
-<li>Here&rsquo;s the annotated <a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">source code for the ML pipeline transformer</a> I discussed in my talk</li>
-</ul>
-
-
-<p>You should also check out my team&rsquo;s <a href="http://silex.freevariable.com">Silex library</a>, which contains useful code factored out of real Spark applications we&rsquo;ve built in Red Hat&rsquo;s Emerging Technology group.  It includes a lot of cool functionality, but the part I mentioned in the talk is <a href="http://silex.freevariable.com/latest/api/#com.redhat.et.silex.rdd.json.JSONTransform$">this handy interface</a> for preprocessing JSON data before inferring a schema.</p>
+      <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
 ]]></content>
     </entry>
   
