@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-07-28T03:43:03-07:00</updated>
+  <updated>2015-07-29T03:09:57-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,18 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[The more things change, the more they stay the same]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html"/>
+      <updated>2015-07-28T15:00:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-8394942129716842708</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[A lot has happened since I last posted in January.<br /><br /><ol><li>I have successfully defended and submitted my dissertation:&nbsp;<i><a href="http://digitalcommons.unl.edu/computerscidiss/88/">Enabling Distributed Scientific Computing on the Campus</a></i>. &nbsp;I will formally graduate on August 15.</li><li>I have been offered, and accepted, a position with the University of Nebraska - Lincoln Holland Computing Center. &nbsp;I will be working with the Open Science Grid's software &amp; investigations team.</li><li>On a personal note, I am now engaged.</li><li>And I am moving later this year to the HCC Omaha office.</li></ol>Now that I have graduated, I hope to write more blog posts about what I am doing, as well as what is happening in the OSG teams that I am working with.<br /><br />]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.3.7 released! ( July 27, 2015 )]]></title>
