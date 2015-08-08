@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-08-07T03:18:04-07:00</updated>
+  <updated>2015-08-08T03:17:13-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,18 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[GPUs and adding new resources types to the HTCondor-CE]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html"/>
+      <updated>2015-08-07T21:45:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6301136022425730449</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[In the past, it has been difficult to add new resource types to the OSG CE, whether it was a Globus GRAM CE or a HTCondor-CE. &nbsp;But, it has just gotten a little bit easier. &nbsp;Today I added HCC's GPU resources to the OSG with this new method.<br /><br />With a (yet unapproved) <a href="https://github.com/opensciencegrid/htcondor-ce/pull/36">pull request</a>, the HTCondor-CE is able to add new resource types by modifying only 2 files, the routes table and scheduler attributes customization script. &nbsp;Previously, it required editing a third python script which had very tricky syntax (python, which spit out ClassAds...). &nbsp;In the following examples, I will demonstrate how to use this new feature with GPUs.      <br /><br /><h3>The Routes</h3><div>Each job submitted to a HTCondor-CE must follow a route from the original job, to the final job submitted to the local batch system. &nbsp;The HTCondor JobRouter is in charge of translating the original job to the final job, according to rules specified in the router configuration. &nbsp;Crane's GPU route is:</div><div><script src="https://gist.github.com/djw8605/1c73cd0fc53c7bf3560b.js?file=CraneGpuRoute.conf"></script></div><div><br /></div>The route submit the job to the local PBS (actually Slurm) scheduler to the grid_gpu partition. &nbsp;Further, it adds a special new attribute:<br /><span style="font-family: Courier New, Courier, monospace;">default_remote_cerequirements = "RequestGpus == 1"</span><br /><span style="font-family: inherit;">This attribute is used in the next section, the local submit attributes script.</span><br /><span style="font-family: inherit;"><br /></span><br /><h3><span style="font-family: inherit;">Local Submit Attributes Script</span></h3><span style="font-family: inherit;">The local submit attributes script translates the remote_cerequirements to the actual scheduler language used at the site. &nbsp;For Crane's GPU configuration, the snippet added for GPUs is:</span><br /><script src="https://gist.github.com/djw8605/1c73cd0fc53c7bf3560b.js?file=pbs_local_submit_attributes.sh"></script><br /><span style="font-family: inherit;">This snippet checks for the&nbsp;</span>existence<span style="font-family: inherit;">&nbsp;of the RequestGpus attribute from the environment, and if detected, will insert several lines into the submit script. &nbsp;It will first add the SLURM line to request a GPU, then it will source the module setup script and load the cuda module.</span><br /><span style="font-family: inherit;"><br /></span><h3><span style="font-family: inherit;">Next Steps</span></h3><div><span style="font-family: inherit;">The next steps for using GPUs on the OSG is to use one of the many frontends that are capable of submitting glideins to the GPU resources at HCC. &nbsp;Currently, the HCC, OSG, <a href="https://osgconnect.net/">OSGConnect</a>, and GLOW frontends are capable of submitting to the GPU resources.</span></div>]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[The more things change, the more they stay the same]]></title>

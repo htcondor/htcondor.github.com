@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="A lot has happened since I last posted in January.I have successfully defended and submitted my dissertation:&nbsp;Enabling Distributed Scientific &hellip;">
+  <meta name="description" content="In the past, it has been difficult to add new resource types to the OSG CE, whether it was a Globus GRAM CE or a HTCondor-CE. &nbsp;But, it has just &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,16 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html">GPUs and adding new resources types to the HTCondor-CE</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-07T21:45:00Z" pubdate data-updated="true">Aug 7<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">In the past, it has been difficult to add new resource types to the OSG CE, whether it was a Globus GRAM CE or a HTCondor-CE. &nbsp;But, it has just gotten a little bit easier. &nbsp;Today I added HCC's GPU resources to the OSG with this new method.<br /><br />With a (yet unapproved) <a href="https://github.com/opensciencegrid/htcondor-ce/pull/36">pull request</a>, the HTCondor-CE is able to add new resource types by modifying only 2 files, the routes table and scheduler attributes customization script. &nbsp;Previously, it required editing a third python script which had very tricky syntax (python, which spit out ClassAds...). &nbsp;In the following examples, I will demonstrate how to use this new feature with GPUs.      <br /><br /><h3>The Routes</h3><div>Each job submitted to a HTCondor-CE must follow a route from the original job, to the final job submitted to the local batch system. &nbsp;The HTCondor JobRouter is in charge of translating the original job to the final job, according to rules specified in the router configuration. &nbsp;Crane's GPU route is:</div><div><script src="https://gist.github.com/djw8605/1c73cd0fc53c7bf3560b.js?file=CraneGpuRoute.conf"></script></div><div><br /></div>The route submit the job to the local PBS (actually Slurm) scheduler to the grid_gpu partition. &nbsp;Further, it adds a special new attribute:<br /><span style="font-family: Courier New, Courier, monospace;">default_remote_cerequirements = "RequestGpus == 1"</span><br /><span style="font-family: inherit;">This attribute is used in the next section, the local submit attributes script.</span><br /><span style="font-family: inherit;"><br /></span><br /><h3><span style="font-family: inherit;">Local Submit Attributes Script</span></h3><span style="font-family: inherit;">The local submit attributes script translates the remote_cerequirements to the actual scheduler language used at the site. &nbsp;For Crane's GPU configuration, the snippet added for GPUs is:</span><br /><script src="https://gist.github.com/djw8605/1c73cd0fc53c7bf3560b.js?file=pbs_local_submit_attributes.sh"></script><br /><span style="font-family: inherit;">This snippet checks for the&nbsp;</span>existence<span style="font-family: inherit;">&nbsp;of the RequestGpus attribute from the environment, and if detected, will insert several lines into the submit script. &nbsp;It will first add the SLURM line to request a GPU, then it will source the module setup script and load the cuda module.</span><br /><span style="font-family: inherit;"><br /></span><h3><span style="font-family: inherit;">Next Steps</span></h3><div><span style="font-family: inherit;">The next steps for using GPUs on the OSG is to use one of the many frontends that are capable of submitting glideins to the GPU resources at HCC. &nbsp;Currently, the HCC, OSG, <a href="https://osgconnect.net/">OSGConnect</a>, and GLOW frontends are capable of submitting to the GPU resources.</span></div></div>
+  </article>
 
   <article>
     <header>
