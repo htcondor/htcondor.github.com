@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-08-27T03:16:09-07:00</updated>
+  <updated>2015-08-28T03:35:24-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.3.8 released! ( August 27, 2015 )]]></title>
+      <link href="manual/v8.3.8/10_3Development_Release.html"/>
+      <updated>2015-08-27T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.8.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.9
+stable release.
+
+Enhancements in the release include:
+a script to tune Linux kernel parameters for better scalability;
+support for python bindings on Windows platforms;
+a mechanism to remove Docker images from the local machine.
+
+Static analysis tools were used to identify and fix memory leaks and
+other code deficiencies.
+
+Further details can be found in the
+Version History.
+HTCondor 8.3.8 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Lightweight Non-Negative Numerics for Better Scala Type Signatures]]></title>
@@ -276,7 +305,7 @@ Downloads page.
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
-      <content type="html"><![CDATA[A lot has happened since I last posted in January.<br /><br /><ol><li>I have successfully defended and submitted my dissertation:&nbsp;<i><a href="http://digitalcommons.unl.edu/computerscidiss/88/">Enabling Distributed Scientific Computing on the Campus</a></i>. &nbsp;I will formally graduate on August 15.</li><li>I have been offered, and accepted, a position with the University of Nebraska - Lincoln Holland Computing Center. &nbsp;I will be working with the Open Science Grid's software &amp; investigations team.</li><li>On a personal note, I am now engaged.</li><li>And I am moving later this year to the HCC Omaha office.</li></ol>Now that I have graduated, I hope to write more blog posts about what I am doing, as well as what is happening in the OSG teams that I am working with.<br /><br />]]></content>
+      <content type="html"><![CDATA[]]></content>
     </entry>
   
     <entry>
@@ -429,27 +458,6 @@ the other HTCondor RPMs of a typical HTCondor installation.
 Further details can be found in the
 Version History.
 HTCondor 8.3.5 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.8 released! ( April 7, 2015 )]]></title>
-      <link href="manual/v8.2.8/10_3Stable_Release.html"/>
-      <updated>2015-04-07T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor version 8.2.8.
-A stable series release contains significant bug and security fixes.
-This version contains:
-a bug fix to reconnect a TCP session when an HTCondorView collector restarts;
-a bug fix to avoid starting too many jobs, only to kill some chosen at random.
-A complete list of fixed bugs can be found in the
-Version History.
-HTCondor 8.2.8 binaries and source code are available from our
 Downloads page.
 ]]></content>
     </entry>
