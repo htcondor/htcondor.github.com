@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-09-08T03:28:08-07:00</updated>
+  <updated>2015-09-09T03:41:22-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -497,19 +497,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Getting Started with Mesos on Fedora 21 and CentOS 7]]></title>
-      <link href="http://timothysc.github.com/blog/2014/09/08/mesos-breeze/"/>
-      <updated>2014-09-08T15:00:00Z</updated>
-      <id>http://timothysc.github.com/blog/2014/09/08/mesos-breeze</id>
-      <author>
-        <name><![CDATA[Timothy St. Clair]]></name>
-        <uri>http://timothysc.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p><img class="left" src="http://timothysc.github.com/images/mesos_logo.png"> [...]</p>
-]]></content>
     </entry>
   
 </feed>
