@@ -9,8 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.3.8.
-This development series release contains new features that are under &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor version 8.4.0.
+After a year of development, this is the first release of the new &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,34 @@ This development series release contains new features that are under &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.0/10_3Stable_Release.html"> HTCondor 8.4.0 released! ( September 14, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-09-14T05:00:00Z" pubdate data-updated="true">Sep 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor version 8.4.0.
+After a year of development, this is the first release of the new stable series.
+
+This version contains:
+a Docker Universe to run a Docker container as an HTCondor job;
+the submit file can queue a job for each file found;
+the submit file can contain macros;
+a dry-run option to condor_submit to test the submit file without any actions;
+HTCondor pools can use IPv4 and IPv6 simultaneously;
+execute directories can be encrypted upon user or administrator request;
+Vanilla Universe jobs can utilize periodic application-level checkpoints;
+the administrator can establish job requirements;
+numerous scalability changes.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.0 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -419,31 +447,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"><p><a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> has offered Hadoop <code>InputFormat</code> and <code>OutputFormat</code> implementations for quite some time.  These made it possible to process Elasticsearch indices with Spark just as you would any other Hadoop data source.  Here&rsquo;s an example of this in action, taken from <a href="http://www.elastic.co/guide/en/elasticsearch/hadoop/master/spark.html">Elastic&rsquo;s documentation</a>: [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.3.5/10_3Development_Release.html"> HTCondor 8.3.5 released! ( April 20, 2015 )</a></h1>
-      <p class="meta">
-        <time datetime="2015-04-20T05:00:00Z" pubdate data-updated="true">Apr 20<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.5.
-A development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.2.8
-stable release.
-A few of the enhancements in this release include:
-new features that increase the power of job specification in the
-submit description file;
-RPMs for Red Hat Enterprise Linux 6 and 7 are modularized and only
-distributed via our YUM repository;
-The new condor-all RPM requires
-the other HTCondor RPMs of a typical HTCondor installation.
-Further details can be found in the
-Version History.
-HTCondor 8.3.5 binaries and source code are available from our
-Downloads page.
 </div>
   </article>
 
