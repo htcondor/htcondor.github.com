@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content=" Planet HTCondor Planet HTCondor Members ">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor version 8.4.0.
+After a year of development, this is the first release of the new &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,10 +71,290 @@
 
 <div class=\"blog-index\">
 
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.0/10_3Stable_Release.html"> HTCondor 8.4.0 released! ( September 14, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-09-14T05:00:00Z" pubdate data-updated="true">Sep 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor version 8.4.0.
+After a year of development, this is the first release of the new stable series.
+
+This version contains:
+a Docker Universe to run a Docker container as an HTCondor job;
+the submit file can queue a job for each file found;
+the submit file can contain macros;
+a dry-run option to condor_submit to test the submit file without any actions;
+HTCondor pools can use IPv4 and IPv6 simultaneously;
+execute directories can be encrypted upon user or administrator request;
+Vanilla Universe jobs can utilize periodic application-level checkpoints;
+the administrator can establish job requirements;
+numerous scalability changes.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.0 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.8/10_3Development_Release.html"> HTCondor 8.3.8 released! ( August 27, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-27T05:00:00Z" pubdate data-updated="true">Aug 27<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.8.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.2.9
+stable release.
+
+Enhancements in the release include:
+a script to tune Linux kernel parameters for better scalability;
+support for python bindings on Windows platforms;
+a mechanism to remove Docker images from the local machine.
+
+Static analysis tools were used to identify and fix memory leaks and
+other code deficiencies.
+
+Further details can be found in the
+Version History.
+HTCondor 8.3.8 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/08/18/lightweight-non-negative-numerics-for-better-scala-type-signatures/">Lightweight Non-Negative Numerics for Better Scala Type Signatures</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-19T00:42:00Z" pubdate data-updated="true">Aug 19<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In this post I want to discuss several advantages of defining lightweight non-negative numeric types in Scala, whose primary benefit is that they allow improved type signatures for Scala functions and methods.  I'll first describe the simple class definition, and then demonstrate how it can be used in function signatures and the benefits of doing so. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/08/17/the-reservoir-sampling-gap-distribution/">The Reservoir Sampling Gap Distribution</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-17T14:35:00Z" pubdate data-updated="true">Aug 17<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In a <a href="http://erikerlandson.github.io/blog/2014/09/11/faster-random-samples-with-gap-sampling/">previous post</a>, I showed that random Bernoulli and Poisson sampling could be made much faster by modeling the <em>sampling gap distribution</em> - that is, directly drawing random samples from the distribution of how many elements would be skipped over between actual samples taken. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/08/14/generalizing-kendalls-tau/">Generalizing Kendall's Tau</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-14T21:35:00Z" pubdate data-updated="true">Aug 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Recently I have been applying <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient">Kendall's Tau</a> as an evaluation metric to assess how well a regression model ranks input samples, with respect to a known correct ranking. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.2.9/10_3Stable_Release.html"> HTCondor 8.2.9 released! ( August 13, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-13T05:00:00Z" pubdate data-updated="true">Aug 13<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor version 8.2.9.
+A stable series release contains significant bug and security fixes.
+This version contains:
+a mechanism for the preemption of dynamic slots, such that the
+partitionable slot may use the dynamic slot in the match of a different job;
+default configuration bug fixes for the desktop policy, such that
+it can both start jobs and monitor the keyboard.
+
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.9 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html">GPUs and adding new resources types to the HTCondor-CE</a></h1>
+      <p class="meta">
+        <time datetime="2015-08-07T21:45:00Z" pubdate data-updated="true">Aug 7<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html">The more things change, the more they stay the same</a></h1>
+      <p class="meta">
+        <time datetime="2015-07-28T15:00:00Z" pubdate data-updated="true">Jul 28<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.7/10_3Development_Release.html"> HTCondor 8.3.7 released! ( July 27, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-07-27T05:00:00Z" pubdate data-updated="true">Jul 27<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.7.
+This development series release contains new features that are under
+development.
+
+Enhancements in the release include:
+default configuration settings have been updated to reflect current usage;
+the ability to preempt dynamic slots, such that a job may match with a partitionable slot;
+the ability to limit the number of jobs per submission and the number of jobs per owner by setting configuration variables.
+
+Further details can be found in the
+Version History.
+HTCondor 8.3.7 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.3.6/10_3Development_Release.html"> HTCondor 8.3.6 released! ( June 23, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-06-23T05:00:00Z" pubdate data-updated="true">Jun 23<span>rd</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.3.6.
+This development series release contains new features that are under
+development.
+
+Enhancements in the release include:
+initial Docker universe support;
+IPv4/IPv6 mixed mode support.
+
+Further details can be found in the
+Version History.
+HTCondor 8.3.6 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/06/summit-fedmsg.html">fedmsg talk at Spark Summit</a></h1>
+      <p class="meta">
+        <time datetime="2015-06-15T15:05:27Z" pubdate data-updated="true">Jun 15<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">Using Spark ML Pipeline transformers</a></h1>
+      <p class="meta">
+        <time datetime="2015-06-14T00:07:58Z" pubdate data-updated="true">Jun 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In this post, we&rsquo;ll see how to make a simple transformer for <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark ML Pipelines</a>.  The transformer we&rsquo;ll design will generate a sparse binary feature vector from an array-valued field representing a set. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/05/bokeh-plots-from-spark.html">Bokeh plots from Spark</a></h1>
+      <p class="meta">
+        <time datetime="2015-05-21T16:05:10Z" pubdate data-updated="true">May 21<span>st</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>This post will show you an extremely simple way to make quick-and-dirty <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> plots from data you&rsquo;ve generated in Spark, but the basic technique is generally applicable to any data that you&rsquo;re generating in some application that doesn&rsquo;t necessarily link in the Bokeh libraries. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/05/process-goals.html">Planning your career like a racing season</a></h1>
+      <p class="meta">
+        <time datetime="2015-05-14T21:04:20Z" pubdate data-updated="true">May 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Most people set personal and professional goals.  If you work in software, your near-term professional goals might sound like this: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/05/06/parallel-k-medoids-using-scala-parseq/">Parallel K-Medoids Using Scala ParSeq</a></h1>
+      <p class="meta">
+        <time datetime="2015-05-06T23:33:00Z" pubdate data-updated="true">May 6<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Scala supplies a <a href="http://docs.scala-lang.org/overviews/parallel-collections/overview.html">parallel collections library</a> that was designed to make it easy for a programmer to add parallel computing over the elements in a collection.  In this post, I will describe a case study of applying Scala's parallel collections to cleanly implement multithreading support for training a K-Medoids clustering model. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/04/elasticsearch-and-spark-1-dot-3.html">Elasticsearch and Spark 1.3</a></h1>
+      <p class="meta">
+        <time datetime="2015-04-30T20:34:37Z" pubdate data-updated="true">Apr 30<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> has offered Hadoop <code>InputFormat</code> and <code>OutputFormat</code> implementations for quite some time.  These made it possible to process Elasticsearch indices with Spark just as you would any other Hadoop data source.  Here&rsquo;s an example of this in action, taken from <a href="http://www.elastic.co/guide/en/elasticsearch/hadoop/master/spark.html">Elastic&rsquo;s documentation</a>: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/03/31/hygienic-closures-for-scala-function-serialization/">Hygienic Closures for Scala Function Serialization</a></h1>
+      <p class="meta">
+        <time datetime="2015-03-31T13:06:00Z" pubdate data-updated="true">Mar 31<span>st</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In most use cases of Scala closures, what you see is what you get, but there are exceptions where looks can be deceiving and this can have a big impact on closure serialization.  Closure serialization is of more than academic interest.  Tools like Apache Spark cannot operate without serializing functions over the network.  In this post I'll describe some scenarios where closures include more than what is evident in the code, and then a technique for preventing unwanted inclusions. [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html">HTCondor CacheD: Caching for HTC - Part 2</a></h1>
+      <p class="meta">
+        <time datetime="2015-01-25T15:59:00Z" pubdate data-updated="true">Jan 25<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html">Condor CacheD: Caching for HTC - Part 1</a></h1>
+      <p class="meta">
+        <time datetime="2015-01-22T16:00:00Z" pubdate data-updated="true">Jan 22<span>nd</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"></div>
+  </article>
+
 </div>
 <aside class="sidebar">
   <section>
     <h1>Planet HTCondor Members</h1>
+    
+      <a href="http://chapeau.freevariable.com/"> William Benton</a><br>
+    
+      <a href="http://erikerlandson.github.com/"> Erik Erlandson</a><br>
+    
+      <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
+    
+      <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
     
   </section>
 </aside>
