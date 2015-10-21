@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-10-20T03:47:36-07:00</updated>
+  <updated>2015-10-21T03:27:07-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Notes from Flink Forward]]></title>
+      <link href="http://chapeau.freevariable.com/2015/10/notes-from-flink-forward.html"/>
+      <updated>2015-10-20T15:48:44Z</updated>
+      <id>http://chapeau.freevariable.com/2015/10/notes-from-flink-forward</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script></p>
+
+<p>I was in Berlin last week for <a href="http://flink-forward.org">Flink Forward</a>, the inaugural Apache Flink conference.  I&rsquo;m still learning about Flink, and Flink Forward was a great place to learn more.  In this post, I&rsquo;ll share some of what I consider its coolest features and highlight some of the talks I especially enjoyed.  Videos of the talks should all be online soon, so you&rsquo;ll be able to check them out as well.</p>
+
+<h2>Background</h2>
+
+<p>Apache Flink is a data processing framework for the JVM that is most popular for streaming workloads with high throughput and low latency, although it is also general enough to support batch processing.  Flink has a pleasant collection-style API, offers stateful elementwise transformations on streams (think of a <code>fold</code> function), can be configured to support fault-tolerance with exactly-once delivery, and does all of this while achieving extremely high performance.  Flink is especially attractive for use in contemporary multitenant environments because it manages its own memory and thus Flink jobs can run well in containers on overprovisioned systems (where CPU cycles may be relatively abundant but memory may be strictly constrained).</p>
+
+<h2>Keynotes and lightning talks</h2>
+
+<p>Kostas Tzoumas and Stephan Ewan (both of data Artisans) shared a keynote in which they presented the advancements in Flink 0.10 (to be released soon) and shared the roadmap for the next release, which will be Flink 1.0.  The most interesting parts of this keynote for me were the <a href="http://data-artisans.com/batch-is-a-special-case-of-streaming/">philosophical arguments for the generality and importance of stream processing in contemporary event-driven data applications</a>.  Many users of batch-processing systems simulate streaming workflows by explicitly encoding windows in the structure of their input data (e.g., by using one physical file or directory to correspond to a day, month, or year worth of records) or by using various workarounds inspired by technical limitations (e.g., the &ldquo;lambda architecture&rdquo; or bespoke but narrowly-applicable stream processors).  However, mature stream processing frameworks not only enable a wide range of applications that process live events, but they also are general enough to handle batch workloads as a special case (i.e., by processing a stream with only one window).<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<p>Of course, the workarounds that data engineers have had to adopt to handle streaming data in batch systems are only necessary given an absence of mature stream processing frameworks.  The streaming space has improved a great deal recently, and this talk gave a clear argument that Flink was mature enough for demanding and complex applications.  Flink offers a flexible treatment of time: events can be processed immediately (one at a time), in windows based on when the events arrived at the processor, or in windows based on when the events were actually generated (even if they arrived out of order).  Flink supports failure recovery with exactly-once delivery but also offers extremely high throughput and low latency:  a basic Flink stream processing application offers two orders of magnitude more throughput than an equivalent Storm application.  Flink also provides a batch-oriented API with a collection-style interface and an optimizing query planner.</p>
+
+<p>After the keynote, there were several lightning talks.  Lightning talks at many events are self-contained (and often speculative, provocative, or describing promising work in progress).  However, these lightning talks were abbreviated versions of talks on the regular program.  In essence, they were ads for talks to see later (think of how academic CS conference talks are really ads for papers to read later).  This was a cool idea and definitely helped me navigate a two-track program that was full of interesting abstracts.</p>
+
+<h2>Everyday Flink</h2>
+
+<p>Michael Häusler of ResearchGate gave a talk in which he talked about the process of evaluating new data processing frameworks, focusing in particular on determining whether a framework makes simple tasks simple.  (Another step, following Alan Kay&rsquo;s famous formulation, is determining whether or not a framework makes complex tasks possible.)  The &ldquo;simple task&rdquo; that Häusler set out to solve was finding the top 5 coauthors for every author in a database of publications; he implemented this task in Hive (running on Tez), Hadoop MapReduce, and Flink.  Careful readers will note that this is not really a fair fight:  SQL and HiveQL do not admit straightforward implementations of top-<em>k</em> queries and MapReduce applications are not known for elegant and terse codebases; indeed, Häusler acknowledged as much.  However, it was still impressive to see how little code was necessary to solve this problem with Flink, especially when contrasted with the boilerplate of MapReduce or all of the machinery to implement a user-defined aggregate function to support top-<em>k</em> in Hive.  The Flink solution was also twice as fast as the custom MapReduce implementation, which was in turn faster than Hive on Tez.</p>
+
+<h2>Declarative Machine Learning with the Samsara DSL</h2>
+
+<p>Sebastian Schelter introduced Samsara, a DSL for machine learning and linear algebra.  Samsara supports in-memory vectors (both dense and sparse), in-memory matrices, and distributed row matrices, and provides an R-like syntax embedded in Scala for operations.  The distributed row matrices are a unique feature of Samsara; they support only a subset of matrix operations (i.e., ones that admit efficient distributed implementations) and go through a process of algebraic optimization (including generating logical and physical plans) to minimize communication during execution.  Samsara can target Flink, Spark, and H2O.</p>
+
+<h2>Streaming and parallel decision trees in Flink</h2>
+
+<p>Training decision trees in batch frameworks requires a view of the entire learning set (and sufficient training data to generate a useful tree).  In streaming applications, each event is seen only once, the classifier must be available immediately (even if there is little data to train on) and the classifier should take feedback into account in real time.  In this talk, Anwar Rizal of Amadeus presented a technique for training decision trees on streaming data by building and aggregating approximate histograms for incoming features and labels.</p>
+
+<h2>Juggling with bits and bytes &mdash; how Apache Flink operates on binary data</h2>
+
+<p>Applications using the Java heap often exhibit appalling memory efficiency; the heap footprint of Java library data structures can be <a href="https://www.cs.virginia.edu/kim/publicity/pldi09tutorials/memory-efficient-java-tutorial.pdf">75% overhead or more</a>.  Since data processing applications frequently create, manipulate, and serialize many objects &mdash; some of which may be quite short-lived &mdash; there are potentially significant performance pitfalls to using the JVM directly for memory allocation.  In this talk, Fabian Hueske of data Artisans presented Flink&rsquo;s approach:  combining a custom memory-management and serialization stack with algorithms that operate directly on compressed data.  Flink jobs are thus more memory-efficient than programs that use the Java heap directly, exhibit predictable space usage, and handle running out of memory gracefully by spilling intermediate results to disk.  In addition, Flink&rsquo;s use of database-style algorithms to sort, filter, and join compressed data reduces computation and communication costs.</p>
+
+<h2>Stateful Stream Processing</h2>
+
+<p>Data processing frameworks like Flink and Spark support collection-style APIs where distributed collections or streams can be processed with operations like <code>map</code>, <code>filter</code>, and so on.  In addition to these, it is useful to support transformations that include <em>state</em>, analogously to the <code>fold</code> function on local collections.  Of course, <code>fold</code> by itself is fairly straightforward, but a reliable <code>fold</code>-style operation that can recover in the face of worker failures is more interesting.  In this talk, Márton Balassi and Gábor Hermann presented an overview of several different approaches to supporting reliable stream processing with state:  the approaches used by Flink (both versions 0.9.1 and 0.10), Spark Streaming, Samza, and Trident.  As one might imagine, Spark Streaming and Samza get a lot of mileage out of delegating to underlying models (immutable RDDs in Spark&rsquo;s case and a reliable unified log in Samza&rsquo;s).  Flink&rsquo;s approach of using distributed snapshots exhibits good performance and enables exactly-once semantics, but it also seems simpler to use than alternatives.  This has become a recurring theme in my investigation of Flink:  technical decisions that are advertised as improving performance (latency, throughput, etc.) also, by happy coincidence, admit a more elegant programming model.</p>
+
+<h2>Fault-tolerance and job recovery in Apache Flink</h2>
+
+<p>This talk was an apt chaser for the Stateful Stream Processing talk.  Till Rohrmann presented Flink&rsquo;s approaches to checkpointing and recovery, showing how Flink can be configured to support at-most-once delivery (the weakest guarantee), at-least-once delivery, or exactly-once delivery (the strongest guarantee).  The basic approach Flink uses for checkpointing operator state is the <a href="https://en.wikipedia.org/wiki/Snapshot_algorithm">Chandy-Lamport snapshot algorithm</a>, which enables consistent distributed snapshots in a way that is transparent to the application programmer.  This approach also enables configurable tradeoffs between throughput and snapshot interval, but it&rsquo;s far faster (and nicer to use) than Storm&rsquo;s approach in any case.  Recovering operator state is only part of the fault-tolerance picture, though; Till&rsquo;s talk also introduced Flink&rsquo;s approach for supporting a highly-available Job Manager.</p>
+
+<h2>Other talks worth checking out</h2>
+
+<p>Here are a few talks that I&rsquo;d like to briefly call out as worth watching:</p>
+
+<ul>
+<li><a href="http://flink-forward.org/?session=automatic-detection-of-web-trackers-at-telefonica-research">&ldquo;Automatic detection of web trackers&rdquo;</a>, presented by Vasia Kalavri, was a cool application of graph processing in Flink.</li>
+<li><a href="http://flink-forward.org/?session=applying-kappa-architecture-in-the-telecom-industry">&ldquo;Applying Kappa architecture in the telecom industry&rdquo;</a>, presented by Ignacio Mulas Viela, showed how to put a realistic streaming topology into production.</li>
+<li>In <a href="http://flink-forward.org/?session=a-tale-of-squirrels-and-storms">&ldquo;A tale of squirrels and storms&rdquo;</a>, Matthias Sax introduced the Storm compatibility layer for Flink, enabling users to run Storm topologies on Flink with minimal code changes.</li>
+<li><a href="http://flink-forward.org/?session=notions-of-time-how-apache-flink-handles-time-and-windows">Aljoscha Krettek&rsquo;s talk</a> covered the different approaches Flink supports for defining windows over streams.</li>
+<li>My colleague <a href="https://www.flickr.com/photos/willb/22227982835/">Suneel Marthi</a> presented on a <a href="http://flink-forward.org/?session=tbd-3">Flink port of the BigPetStore big data application blueprints</a>.</li>
+</ul>
+
+
+<h2>General notes</h2>
+
+<p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22322707802/in/dateposted-public/" title="Kulturbrauerei"><img src="https://farm1.staticflickr.com/771/22322707802_8b4fa7662e_b.jpg" width="1024" height="820" alt="Kulturbrauerei"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script></p>
+
+<p>The data Artisans team and the Flink community clearly put a lot of hard work towards making this a really successful conference.  The <a href="https://en.wikipedia.org/wiki/Kulturbrauerei">venue</a> (pictured above) was unique and cool, the overall vibe was friendly and technical, and I didn&rsquo;t see a single talk that I regretted attending.  (This is high praise indeed for a technical conference; I may have been lucky, but I suspect it&rsquo;s more likely that the committee picked a good program.)  I especially appreciated the depth of technical detail in the talks by Flink contributors on the second afternoon, covering both design tradeoffs and implementation decisions.  I&rsquo;m hoping to be back for a future iteration.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Indeed, <a href="http://flink-forward.org/?session=stream-and-batch-processing-in-one-system-apache-flinks-streaming-data-flow-engine">as we saw later in the conference</a>, the difference between &ldquo;batch&rdquo; workloads and &ldquo;streaming&rdquo; workloads can be as simple as a set of policy decisions by the scheduler.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.5.0 released! ( October 12, 2015 )]]></title>
@@ -686,19 +764,6 @@ Downloads page.
         <uri>http://erikerlandson.github.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Scala supplies a <a href="http://docs.scala-lang.org/overviews/parallel-collections/overview.html">parallel collections library</a> that was designed to make it easy for a programmer to add parallel computing over the elements in a collection.  In this post, I will describe a case study of applying Scala's parallel collections to cleanly implement multithreading support for training a K-Medoids clustering model. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Elasticsearch and Spark 1.3]]></title>
-      <link href="http://chapeau.freevariable.com/2015/04/elasticsearch-and-spark-1-dot-3.html"/>
-      <updated>2015-04-30T20:34:37Z</updated>
-      <id>http://chapeau.freevariable.com/2015/04/elasticsearch-and-spark-1-dot-3</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p><a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> has offered Hadoop <code>InputFormat</code> and <code>OutputFormat</code> implementations for quite some time.  These made it possible to process Elasticsearch indices with Spark just as you would any other Hadoop data source.  Here&rsquo;s an example of this in action, taken from <a href="http://www.elastic.co/guide/en/elasticsearch/hadoop/master/spark.html">Elastic&rsquo;s documentation</a>: [...]</p>
 ]]></content>
     </entry>
   
