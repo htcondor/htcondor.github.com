@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-10-21T03:27:07-07:00</updated>
+  <updated>2015-10-22T03:40:10-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Pacing technical talks]]></title>
+      <link href="http://chapeau.freevariable.com/2015/10/pacing-technical-talks.html"/>
+      <updated>2015-10-21T16:17:01Z</updated>
+      <id>http://chapeau.freevariable.com/2015/10/pacing-technical-talks</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy.</p>
+
+<p>By going out too hard in the half-marathon, you&rsquo;ll be running on adrenaline instead of on your aerobic metabolism, will burn matches by working hard before warming up fully, and ultimately won&rsquo;t be able to maintain your best possible pace because you&rsquo;ll be spent by the second half of the race.  Similarly, in the talk, your impulse might be to get right to the most elegant and intricate parts of your work immediately after introducing yourself, but if you get there without warming up the audience first, you&rsquo;ll lose most of them along the way.  In both cases, your perception of what you&rsquo;re doing is warped by energy and nerves; the <em>right</em> pace will feel sluggish and awkward; and starting too fast will put you in a hole that will be nearly impossible to recover from.</p>
+
+<p>Delivering a technical talk successfully has a lot in common with choosing an appropriate pacing strategy for an endurance event:  <a href="http://www.runnersworld.com/ask-coach-jenny/how-to-pace-your-first-half-or-full-marathon">by starting out slower than you think you need to, you&rsquo;ll be able to go faster at the end</a>.  Most runners<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> will be able to maintain a higher average pace by doing <a href="https://en.wikipedia.org/wiki/Negative_split">negative splits</a>.  In a race, this means you start out slower than your desired average pace and gradually ramp up over the course of the race so that by the end, you&rsquo;re going faster than your desired average pace.  By starting out easy, your cardiovascular system will warm up, your connective tissue will get used to the stress of pounding on the pavement, and your muscles will start buffering lactic acid; this will reduce muscle fatigue and save your anaerobic energy for the final sprint.</p>
+
+<p>You can apply the general strategy of negative splits to a talk as well.  Instead of warming up cold muscles and your aerobic energy systems before making them work, you&rsquo;re preparing a group of smart people to learn why they should care about your topic before making them think about it too much.  Start off slow:  provide background, context, and examples.  Unless you&rsquo;re a very experienced speaker, this will feel agonizingly slow at first.</p>
+
+<p>It&rsquo;s understandable that it might feel remedial and boring to you to explain why your work is relevant.  After all, you&rsquo;re deep in your topic and have probably long since forgotten what it was like to learn about it for the first time.  Examples and visual explanations might seem like a waste of time before you get to your clever implementation, elegant proof, or sophisticated model.  You have some <em>serious detail</em> to cover, after all!  Your audience, however, isn&rsquo;t prepared for that detail yet.  If you skip the warm-up and go straight to that detail, you&rsquo;ll lose audience engagement, and it&rsquo;s nearly impossible to recover from that; it&rsquo;ll certainly prevent you from covering as much as you might have otherwise wanted to.</p>
+
+<p>Remember that your audience are smart people who chose to attend your talk instead of sitting out in the hall.  They&rsquo;d probably rather be learning something from you than halfheartedly reading email.  But they also almost certainly don&rsquo;t know as much about your topic as you do.  Ease them in to it, warm them up, and give them plenty of context first.  You&rsquo;ll be able to cover more ground that way.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Pacing in cycling time trials can be a little more complicated depending on the terrain and wind but in general being able to finish stronger than you started is still desirable.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Notes from Flink Forward]]></title>
@@ -738,19 +769,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>This post will show you an extremely simple way to make quick-and-dirty <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> plots from data you&rsquo;ve generated in Spark, but the basic technique is generally applicable to any data that you&rsquo;re generating in some application that doesn&rsquo;t necessarily link in the Bokeh libraries. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Planning your career like a racing season]]></title>
-      <link href="http://chapeau.freevariable.com/2015/05/process-goals.html"/>
-      <updated>2015-05-14T21:04:20Z</updated>
-      <id>http://chapeau.freevariable.com/2015/05/process-goals</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Most people set personal and professional goals.  If you work in software, your near-term professional goals might sound like this: [...]</p>
 ]]></content>
     </entry>
   
