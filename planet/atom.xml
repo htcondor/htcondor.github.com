@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-10-27T03:11:38-07:00</updated>
+  <updated>2015-10-28T03:18:53-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.4.1 released! ( October 27, 2015 )]]></title>
+      <link href="manual/v8.4.1/10_3Stable_Release.html"/>
+      <updated>2015-10-27T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.1.
+A stable series release contains significant bug fixes.  This release
+contains all of the bug fixes from the recent HTCondor 8.2.10 release.
+
+Highlights of this release are:
+four new policy metaknobs to make configuration easier;
+a bug fix to prevent condor daemons from crashing on reconfiguration;
+an option natural sorting option on condor_status;
+support of admin to mount certain directories into Docker containers;
+many other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.1 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.2.10 released! ( October 22, 2015 )]]></title>
+      <link href="manual/v8.2.10/10_3Stable_Release.html"/>
+      <updated>2015-10-22T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.2.10.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+an updated RPM to work with SELinux on EL7 platforms;
+fixes to the condor_kbdd authentication to the X server;
+a fix to allow the condor_kbdd to work with shared port enabled;
+avoid crashes when using more than 1024 file descriptors on EL7;
+fixed a memory leak in the ClassAd split() function;
+condor_vacate will error out rather than ignore conflicting arguments;
+a bug fix to the JobRouter to properly process the queue on restart;
+a bug fix to prevent sending spurious data on a SOAP file transfer;
+a bug fix to always present jobs in order in condor_history.
+
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.10 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Pacing technical talks]]></title>
@@ -260,30 +317,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.9 released! ( August 13, 2015 )]]></title>
-      <link href="manual/v8.2.9/10_3Stable_Release.html"/>
-      <updated>2015-08-13T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor version 8.2.9.
-A stable series release contains significant bug and security fixes.
-This version contains:
-a mechanism for the preemption of dynamic slots, such that the
-partitionable slot may use the dynamic slot in the match of a different job;
-default configuration bug fixes for the desktop policy, such that
-it can both start jobs and monitor the keyboard.
-
-A complete list of fixed bugs can be found in the
-Version History.
-HTCondor 8.2.9 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[GPUs and adding new resources types to the HTCondor-CE]]></title>
       <link href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html"/>
       <updated>2015-08-07T21:45:00Z</updated>
@@ -305,31 +338,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.3.7 released! ( July 27, 2015 )]]></title>
-      <link href="manual/v8.3.7/10_3Development_Release.html"/>
-      <updated>2015-07-27T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.7.
-This development series release contains new features that are under
-development.
-
-Enhancements in the release include:
-default configuration settings have been updated to reflect current usage;
-the ability to preempt dynamic slots, such that a job may match with a partitionable slot;
-the ability to limit the number of jobs per submission and the number of jobs per owner by setting configuration variables.
-
-Further details can be found in the
-Version History.
-HTCondor 8.3.7 binaries and source code are available from our
-Downloads page.
-]]></content>
     </entry>
   
     <entry>
