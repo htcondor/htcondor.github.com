@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-11-17T03:48:58-07:00</updated>
+  <updated>2015-11-18T03:42:07-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.4.2 released! ( November 17, 2015 )]]></title>
+      <link href="manual/v8.4.2/10_3Stable_Release.html"/>
+      <updated>2015-11-17T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.2.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+a bug fix to prevent the condor_schedd from crashing;
+a bug fix to honor TCP_FORWARDING_HOST;
+Standard Universe works properly in RPM installations of HTCondor;
+the RPM packages no longer claim to provide Globus libraries;
+bug fixes to DAGMan's "maximum idle jobs" throttle;
+several other bug fixes, consult the version history.
+
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.2 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.4.1 released! ( October 27, 2015 )]]></title>
@@ -244,35 +272,6 @@ numerous scalability changes.
 Further details can be found in the
 Version History.
 HTCondor 8.4.0 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.3.8 released! ( August 27, 2015 )]]></title>
-      <link href="manual/v8.3.8/10_3Development_Release.html"/>
-      <updated>2015-08-27T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.3.8.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.2.9
-stable release.
-
-Enhancements in the release include:
-a script to tune Linux kernel parameters for better scalability;
-support for python bindings on Windows platforms;
-a mechanism to remove Docker images from the local machine.
-
-Static analysis tools were used to identify and fix memory leaks and
-other code deficiencies.
-
-Further details can be found in the
-Version History.
-HTCondor 8.3.8 binaries and source code are available from our
 Downloads page.
 ]]></content>
     </entry>
