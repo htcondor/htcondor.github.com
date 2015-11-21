@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-11-20T03:21:26-07:00</updated>
+  <updated>2015-11-21T03:45:11-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Very Fast Reservoir Sampling]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/11/20/very-fast-reservoir-sampling/"/>
+      <updated>2015-11-20T18:27:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/11/20/very-fast-reservoir-sampling</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<blockquote><p>The code I used to collect the data for this post can be viewed <a href="https://github.com/erikerlandson/silex/blob/blog/reservoir/src/main/scala/com/redhat/et/silex/sample/reservoir/reservoir.scala">here</a>.  I generated the plots using the <a href="https://github.com/quantifind/wisp">quantifind WISP</a> project.</p></blockquote>
+
+<p>In a <a href="http://erikerlandson.github.io/blog/2014/09/11/faster-random-samples-with-gap-sampling/">previous post</a>, I showed that random Bernoulli and Poisson sampling could be made much faster by modeling the <em>sampling gap distribution</em> for the corresponding smapling distributions.  More recently, I also began exploring whether <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">reservoir sampling</a> might also be optimized using the gap sampling technique, by deriving the <a href="http://erikerlandson.github.io/blog/2015/08/17/the-reservoir-sampling-gap-distribution/">reservoir sampling gap distribution</a>.  For a sampling reservoir of size (R), starting at data element (j), the probability distribution of the sampling gap is:</p>
+
+<p><img src="/assets/images/reservoir1/figure6.png" title="Figure 1" alt="Figure 1" /></p>
+
+<p>Modeling a sampling gap distribution is a powerful tool for optimizing a sampling algorithm, but it presupposes that you can actually draw values from that distribution substantially faster than just applying a random process to drawing each data element.  I was unable to come up with a "direct" algorithm for drawing samples from P(k) above (I suspect none exists), however I also know the CDF F(k), so it <em>is</em> possible to apply <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">inversion sampling</a>, which runs in logarithmic time w.r.t the desired accuracy.  Although its logarithmic cost effectively guarantees that it will be a net efficiency win for sufficiently large (j), it still involves a substantial number of computations to yield its samples, and it seems unlikely to be competitive with straight "naive" reservoir sampling over many real-world data sizes, where (j) may never grow very large.</p>
+
+<p>Well, if exact computations are too expensive, we can always look for a fast approximation.  Consider the original "first principles" formula for the sampling gap P(k):</p>
+
+<p><img src="/assets/images/reservoir2/figure2.png" title="Figure 2" alt="Figure 2" /></p>
+
+<p>As the figure above alludes to, if (j) is relatively large compared to (k), then values (j+1),(j+2)...(j+k) are all going to be effectively "close" to (j), and so we can replace them all with (j) as an approximation.  Note that the resulting approximation is just the PMF of the <a href="https://en.wikipedia.org/wiki/Geometric_distribution">geometric distribution</a>, with probability of success p=(R/j), and we already saw how to efficiently draw values from a geometric distribution from our experience with Bernoulli sampling.</p>
+
+<p>Do we have any reason to hope that this approximation will be useful?  For reasons that are similar to those for Bernoulli gap sampling, it will only be efficient to employ gap sampling when the probability (R/j) becomes small enough.  From our experiences with Bernoulli sampling that is <em>at least</em> j>=2R.  So, we have some assurance that (j) itself will be never be <em>very</em> small.  What about (k)?  Note that a geometric distribution "favors" smaller values of (k) -- that is, small values of (k) have the highest probabilities.  In fact, the smaller that (j) is, the larger the probability (R/j) is, and so the more likely that (k) values that are small relative to (j) will be the frequent ones.  It is also promising that the true distribution for P(k) <em>also</em> favors smaller values of (k) (in fact it favors them even a bit more strongly than the approximation).</p>
+
+<p>Although it is encouraging, it is also clear that my argument above is limited to heuristic hand-waving.  What does this approximation really <em>look</em> like, compared to the true distribution?  Fortunately, it is easy to plot both distributions numerically, since we now know the formulas for both:</p>
+
+<p><img src="/assets/images/reservoir2/CDFs_R=10.png" title="Figure 3" alt="Figure 3" /></p>
+
+<p>The plot above shows that, in fact, the geometric approximation is a <em>surprisingly good</em> approximation to the true distribution!  Furthermore, the approximation remains good as both (j) and (k) grow larger.</p>
+
+<p>Our numeric eye-balling looks quite promising.  Is there an effective way to <em>measure</em> how good this approximation is?  One useful measure is the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov-Smirnov D statistic</a>, which is just the maximum absolute error between two cumulative distributions.  Here is a plot of the D statistic for reservoir size R=10, as (j) varies across several magnitudes:</p>
+
+<p><img src="/assets/images/reservoir2/R=10.png" title="Figure 4" alt="Figure 4" /></p>
+
+<p>This plot is also good news: we can see that deviation, as measured by D, remains bounded at a small value (less than 0.0262).  As this is for the specific value R=10, we also want to know how things change as reservoir size changes:</p>
+
+<p><img src="/assets/images/reservoir2/R=all.png" title="Figure 5" alt="Figure 5" /></p>
+
+<p>The news is still good!  As reservoir size grows, the approximation only gets better: the D values get smaller as R increases, and remain asymtotically bounded as (j) increases.</p>
+
+<p>Now we have some numeric assurance that the geometric approximation is a good one, and stays good as reservoir size grows and sampling runs get longer.  However, we should also verify that an actual implementation of the approximation works as expected.  Following is a plot that shows two-sample D statistics, comparing the distribution in sample gaps between runs of the exact "naive" reservoir sampling with the fast geometric approximation:</p>
+
+<p><img src="/assets/images/reservoir2/D_naive_vs_fast.png" title="Figure 6" alt="Figure 6" /></p>
+
+<p>As expected, the measured difference in sampling characteristics between naive and fast approximation are small, confirming the numeric predictions.</p>
+
+<p>Since the point of this exercise was to achieve faster random sampling, it remains to measure what kind of speed improvements the fast approximation provides.  As a point of reference, here is a plot of run times for reservoir sampling over 10<sup>8</sup> integers:</p>
+
+<p><img src="/assets/images/reservoir2/naive_sample_time_vs_R.png" title="Figure 7" alt="Figure 7" /></p>
+
+<p>As expected, sample time remains constant at around 1.5 seconds, regardless of reservoir size, since the naive algorithm always samples from its RNG per each sample.</p>
+
+<p>Compare this to the corresponding plot for the fast geometric approximation:</p>
+
+<p><img src="/assets/images/reservoir2/gap_sample_times_vs_R.png" title="Figure 8" alt="Figure 8" /></p>
+
+<p>Firstly, we see that the sampling times are <em>much faster</em>, as originally anticipated in my <a href="http://erikerlandson.github.io/blog/2015/08/17/the-reservoir-sampling-gap-distribution/">previous post</a> -- in the neighborhood of 3 orders of magnitude faster.  Secondly, we see that the sampling times do increase as a linear function of reservoir size.  Based on our experience with Bernoulli gap sampling, this is expected; the sampling probabilities are given by (R/j), and therefore the amount of sampling is proportional to R.</p>
+
+<p>Another property anticipated in my previous post was that the efficiency of gap sampling should continue to increase as the amount of data sampled grows; the sampling probability being (R/j), the probability of sampling decreases as j gets larger, and so the corresponding gap sizes grow.  The following plot verifies this property, holding reservoir size R constant, and increasing the data size:</p>
+
+<p><img src="/assets/images/reservoir2/gap_sampling_efficiency.png" title="Figure 9" alt="Figure 9" /></p>
+
+<p>The sampling time (per million elements) decreases as the sample size grows, as predicted by the formula.</p>
+
+<p>In conclusion, I have demonstrated that a geometric distribution can be used as a high quality approximation to the true sampling gap distribution for reservoir sampling, which allows reservoir sampling to be performed much faster than the naive algorithm while still retaining sampling quality.</p>
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.4.2 released! ( November 17, 2015 )]]></title>
@@ -164,25 +233,7 @@ Downloads page.
         <name><![CDATA[William Benton]]></name>
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy.</p>
-
-<p>By going out too hard in the half-marathon, you&rsquo;ll be running on adrenaline instead of on your aerobic metabolism, will burn matches by working hard before warming up fully, and ultimately won&rsquo;t be able to maintain your best possible pace because you&rsquo;ll be spent by the second half of the race.  Similarly, in the talk, your impulse might be to get right to the most elegant and intricate parts of your work immediately after introducing yourself, but if you get there without warming up the audience first, you&rsquo;ll lose most of them along the way.  In both cases, your perception of what you&rsquo;re doing is warped by energy and nerves; the <em>right</em> pace will feel sluggish and awkward; and starting too fast will put you in a hole that will be nearly impossible to recover from.</p>
-
-<p>Delivering a technical talk successfully has a lot in common with choosing an appropriate pacing strategy for an endurance event:  <a href="http://www.runnersworld.com/ask-coach-jenny/how-to-pace-your-first-half-or-full-marathon">by starting out slower than you think you need to, you&rsquo;ll be able to go faster at the end</a>.  Most runners<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> will be able to maintain a higher average pace by doing <a href="https://en.wikipedia.org/wiki/Negative_split">negative splits</a>.  In a race, this means you start out slower than your desired average pace and gradually ramp up over the course of the race so that by the end, you&rsquo;re going faster than your desired average pace.  By starting out easy, your cardiovascular system will warm up, your connective tissue will get used to the stress of pounding on the pavement, and your muscles will start buffering lactic acid; this will reduce muscle fatigue and save your anaerobic energy for the final sprint.</p>
-
-<p>You can apply the general strategy of negative splits to a talk as well.  Instead of warming up cold muscles and your aerobic energy systems before making them work, you&rsquo;re preparing a group of smart people to learn why they should care about your topic before making them think about it too much.  Start off slow:  provide background, context, and examples.  Unless you&rsquo;re a very experienced speaker, this will feel agonizingly slow at first.</p>
-
-<p>It&rsquo;s understandable that it might feel remedial and boring to you to explain why your work is relevant.  After all, you&rsquo;re deep in your topic and have probably long since forgotten what it was like to learn about it for the first time.  Examples and visual explanations might seem like a waste of time before you get to your clever implementation, elegant proof, or sophisticated model.  You have some <em>serious detail</em> to cover, after all!  Your audience, however, isn&rsquo;t prepared for that detail yet.  If you skip the warm-up and go straight to that detail, you&rsquo;ll lose audience engagement, and it&rsquo;s nearly impossible to recover from that; it&rsquo;ll certainly prevent you from covering as much as you might have otherwise wanted to.</p>
-
-<p>Remember that your audience is made up of smart people who chose to attend your talk instead of sitting out in the hall.  They&rsquo;d probably rather be learning something from you than halfheartedly reading email.  But they also almost certainly don&rsquo;t know as much about your topic as you do.  Ease them in to it, warm them up, and give them plenty of context first.  You&rsquo;ll be able to cover more ground that way.</p>
-<div class="footnotes">
-<hr/>
-<ol>
-<li id="fn:1">
-<p>Pacing in cycling time trials can be a little more complicated depending on the terrain and wind but in general being able to finish stronger than you started is still desirable.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
-</ol>
-</div>
-
+      <content type="html"><![CDATA[<p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy. [...]</p>
 ]]></content>
     </entry>
   
@@ -355,19 +406,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>In this post, we&rsquo;ll see how to make a simple transformer for <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark ML Pipelines</a>.  The transformer we&rsquo;ll design will generate a sparse binary feature vector from an array-valued field representing a set. [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Parallel K-Medoids Using Scala ParSeq]]></title>
-      <link href="http://erikerlandson.github.com/blog/2015/05/06/parallel-k-medoids-using-scala-parseq/"/>
-      <updated>2015-05-06T23:33:00Z</updated>
-      <id>http://erikerlandson.github.com/blog/2015/05/06/parallel-k-medoids-using-scala-parseq</id>
-      <author>
-        <name><![CDATA[Erik Erlandson]]></name>
-        <uri>http://erikerlandson.github.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>Scala supplies a <a href="http://docs.scala-lang.org/overviews/parallel-collections/overview.html">parallel collections library</a> that was designed to make it easy for a programmer to add parallel computing over the elements in a collection.  In this post, I will describe a case study of applying Scala's parallel collections to cleanly implement multithreading support for training a K-Medoids clustering model. [...]</p>
 ]]></content>
     </entry>
   
