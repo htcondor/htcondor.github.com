@@ -9,7 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="I want to make an argument that the Algebird Aggregator design, in particular its use of the prepare operation in a map-reduce context, has &hellip;">
+  <meta name="description" content="Lately, I&rsquo;ve been experimenting with Spark&rsquo;s implementation of word2vec. Since most of the natural-language data I have sitting around &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,166 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html">Using word2vec on logs</a></h1>
+      <p class="meta">
+        <time datetime="2015-12-01T17:51:36Z" pubdate data-updated="true">Dec 1<span>st</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Lately, I&rsquo;ve been experimenting with <a href="http://spark.apache.org/docs/latest/mllib-feature-extraction.html#word2vec">Spark&rsquo;s implementation</a> of word2vec.  Since most of the natural-language data I have sitting around these days are service and system logs from machines at work, I thought it would be fun to see how well word2vec worked if we trained it on the text of log messages.  This is obviously pretty far from an ideal training corpus, but these brief, rich messages seem like they should have some minable content.  In the rest of this post, I&rsquo;ll show some interesting results from the model and also describe some concrete preprocessing steps to get more useful results for extracting words from the odd dialect of natural language that appears in log messages.</p>
+
+<h3>Background</h3>
+
+<p><a href="http://arxiv.org/abs/1310.4546">word2vec</a> is a family of techniques for encoding words as relatively low-dimensional vectors that capture interesting semantic information.  That is, words that are synonyms are likely to have vectors that are similar (by cosine similarity).  Another really neat aspect of this encoding is that linear transformations of these vectors can expose semantic information like analogies:  for example, given a model trained on news articles, adding the vectors for &ldquo;Madrid&rdquo; and &ldquo;France&rdquo; and subtracting the vector for &ldquo;Spain&rdquo; results in a vector very close to that for &ldquo;Paris.&rdquo;</p>
+
+<p>Spark&rsquo;s implementation of word2vec uses <a href="https://en.wikipedia.org/wiki/N-gram#Bias-versus-variance_trade-off">skip-grams</a>, so the training objective is to produce a model that, given a word, predicts the context in which it is likely to appear.</p>
+
+<h3>Preliminaries</h3>
+
+<p>Like the <a href="">original implementation of word2vec</a>, Spark&rsquo;s implementation uses a window of &#177;5 surrounding words (this is not user-configurable) and defaults to discarding all words that appear fewer than 5 times (this threshold is user-configurable).  Both of these assumptions seem sane for the sort of training &ldquo;sentences&rdquo; that appear in log messages, but they won&rsquo;t be sufficient.</p>
+
+<p>Spark doesn&rsquo;t provide a lot of tools for tokenizing and preprocessing natural-language text.<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>  Simple string splitting is as ubiquitous in trivial language processing examples just as it is in trivial word count examples, but it&rsquo;s not going to give us the best results. Fortunately, there are some minimal steps we can take to start getting useful tokens out of log messages.  We&rsquo;ll look at these steps and what see what motivates them now.</p>
+
+<h4>What is a word?</h4>
+
+<p>Let&rsquo;s first consider what kinds of tokens might be interesting for analyzing the content of log messages.  At the very least, we might care about:</p>
+
+<ol>
+<li>dictionary words,</li>
+<li>trademarks (which may or may not be dictionary words),</li>
+<li>technical jargon terms (which may or may not be dictionary words),</li>
+<li>service names (which may or may not be dictionary words),</li>
+<li>symbolic constant names (e.g., <code>ENOENT</code> and <code>OPEN_MAX</code>),</li>
+<li>pathnames (e.g., <code>/dev/null</code>), and</li>
+<li>programming-language identifiers (e.g., <code>OutOfMemoryError</code> and <code>Kernel::exec</code>).</li>
+</ol>
+
+
+<p>For this application, we&rsquo;re less interested in the following kinds of tokens, although it is possible to imagine other applications in which they might be important:</p>
+
+<ol>
+<li>hostnames,</li>
+<li>IPv4 and IPv6 addresses,</li>
+<li>MAC addresses,</li>
+<li>dates and times, and</li>
+<li>hex hash digests.</li>
+</ol>
+
+
+<h4>Preprocessing steps</h4>
+
+<p>If we&rsquo;re going to convert sequences of lines to sequences of sequences of tokens, we&rsquo;ll eventually be splitting strings.  Before we split, we&rsquo;ll collapse all runs of whitespace into single spaces so that we get more useful results when we do split.  This isn&rsquo;t strictly necessary &mdash; we could elect to split on runs of whitespace instead of single whitespace characters, or we could filter out empty strings from word sequences before training on them.  But this makes for cleaner input and it makes the subsequent transformations a little simpler.</p>
+
+<p>Here&rsquo;s Scala code to collapse runs of whitespace into a single space:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">replace</span><span class="o">(</span><span class="n">r</span><span class="k">:</span> <span class="kt">scala.util.matching.Regex</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">replaceAllIn</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span> <span class="o">}</span>
+</span><span class='line'><span class="k">val</span> <span class="n">collapseSpaces</span> <span class="k">=</span> <span class="n">replace</span><span class="o">(</span><span class="k">new</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">matching</span><span class="o">.</span><span class="nc">Regex</span><span class="o">(</span><span class="s">&quot;[\\s]+&quot;</span><span class="o">),</span> <span class="s">&quot; &quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The next thing we&rsquo;ll want to do is eliminate all punctuation from the ends of each word.  An appropriate definition of &ldquo;punctuation&rdquo; will depend on the sorts of tokens we wind up deciding are interesting, but I considered punctuation characters to be anything except:</p>
+
+<ol>
+<li>alphanumeric characters,</li>
+<li>dashes, and</li>
+<li>underscores.</li>
+</ol>
+
+
+<p>Whether or not we want to retain intratoken punctuation depends on the application; there are good arguments to be made for retaining colons and periods (MAC addresses, programming-language identifiers in stack traces, hostnames, etc.), slashes (paths), at-signs (email addresses), and other marks as well.  I&rsquo;ll be retaining these marks but stripping all others.  After these transformations, we can split on whitespace and get a relatively sensible set of tokens.</p>
+
+<p>Here&rsquo;s Scala code to strip punctuation from lines:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">rejectedIntratokenPunctuation</span> <span class="k">=</span> <span class="k">new</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">matching</span><span class="o">.</span><span class="nc">Regex</span><span class="o">(</span><span class="s">&quot;[^A-Za-z0-9-_./:@]&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">leadingPunctuation</span> <span class="k">=</span> <span class="k">new</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">matching</span><span class="o">.</span><span class="nc">Regex</span><span class="o">(</span><span class="s">&quot;\\s[^A-Za-z0-9-_/]+&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">trailingPunctuation</span> <span class="k">=</span> <span class="k">new</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">matching</span><span class="o">.</span><span class="nc">Regex</span><span class="o">(</span><span class="s">&quot;[^A-Za-z0-9-_/]+\\s&quot;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">stripPunctuation</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span> <span class="nc">String</span> <span class="k">=</span>
+</span><span class='line'>  <span class="n">replace</span><span class="o">(</span><span class="n">leadingPunctuation</span><span class="o">,</span> <span class="s">&quot; &quot;</span><span class="o">)</span> <span class="n">compose</span>
+</span><span class='line'>  <span class="n">replace</span><span class="o">(</span><span class="n">trailingPunctuation</span><span class="o">,</span> <span class="s">&quot; &quot;</span><span class="o">)</span> <span class="n">compose</span>
+</span><span class='line'>  <span class="n">replace</span><span class="o">(</span><span class="n">rejectedIntratokenPunctuation</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to filter out strings of numbers, we&rsquo;ll reject all tokens that don&rsquo;t contain at least one letter.  (We could be stricter and reject all tokens that don&rsquo;t contain at least one letter that isn&rsquo;t a hex digit, but I decided to be permissive in order to avoid rejecting interesting words that only contain letters <code>A-F</code>.)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">oneletter</span> <span class="k">=</span> <span class="k">new</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">matching</span><span class="o">.</span><span class="nc">Regex</span><span class="o">(</span><span class="s">&quot;.*([A-Za-z]).*&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here&rsquo;s what our preprocessing pipeline looks like, assuming an RDD of log messages called <code>messages</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">tokens</span><span class="o">(</span><span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">post</span><span class="k">:</span> <span class="kt">String</span><span class="o">=&gt;</span><span class="nc">String</span> <span class="k">=</span> <span class="n">identity</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span>
+</span><span class='line'>  <span class="n">collapseWhitespace</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">s</span> <span class="k">=&gt;</span> <span class="n">post</span><span class="o">(</span><span class="n">stripPunctuation</span><span class="o">(</span><span class="n">s</span><span class="o">)))</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">collect</span> <span class="o">{</span> <span class="k">case</span> <span class="n">token</span> <span class="k">@</span> <span class="n">oneletter</span><span class="o">(</span><span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">token</span> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">tokenSeqs</span> <span class="k">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="n">tokens</span><span class="o">(</span><span class="n">line</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have a sequence of words for each log message and are ready to train a word2vec model.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.apache.spark.mllib.feature.Word2Vec</span>
+</span><span class='line'><span class="k">val</span> <span class="n">w2v</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Word2Vec</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">val</span> <span class="n">model</span> <span class="k">=</span> <span class="n">w2v</span><span class="o">.</span><span class="n">fit</span><span class="o">(</span><span class="n">tokenSeqs</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that there are a few things we could be doing in our preprocessing pipeline but aren&rsquo;t, like using a whitelist (for dictionary words or service names), or rejecting stopwords.  This approach is pretty basic, but it produces some interesting results in any case.</p>
+
+<h3>Results and conclusions</h3>
+
+<p>I evaluated the model by using it to find synonyms for (more or less) arbitrary words that appeared in log messages.  Recall that word2vec basically models words by the contexts in which they might appear; informally, synonyms are thus words with similar contexts.</p>
+
+<ul>
+<li>The top synonyms for <code>nova</code> (the OpenStack compute service) included <code>vm</code>, <a href="http://docs.openstack.org/developer/glance/"><code>glance</code></a>, <code>containers</code>, <code>instances</code>, and <code>images</code> &mdash; all of these are related to running OpenStack compute jobs.</li>
+<li>The top synonyms for <code>volume</code> included <code>update</code>, <a href="https://wiki.openstack.org/wiki/Cinder"><code>cinder.scheduler.host_manager</code></a>, and several UUIDs for actual volumes.</li>
+<li>The top synonyms for <code>tmpfs</code> included <code>type</code>, <code>dev</code>, <code>uses</code>, <code>initialized</code>, and <code>transition</code>.</li>
+<li>The top synonyms for <code>sh</code> included <code>/usr/bin/bash</code>, <code>_AUDIT_SESSION</code>, <code>NetworkManager</code>, <code>_SYSTEMD_SESSION</code>, <code>postfixqmgr</code>.</li>
+<li>The top synonyms for <code>password</code> included <code>publickey</code>, <code>Accepted</code>, <code>opened</code>, <a href="https://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface"><code>IPMI</code></a>, and the name of an internal project.</li>
+</ul>
+
+
+<p>These results aren&rsquo;t earth-shattering &mdash; indeed, they won&rsquo;t even tell you <a href="https://scholar.google.com/scholar?q=yelp+sentiment+analysis&amp;hl=en&amp;as_sdt=0&amp;as_vis=1&amp;oi=scholart&amp;sa=X&amp;ved=0ahUKEwj74vLpl9TJAhXLXh4KHccICIgQgQMIGzAA">where to get a decent burrito</a> &mdash;  but they&rsquo;re interesting, they&rsquo;re sensible, and they point to the effectiveness of word2vec even given a limited, unidiomatic corpus full of odd word-like tokens.  Of course, one can imagine ways to make our preprocessing more robust.  Similarly, there are certainly other ways to generate a training corpus for these words: perhaps using the set of all messages for a particular service and severity as a training sentence,  using the documentation for the services involved, using format strings present in the source or binaries for the services themselves, or some combination of these.</p>
+
+<p>Semantic modeling of terms in log messages is obviously useful for log analytics:  it can be used as part of a pipeline to classify related log messages by topic, in feature engineering for anomaly detection, and to suggest alternate search terms for interactive queries.  However, it is a pleasant surprise that we can train a competent word2vec model for understanding log messages from the uncharacteristic utterances that comprise log messages themselves.</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Spark does provide a <a href="https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.feature.StopWordsRemover">stopword filter for English</a> and there are external libraries to fill in some of its language-processing gaps.  In particular, I&rsquo;ve had good luck with the <a href="http://tartarus.org/~martin/PorterStemmer/">Porter stemmer</a> implementation from <a href="https://github.com/scalanlp/chalk/">Chalk</a>.<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+  </article>
 
   <article>
     <header>
@@ -597,17 +757,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"><p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/06/using-sparks-ml-pipeline-transformers.html">Using Spark ML Pipeline transformers</a></h1>
-      <p class="meta">
-        <time datetime="2015-06-14T00:07:58Z" pubdate data-updated="true">Jun 14<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>In this post, we&rsquo;ll see how to make a simple transformer for <a href="https://spark.apache.org/docs/latest/ml-guide.html">Spark ML Pipelines</a>.  The transformer we&rsquo;ll design will generate a sparse binary feature vector from an array-valued field representing a set. [...]</p>
 </div>
   </article>
 
