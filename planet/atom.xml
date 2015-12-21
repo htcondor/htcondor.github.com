@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2015-12-20T03:26:09-07:00</updated>
+  <updated>2015-12-21T03:22:09-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,33 +11,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.4.3 released! ( December 16, 2015 )]]></title>
-      <link href="manual/v8.4.3/10_3Stable_Release.html"/>
-      <updated>2015-12-16T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.3.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-fixed the processing of the -append option in the condor_submit command;
-fixed a bug to run more that 100 dynamic slots on a single execute node;
-fixed bugs that would delay daemon startup when using shared port on Windows;
-fixed a bug where the cgroup VM limit would not be set for sizes over 2 GiB;
-fixed a bug to use the ec2_iam_profile_name for Amazon EC2 Spot instances;
-a few other bug fixes, consult the version history.
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.3 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
   
     <entry>
       <title type="html"><![CDATA[Using word2vec on logs]]></title>
@@ -361,131 +334,7 @@ def update(m: M, e: E) = mon.plus(m, mon.prepare(e))
         <name><![CDATA[Erik Erlandson]]></name>
         <uri>http://erikerlandson.github.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>In this post I will demonstrate how to do reservoir sampling orders of magnitude faster than the traditional "naive" reservoir sampling algorithm, using a fast high-fidelity approximation to the reservoir sampling-gap distribution.</p>
-
-<blockquote><p>The code I used to collect the data for this post can be viewed <a href="https://github.com/erikerlandson/silex/blob/blog/reservoir/src/main/scala/com/redhat/et/silex/sample/reservoir/reservoir.scala">here</a>.  I generated the plots using the <a href="https://github.com/quantifind/wisp">quantifind WISP</a> project.</p></blockquote>
-
-<p>In a <a href="http://erikerlandson.github.io/blog/2014/09/11/faster-random-samples-with-gap-sampling/">previous post</a>, I showed that random Bernoulli and Poisson sampling could be made much faster by modeling the <em>sampling gap distribution</em> for the corresponding sampling distributions.  More recently, I also began exploring whether <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">reservoir sampling</a> might also be optimized using the gap sampling technique, by deriving the <a href="http://erikerlandson.github.io/blog/2015/08/17/the-reservoir-sampling-gap-distribution/">reservoir sampling gap distribution</a>.  For a sampling reservoir of size (R), starting at data element (j), the probability distribution of the sampling gap is:</p>
-
-<p><img src="/assets/images/reservoir1/figure6.png" title="Figure 1" alt="Figure 1" /></p>
-
-<p>Modeling a sampling gap distribution is a powerful tool for optimizing a sampling algorithm, but it presupposes that you can actually draw values from that distribution substantially faster than just applying a random process to drawing each data element.  I was unable to come up with a "direct" algorithm for drawing samples from P(k) above (I suspect none exists), however I also know the CDF F(k), so it <em>is</em> possible to apply <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">inversion sampling</a>, which runs in logarithmic time w.r.t the desired accuracy.  Although its logarithmic cost effectively guarantees that it will be a net efficiency win for sufficiently large (j), it still involves a substantial number of computations to yield its samples, and it seems unlikely to be competitive with straight "naive" reservoir sampling over many real-world data sizes, where (j) may never grow very large.</p>
-
-<p>Well, if exact computations are too expensive, we can always look for a fast approximation.  Consider the original "first principles" formula for the sampling gap P(k):</p>
-
-<p><img src="/assets/images/reservoir2/figure2.png" title="Figure 2" alt="Figure 2" /></p>
-
-<p>As the figure above alludes to, if (j) is relatively large compared to (k), then values (j+1),(j+2)...(j+k) are all going to be effectively "close" to (j), and so we can replace them all with (j) as an approximation.  Note that the resulting approximation is just the PMF of the <a href="https://en.wikipedia.org/wiki/Geometric_distribution">geometric distribution</a>, with probability of success p=(R/j), and we already saw how to efficiently draw values from a geometric distribution from our experience with Bernoulli sampling.</p>
-
-<p>Do we have any reason to hope that this approximation will be useful?  For reasons that are similar to those for Bernoulli gap sampling, it will only be efficient to employ gap sampling when the probability (R/j) becomes small enough.  From our experiences with Bernoulli sampling that is <em>at least</em> j>=2R.  So, we have some assurance that (j) itself will be never be <em>very</em> small.  What about (k)?  Note that a geometric distribution "favors" smaller values of (k) -- that is, small values of (k) have the highest probabilities.  In fact, the smaller that (j) is, the larger the probability (R/j) is, and so the more likely that (k) values that are small relative to (j) will be the frequent ones.  It is also promising that the true distribution for P(k) <em>also</em> favors smaller values of (k) (in fact it favors them even a bit more strongly than the approximation).</p>
-
-<p>Although it is encouraging, it is also clear that my argument above is limited to heuristic hand-waving.  What does this approximation really <em>look</em> like, compared to the true distribution?  Fortunately, it is easy to plot both distributions numerically, since we now know the formulas for both:</p>
-
-<p><img src="/assets/images/reservoir2/CDFs_R=10.png" title="Figure 3" alt="Figure 3" /></p>
-
-<p>The plot above shows that, in fact, the geometric approximation is a <em>surprisingly good</em> approximation to the true distribution!  Furthermore, the approximation remains good as both (j) and (k) grow larger.</p>
-
-<p>Our numeric eye-balling looks quite promising.  Is there an effective way to <em>measure</em> how good this approximation is?  One useful measure is the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov-Smirnov D statistic</a>, which is just the maximum absolute error between two cumulative distributions.  Here is a plot of the D statistic for reservoir size R=10, as (j) varies across several magnitudes:</p>
-
-<p><img src="/assets/images/reservoir2/R=10.png" title="Figure 4" alt="Figure 4" /></p>
-
-<p>This plot is also good news: we can see that deviation, as measured by D, remains bounded at a small value (less than 0.0262).  As this is for the specific value R=10, we also want to know how things change as reservoir size changes:</p>
-
-<p><img src="/assets/images/reservoir2/R=all.png" title="Figure 5" alt="Figure 5" /></p>
-
-<p>The news is still good!  As reservoir size grows, the approximation only gets better: the D values get smaller as R increases, and remain asymptotically bounded as (j) increases.</p>
-
-<p>Now we have some numeric assurance that the geometric approximation is a good one, and stays good as reservoir size grows and sampling runs get longer.  However, we should also verify that an actual implementation of the approximation works as expected.</p>
-
-<p>Here is pseudocode for an implementation of reservoir sampling using the fast geometric approximation:</p>
-
-<pre><code>// data is array to sample from
-// R is the reservoir size
-function reservoirFast(data: Array, R: Int) {
-  n = data.length
-  // Initialize reservoir with first R elements of data:
-  res = data[0 until R]
-  // Until this threshold, use traditional sampling.  This value may
-  // depend on performance characteristics of random number generation and/or
-  // numeric libraries:
-  t = 4 * R
-  j = 1 + R
-  while (j &lt; n  &amp;&amp;  j &lt;= t) {
-    k = randomInt(j) // random integer &gt;= 0 and &lt; j
-    if (k &lt; R) res[k] = data[j]
-    j = j + 1
-  }
-  // Once gaps become significant, it pays to do gap sampling
-  while (j &lt; n) {
-    // draw gap size (g) from geometric distribution with probability p = R/j
-    p = R / j
-    u = randomFloat() // random float &gt; 0 and &lt;= 1
-    g = floor(log(u) / log(1-p))
-    j = j + g
-    if (j &lt; n) {
-      k = randomInt(R)
-      res[k] = data[j]
-    }
-    j = j + 1
-  }
-  // return the reservoir
-  return res
-}
-</code></pre>
-
-<p>Following is a plot that shows two-sample D statistics, comparing the distribution in sample gaps between runs of the exact "naive" reservoir sampling with the fast geometric approximation:</p>
-
-<p><img src="/assets/images/reservoir2/D_naive_vs_fast.png" title="Figure 6" alt="Figure 6" /></p>
-
-<p>As expected, the measured difference in sampling characteristics between naive and fast approximation are small, confirming the numeric predictions.</p>
-
-<p>Since the point of this exercise was to achieve faster random sampling, it remains to measure what kind of speed improvements the fast approximation provides.  As a point of reference, here is a plot of run times for reservoir sampling over 10<sup>8</sup> integers:</p>
-
-<p><img src="/assets/images/reservoir2/naive_sample_time_vs_R.png" title="Figure 7" alt="Figure 7" /></p>
-
-<p>As expected, sample time remains constant at around 1.5 seconds, regardless of reservoir size, since the naive algorithm always samples from its RNG per each sample.</p>
-
-<p>Compare this to the corresponding plot for the fast geometric approximation:</p>
-
-<p><img src="/assets/images/reservoir2/gap_sample_times_vs_R.png" title="Figure 8" alt="Figure 8" /></p>
-
-<p>Firstly, we see that the sampling times are <em>much faster</em>, as originally anticipated in my <a href="http://erikerlandson.github.io/blog/2015/08/17/the-reservoir-sampling-gap-distribution/">previous post</a> -- in the neighborhood of 3 orders of magnitude faster.  Secondly, we see that the sampling times do increase as a linear function of reservoir size.  Based on our experience with Bernoulli gap sampling, this is expected; the sampling probabilities are given by (R/j), and therefore the amount of sampling is proportional to R.</p>
-
-<p>Another property anticipated in my previous post was that the efficiency of gap sampling should continue to increase as the amount of data sampled grows; the sampling probability being (R/j), the probability of sampling decreases as j gets larger, and so the corresponding gap sizes grow.  The following plot verifies this property, holding reservoir size R constant, and increasing the data size:</p>
-
-<p><img src="/assets/images/reservoir2/gap_sampling_efficiency.png" title="Figure 9" alt="Figure 9" /></p>
-
-<p>The sampling time (per million elements) decreases as the sample size grows, as predicted by the formula.</p>
-
-<p>In conclusion, I have demonstrated that a geometric distribution can be used as a high quality approximation to the true sampling gap distribution for reservoir sampling, which allows reservoir sampling to be performed much faster than the naive algorithm while still retaining sampling quality.</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.4.2 released! ( November 17, 2015 )]]></title>
-      <link href="manual/v8.4.2/10_3Stable_Release.html"/>
-      <updated>2015-11-17T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.2.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-a bug fix to prevent the condor_schedd from crashing;
-a bug fix to honor TCP_FORWARDING_HOST;
-Standard Universe works properly in RPM installations of HTCondor;
-the RPM packages no longer claim to provide Globus libraries;
-bug fixes to DAGMan's "maximum idle jobs" throttle;
-several other bug fixes, consult the version history.
-
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.2 binaries and source code are available from our
-Downloads page.
+      <content type="html"><![CDATA[<p>In this post I will demonstrate how to do reservoir sampling orders of magnitude faster than the traditional "naive" reservoir sampling algorithm, using a fast high-fidelity approximation to the reservoir sampling-gap distribution. [...]</p>
 ]]></content>
     </entry>
   
@@ -499,63 +348,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Consider the following hypothetical conference session abstract: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.4.1 released! ( October 27, 2015 )]]></title>
-      <link href="manual/v8.4.1/10_3Stable_Release.html"/>
-      <updated>2015-10-27T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.1.
-A stable series release contains significant bug fixes.  This release
-contains all of the bug fixes from the recent HTCondor 8.2.10 release.
-
-Highlights of this release are:
-four new policy metaknobs to make configuration easier;
-a bug fix to prevent condor daemons from crashing on reconfiguration;
-an option natural sorting option on condor_status;
-support of admin to mount certain directories into Docker containers;
-many other bug fixes, consult the version history.
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.1 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.10 released! ( October 22, 2015 )]]></title>
-      <link href="manual/v8.2.10/10_3Stable_Release.html"/>
-      <updated>2015-10-22T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.2.10.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-an updated RPM to work with SELinux on EL7 platforms;
-fixes to the condor_kbdd authentication to the X server;
-a fix to allow the condor_kbdd to work with shared port enabled;
-avoid crashes when using more than 1024 file descriptors on EL7;
-fixed a memory leak in the ClassAd split() function;
-condor_vacate will error out rather than ignore conflicting arguments;
-a bug fix to the JobRouter to properly process the queue on restart;
-a bug fix to prevent sending spurious data on a SOAP file transfer;
-a bug fix to always present jobs in order in condor_history.
-
-A complete list of fixed bugs can be found in the
-Version History.
-HTCondor 8.2.10 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
@@ -582,33 +374,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.5.0 released! ( October 12, 2015 )]]></title>
-      <link href="manual/v8.5.0/10_2Development_Release.html"/>
-      <updated>2015-10-12T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.5.0.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.4.0
-stable release.
-
-Enhancements in the release include:
-multiple enhancements to the python bindings;
-the condor_schedd no longer changes the ownership of spooled job files;
-spooled job files are visible to only the user account by default;
-the condor_startd records when jobs are evicted by preemption or draining.
-
-Further details can be found in the
-Version History.
-HTCondor 8.5.0 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
