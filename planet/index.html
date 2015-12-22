@@ -9,7 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="Lately, I&rsquo;ve been experimenting with Spark&rsquo;s implementation of word2vec. Since most of the natural-language data I have sitting around &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.4.3.
+A stable series release contains significant bug fixes. Highlights of this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,31 @@
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.3/10_3Stable_Release.html"> HTCondor 8.4.3 released! ( December 16, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-12-16T06:00:00Z" pubdate data-updated="true">Dec 16<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.3.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+fixed the processing of the -append option in the condor_submit command;
+fixed a bug to run more that 100 dynamic slots on a single execute node;
+fixed bugs that would delay daemon startup when using shared port on Windows;
+fixed a bug where the cgroup VM limit would not be set for sizes over 2 GiB;
+fixed a bug to use the ec2_iam_profile_name for Amazon EC2 Spot instances;
+a few other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.3 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -392,12 +418,91 @@ def update(m: M, e: E) = mon.plus(m, mon.prepare(e))
 
   <article>
     <header>
+      <h1 class="entry-title"><a href="manual/v8.4.2/10_3Stable_Release.html"> HTCondor 8.4.2 released! ( November 17, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-11-17T06:00:00Z" pubdate data-updated="true">Nov 17<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.2.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+a bug fix to prevent the condor_schedd from crashing;
+a bug fix to honor TCP_FORWARDING_HOST;
+Standard Universe works properly in RPM installations of HTCondor;
+the RPM packages no longer claim to provide Globus libraries;
+bug fixes to DAGMan's "maximum idle jobs" throttle;
+several other bug fixes, consult the version history.
+
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.2 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
       <h1 class="entry-title"><a href="http://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts.html">Concrete advice about abstracts</a></h1>
       <p class="meta">
         <time datetime="2015-11-16T15:43:49Z" pubdate data-updated="true">Nov 16<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
       </p>
     </header>
     <div class="entry-content"><p>Consider the following hypothetical conference session abstract: [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.1/10_3Stable_Release.html"> HTCondor 8.4.1 released! ( October 27, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-10-27T05:00:00Z" pubdate data-updated="true">Oct 27<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.1.
+A stable series release contains significant bug fixes.  This release
+contains all of the bug fixes from the recent HTCondor 8.2.10 release.
+
+Highlights of this release are:
+four new policy metaknobs to make configuration easier;
+a bug fix to prevent condor daemons from crashing on reconfiguration;
+an option natural sorting option on condor_status;
+support of admin to mount certain directories into Docker containers;
+many other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.1 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.2.10/10_3Stable_Release.html"> HTCondor 8.2.10 released! ( October 22, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-10-22T05:00:00Z" pubdate data-updated="true">Oct 22<span>nd</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.2.10.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+an updated RPM to work with SELinux on EL7 platforms;
+fixes to the condor_kbdd authentication to the X server;
+a fix to allow the condor_kbdd to work with shared port enabled;
+avoid crashes when using more than 1024 file descriptors on EL7;
+fixed a memory leak in the ClassAd split() function;
+condor_vacate will error out rather than ignore conflicting arguments;
+a bug fix to the JobRouter to properly process the queue on restart;
+a bug fix to prevent sending spurious data on a SOAP file transfer;
+a bug fix to always present jobs in order in condor_history.
+
+A complete list of fixed bugs can be found in the
+Version History.
+HTCondor 8.2.10 binaries and source code are available from our
+Downloads page.
 </div>
   </article>
 
@@ -420,6 +525,31 @@ def update(m: M, e: E) = mon.plus(m, mon.prepare(e))
       </p>
     </header>
     <div class="entry-content"><p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> [...]</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.5.0/10_2Development_Release.html"> HTCondor 8.5.0 released! ( October 12, 2015 )</a></h1>
+      <p class="meta">
+        <time datetime="2015-10-12T05:00:00Z" pubdate data-updated="true">Oct 12<span>th</span>, 2015  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.5.0.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.4.0
+stable release.
+
+Enhancements in the release include:
+multiple enhancements to the python bindings;
+the condor_schedd no longer changes the ownership of spooled job files;
+spooled job files are visible to only the user account by default;
+the condor_startd records when jobs are evicted by preemption or draining.
+
+Further details can be found in the
+Version History.
+HTCondor 8.5.0 binaries and source code are available from our
+Downloads page.
 </div>
   </article>
 
@@ -515,6 +645,8 @@ def update(m: M, e: E) = mon.plus(m, mon.prepare(e))
       <a href="http://chapeau.freevariable.com/"> William Benton</a><br>
     
       <a href="http://erikerlandson.github.com/"> Erik Erlandson</a><br>
+    
+      <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
     
       <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
     
