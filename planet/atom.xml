@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-05T03:33:08-07:00</updated>
+  <updated>2016-01-06T03:18:08-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -51,6 +51,38 @@ Timetable overview: Monday, Tuesday, and Wednesday presentations will be dedicat
 
 We hope to see you in Barcelona!
 
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.5.1 released! ( December 21, 2015 )]]></title>
+      <link href="manual/v8.5.1/10_2Development_Release.html"/>
+      <updated>2015-12-21T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.5.1.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.4.3
+stable release.
+
+Enhancements in the release include:
+the shared port daemon is enabled by default;
+the condor_startd now records the peak memory usage instead of recent;
+the condor_startd advertizes CPU submodel and cache size;
+authorizations are automatically setup when "Match Password" is enabled;
+added a schedd-constraint option to condor_q.
+
+With the shared port daemon enabled, all HTCondor daemons share a single
+inbound network port. This change makes it much easier to construct a
+firewall configuration that allows HTCondor use.
+
+Further details can be found in the
+Version History.
+HTCondor 8.5.1 binaries and source code are available from our
+Downloads page.
 ]]></content>
     </entry>
   
@@ -333,36 +365,6 @@ many other bug fixes, consult the version history.
 Further details can be found in the
 Version History.
 HTCondor 8.4.1 binaries and source code are available from our
-Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.2.10 released! ( October 22, 2015 )]]></title>
-      <link href="manual/v8.2.10/10_3Stable_Release.html"/>
-      <updated>2015-10-22T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.2.10.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-an updated RPM to work with SELinux on EL7 platforms;
-fixes to the condor_kbdd authentication to the X server;
-a fix to allow the condor_kbdd to work with shared port enabled;
-avoid crashes when using more than 1024 file descriptors on EL7;
-fixed a memory leak in the ClassAd split() function;
-condor_vacate will error out rather than ignore conflicting arguments;
-a bug fix to the JobRouter to properly process the queue on restart;
-a bug fix to prevent sending spurious data on a SOAP file transfer;
-a bug fix to always present jobs in order in condor_history.
-
-A complete list of fixed bugs can be found in the
-Version History.
-HTCondor 8.2.10 binaries and source code are available from our
 Downloads page.
 ]]></content>
     </entry>
