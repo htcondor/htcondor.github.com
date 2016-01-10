@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-09T03:10:11-07:00</updated>
+  <updated>2016-01-10T03:42:11-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -435,30 +435,6 @@ Downloads page.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[GPUs and adding new resources types to the HTCondor-CE]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html"/>
-      <updated>2015-08-07T21:45:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6301136022425730449</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[The more things change, the more they stay the same]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html"/>
-      <updated>2015-07-28T15:00:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-8394942129716842708</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[fedmsg talk at Spark Summit]]></title>
       <link href="http://chapeau.freevariable.com/2015/06/summit-fedmsg.html"/>
       <updated>2015-06-15T15:05:27Z</updated>
@@ -469,30 +445,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
-      <updated>2015-01-25T15:59:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-5260378956420164105</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Condor CacheD: Caching for HTC - Part 1]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html"/>
-      <updated>2015-01-22T16:00:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1889975382858537261</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
