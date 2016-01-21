@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-20T03:19:15-07:00</updated>
+  <updated>2016-01-21T03:28:10-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,22 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ Re-release of RPMs for HTCondor 8.4.3 and 8.5.1 ( January 8, 2016 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor"/>
+      <updated>2016-01-08T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is re-releasing the RPMs for 8.4.3 and 8.5.1.
+A recent change to correct problems with Standard Universe in the
+RPM packaging resulted in unoptimized binaries to be packaged.
+The new RPMs have optimized binaries.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor / ARC CE Workshop: 29 February 2016 to 4 March 2016 ( January 4, 2016 )]]></title>
@@ -190,33 +206,6 @@ Downloads page.
         <uri>http://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Consider the following hypothetical conference session abstract: [...]</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.4.1 released! ( October 27, 2015 )]]></title>
-      <link href="manual/v8.4.1/10_3Stable_Release.html"/>
-      <updated>2015-10-27T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.1.
-A stable series release contains significant bug fixes.  This release
-contains all of the bug fixes from the recent HTCondor 8.2.10 release.
-
-Highlights of this release are:
-four new policy metaknobs to make configuration easier;
-a bug fix to prevent condor daemons from crashing on reconfiguration;
-an option natural sorting option on condor_status;
-support of admin to mount certain directories into Docker containers;
-many other bug fixes, consult the version history.
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.1 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
