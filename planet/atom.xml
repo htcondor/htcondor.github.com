@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-22T03:17:17-07:00</updated>
+  <updated>2016-01-23T03:21:51-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -316,18 +316,6 @@ Downloads page.
       <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
       <updated>2015-01-25T15:59:00Z</updated>
       <id>tag:blogger.com,1999:blog-3007054864987759910.post-5260378956420164105</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[Condor CacheD: Caching for HTC - Part 1]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/01/condor-cached-caching-for-htc-part-1.html"/>
-      <updated>2015-01-22T16:00:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-1889975382858537261</id>
       <author>
         <name><![CDATA[Derek Weitzel]]></name>
         <uri>http://derekweitzel.blogspot.com</uri>
