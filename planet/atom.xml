@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-25T03:28:09-07:00</updated>
+  <updated>2016-01-26T03:23:07-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -309,18 +309,6 @@ Downloads page.
       </author>
       <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[HTCondor CacheD: Caching for HTC - Part 2]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/01/htcondor-cached-caching-for-htc-part-2.html"/>
-      <updated>2015-01-25T15:59:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-5260378956420164105</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
