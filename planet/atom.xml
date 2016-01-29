@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-01-28T03:50:06-07:00</updated>
+  <updated>2016-01-29T03:22:09-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,5 +11,255 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ Registration open for Barcelona Workshop for HTCondor / ARC CE ( January 28, 2016 )]]></title>
+      <link href="https://indico.cern.ch/e/Spring2016HTCondorWorkshop"/>
+      <updated>2016-01-28T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[*REGISTRATION IS NOW OPEN* (until 22nd Feb.)!! The workshop fee is 80 
+EUROS (VAT included), which covers the lunches and all coffee breaks 
+along the event. The list of recommended hotels, instructions for fee 
+payment, and how to get to the venue is available in the workshop homepage.
+
+Where: Barcelona, Spain, at the ALBA Synchrotron Facility
+When: Monday February 29 2016 thru Friday March 4 2016.
+Workshop homepage: https://indico.cern.ch/e/Spring2016HTCondorWorkshop
+
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ Re-release of RPMs for HTCondor 8.4.3 and 8.5.1 ( January 8, 2016 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor"/>
+      <updated>2016-01-08T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is re-releasing the RPMs for 8.4.3 and 8.5.1.
+A recent change to correct problems with Standard Universe in the
+RPM packaging resulted in unoptimized binaries to be packaged.
+The new RPMs have optimized binaries.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.5.1 released! ( December 21, 2015 )]]></title>
+      <link href="manual/v8.5.1/10_2Development_Release.html"/>
+      <updated>2015-12-21T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.5.1.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.4.3
+stable release.
+
+Enhancements in the release include:
+the shared port daemon is enabled by default;
+the condor_startd now records the peak memory usage instead of recent;
+the condor_startd advertizes CPU submodel and cache size;
+authorizations are automatically setup when "Match Password" is enabled;
+added a schedd-constraint option to condor_q.
+
+With the shared port daemon enabled, all HTCondor daemons share a single
+inbound network port. This change makes it much easier to construct a
+firewall configuration that allows HTCondor use.
+
+Further details can be found in the
+Version History.
+HTCondor 8.5.1 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.4.3 released! ( December 16, 2015 )]]></title>
+      <link href="manual/v8.4.3/10_3Stable_Release.html"/>
+      <updated>2015-12-16T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.3.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+fixed the processing of the -append option in the condor_submit command;
+fixed a bug to run more that 100 dynamic slots on a single execute node;
+fixed bugs that would delay daemon startup when using shared port on Windows;
+fixed a bug where the cgroup VM limit would not be set for sizes over 2 GiB;
+fixed a bug to use the ec2_iam_profile_name for Amazon EC2 Spot instances;
+a few other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.3 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Using word2vec on logs]]></title>
+      <link href="http://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html"/>
+      <updated>2015-12-11T17:51:36Z</updated>
+      <id>http://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Lately, I&rsquo;ve been experimenting with <a href="http://spark.apache.org/docs/latest/mllib-feature-extraction.html#word2vec">Spark&rsquo;s implementation</a> of word2vec.  Since most of the natural-language data I have sitting around these days are service and system logs from machines at work, I thought it would be fun to see how well word2vec worked if we trained it on the text of log messages.  This is obviously pretty far from an ideal training corpus, but these brief, rich messages seem like they should have some minable content.  In the rest of this post, I&rsquo;ll show some interesting results from the model and also describe some concrete preprocessing steps to get more useful results for extracting words from the odd dialect of natural language that appears in log messages. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The 'prepare' operation considered harmful in Algebird aggregation]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/11/24/the-prepare-operation-considered-harmful-in-algebird/"/>
+      <updated>2015-11-24T23:32:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/11/24/the-prepare-operation-considered-harmful-in-algebird</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I want to make an argument that the Algebird <a href="http://twitter.github.io/algebird/#com.twitter.algebird.Aggregator">Aggregator</a> design, in particular its use of the <code>prepare</code> operation in a map-reduce context, has substantial inefficiencies, compared to an equivalent formulation that is more directly suited to taking advantage of Scala's <a href="http://www.scala-lang.org/api/current/index.html#scala.collection.Seq">aggregate method on collections</a> method. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Very Fast Reservoir Sampling]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/11/20/very-fast-reservoir-sampling/"/>
+      <updated>2015-11-20T18:27:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/11/20/very-fast-reservoir-sampling</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In this post I will demonstrate how to do reservoir sampling orders of magnitude faster than the traditional "naive" reservoir sampling algorithm, using a fast high-fidelity approximation to the reservoir sampling-gap distribution. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Concrete advice about abstracts]]></title>
+      <link href="http://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts.html"/>
+      <updated>2015-11-16T15:43:49Z</updated>
+      <id>http://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Consider the following hypothetical conference session abstract: [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Pacing technical talks]]></title>
+      <link href="http://chapeau.freevariable.com/2015/10/pacing-technical-talks.html"/>
+      <updated>2015-10-21T16:17:01Z</updated>
+      <id>http://chapeau.freevariable.com/2015/10/pacing-technical-talks</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Notes from Flink Forward]]></title>
+      <link href="http://chapeau.freevariable.com/2015/10/notes-from-flink-forward.html"/>
+      <updated>2015-10-20T15:48:44Z</updated>
+      <id>http://chapeau.freevariable.com/2015/10/notes-from-flink-forward</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[A Library of Binary Tree Algorithms as Mixable Scala Traits]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/09/26/a-library-of-binary-tree-algorithms-as-mixable-scala-traits/"/>
+      <updated>2015-09-26T19:43:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/09/26/a-library-of-binary-tree-algorithms-as-mixable-scala-traits</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In this post I am going to describe some work I've done recently on a system of Scala traits that support tree-based collection algorithms prefix-sum, nearest key query and value increment in a mixable format, all backed by Red-Black balanced tree logic, which is also a fully inheritable trait. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[Lightweight Non-Negative Numerics for Better Scala Type Signatures]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/08/18/lightweight-non-negative-numerics-for-better-scala-type-signatures/"/>
+      <updated>2015-08-19T00:42:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/08/18/lightweight-non-negative-numerics-for-better-scala-type-signatures</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In this post I want to discuss several advantages of defining lightweight non-negative numeric types in Scala, whose primary benefit is that they allow improved type signatures for Scala functions and methods.  I'll first describe the simple class definition, and then demonstrate how it can be used in function signatures and the benefits of doing so. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The Reservoir Sampling Gap Distribution]]></title>
+      <link href="http://erikerlandson.github.com/blog/2015/08/17/the-reservoir-sampling-gap-distribution/"/>
+      <updated>2015-08-17T14:35:00Z</updated>
+      <id>http://erikerlandson.github.com/blog/2015/08/17/the-reservoir-sampling-gap-distribution</id>
+      <author>
+        <name><![CDATA[Erik Erlandson]]></name>
+        <uri>http://erikerlandson.github.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>In a <a href="http://erikerlandson.github.io/blog/2014/09/11/faster-random-samples-with-gap-sampling/">previous post</a>, I showed that random Bernoulli and Poisson sampling could be made much faster by modeling the <em>sampling gap distribution</em> - that is, directly drawing random samples from the distribution of how many elements would be skipped over between actual samples taken. [...]</p>
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[GPUs and adding new resources types to the HTCondor-CE]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html"/>
+      <updated>2015-08-07T21:45:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6301136022425730449</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[The more things change, the more they stay the same]]></title>
+      <link href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html"/>
+      <updated>2015-07-28T15:00:00Z</updated>
+      <id>tag:blogger.com,1999:blog-3007054864987759910.post-8394942129716842708</id>
+      <author>
+        <name><![CDATA[Derek Weitzel]]></name>
+        <uri>http://derekweitzel.blogspot.com</uri>
+      </author>
+      <content type="html"><![CDATA[]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[fedmsg talk at Spark Summit]]></title>
+      <link href="http://chapeau.freevariable.com/2015/06/summit-fedmsg.html"/>
+      <updated>2015-06-15T15:05:27Z</updated>
+      <id>http://chapeau.freevariable.com/2015/06/summit-fedmsg</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
+]]></content>
+    </entry>
   
 </feed>
