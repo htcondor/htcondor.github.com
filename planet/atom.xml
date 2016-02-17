@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-02-16T03:30:01-07:00</updated>
+  <updated>2016-02-17T03:18:42-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[Dimensionality reduction in Spark]]></title>
+      <link href="http://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark.html"/>
+      <updated>2016-02-17T01:23:17Z</updated>
+      <id>http://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark</id>
+      <author>
+        <name><![CDATA[William Benton]]></name>
+        <uri>http://chapeau.freevariable.com/</uri>
+      </author>
+      <content type="html"><![CDATA[<p>Here&rsquo;s a quick video I put together introducing infrastructure log processing in Spark.  At the end, there are a couple of nice graphs contrasting PCA and t-SNE for embedding high-dimensional log metadata into two dimensions.</p>
+
+<iframe src="https://player.vimeo.com/video/155555333" width="850" height="478" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+
+<p><a href="https://vimeo.com/155555333">Log processing demo</a> from <a href="https://vimeo.com/willbenton">William Benton</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Efficient Multiplexing for Spark RDDs]]></title>
@@ -383,19 +402,6 @@ Downloads page.
         <uri>http://derekweitzel.blogspot.com</uri>
       </author>
       <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[fedmsg talk at Spark Summit]]></title>
-      <link href="http://chapeau.freevariable.com/2015/06/summit-fedmsg.html"/>
-      <updated>2015-06-15T15:05:27Z</updated>
-      <id>http://chapeau.freevariable.com/2015/06/summit-fedmsg</id>
-      <author>
-        <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
-      </author>
-      <content type="html"><![CDATA[<p>I&rsquo;m speaking at Spark Summit today about using Spark to analyze operational data from the Fedora project.  Here are some links to further resources related to my talk: [...]</p>
-]]></content>
     </entry>
   
 </feed>
