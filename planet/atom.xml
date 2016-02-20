@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-02-19T03:19:07-07:00</updated>
+  <updated>2016-02-20T03:40:02-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -44,20 +44,19 @@ Downloads page.
   
     <entry>
       <title type="html"><![CDATA[Dimensionality reduction in Spark]]></title>
-      <link href="http://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark.html"/>
+      <link href="https://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark.html"/>
       <updated>2016-02-17T01:23:17Z</updated>
-      <id>http://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark</id>
+      <id>https://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark</id>
       <author>
         <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
+        <uri>https://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Here&rsquo;s a quick video I put together introducing infrastructure log processing in Spark.  At the end, there are a couple of nice graphs contrasting PCA and t-SNE for embedding high-dimensional log metadata into two dimensions.</p>
 
-<iframe src="https://player.vimeo.com/video/155555333" width="850" height="478" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src='https://player.vimeo.com/video/155555333' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
 
 
 <p><a href="https://vimeo.com/155555333">Log processing demo</a> from <a href="https://vimeo.com/willbenton">William Benton</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
 ]]></content>
     </entry>
   
@@ -276,12 +275,12 @@ The new RPMs have optimized binaries.
   
     <entry>
       <title type="html"><![CDATA[Using word2vec on logs]]></title>
-      <link href="http://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html"/>
+      <link href="https://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html"/>
       <updated>2015-12-11T17:51:36Z</updated>
-      <id>http://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages</id>
+      <id>https://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages</id>
       <author>
         <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
+        <uri>https://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Lately, I&rsquo;ve been experimenting with <a href="http://spark.apache.org/docs/latest/mllib-feature-extraction.html#word2vec">Spark&rsquo;s implementation</a> of word2vec.  Since most of the natural-language data I have sitting around these days are service and system logs from machines at work, I thought it would be fun to see how well word2vec worked if we trained it on the text of log messages.  This is obviously pretty far from an ideal training corpus, but these brief, rich messages seem like they should have some minable content.  In the rest of this post, I&rsquo;ll show some interesting results from the model and also describe some concrete preprocessing steps to get more useful results for extracting words from the odd dialect of natural language that appears in log messages. [...]</p>
 ]]></content>
@@ -315,12 +314,12 @@ The new RPMs have optimized binaries.
   
     <entry>
       <title type="html"><![CDATA[Concrete advice about abstracts]]></title>
-      <link href="http://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts.html"/>
+      <link href="https://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts.html"/>
       <updated>2015-11-16T15:43:49Z</updated>
-      <id>http://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts</id>
+      <id>https://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts</id>
       <author>
         <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
+        <uri>https://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Consider the following hypothetical conference session abstract: [...]</p>
 ]]></content>
@@ -328,12 +327,12 @@ The new RPMs have optimized binaries.
   
     <entry>
       <title type="html"><![CDATA[Pacing technical talks]]></title>
-      <link href="http://chapeau.freevariable.com/2015/10/pacing-technical-talks.html"/>
+      <link href="https://chapeau.freevariable.com/2015/10/pacing-technical-talks.html"/>
       <updated>2015-10-21T16:17:01Z</updated>
-      <id>http://chapeau.freevariable.com/2015/10/pacing-technical-talks</id>
+      <id>https://chapeau.freevariable.com/2015/10/pacing-technical-talks</id>
       <author>
         <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
+        <uri>https://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy. [...]</p>
 ]]></content>
@@ -341,12 +340,12 @@ The new RPMs have optimized binaries.
   
     <entry>
       <title type="html"><![CDATA[Notes from Flink Forward]]></title>
-      <link href="http://chapeau.freevariable.com/2015/10/notes-from-flink-forward.html"/>
+      <link href="https://chapeau.freevariable.com/2015/10/notes-from-flink-forward.html"/>
       <updated>2015-10-20T15:48:44Z</updated>
-      <id>http://chapeau.freevariable.com/2015/10/notes-from-flink-forward</id>
+      <id>https://chapeau.freevariable.com/2015/10/notes-from-flink-forward</id>
       <author>
         <name><![CDATA[William Benton]]></name>
-        <uri>http://chapeau.freevariable.com/</uri>
+        <uri>https://chapeau.freevariable.com/</uri>
       </author>
       <content type="html"><![CDATA[<p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> [...]</p>
 ]]></content>
