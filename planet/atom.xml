@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-02-22T03:07:09-07:00</updated>
+  <updated>2016-02-23T03:34:07-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,26 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor helps to find gravitational waves ( February 22, 2016 )]]></title>
+      <link href="http://www.opensciencegrid.org/osg-helps-ligo-scientists-confirm-einsteins-last-unproven-theory/"/>
+      <updated>2016-02-22T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  Open Science Grid news article
+discusses the role of HTCondor, Pegasus and the Open Science Grid in the
+recently-announced discovery of gravitational waves by the Laser
+Interferometer Gravitational-Wave Observatory (LIGO).
+LIGO used a single HTCondor-based system to run computations across
+LIGO Data Grid, OSG and Extreme Science and Engineering Discovery
+Environment (XSEDE)-based resources, and consumed 3,956,910 compute
+hours on OSG.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.5.2 released! ( February 18, 2016 )]]></title>
@@ -251,7 +271,7 @@ along the event. The list of recommended hotels, instructions for fee
 payment, and how to get to the venue is available in the workshop homepage.
 
 Where: Barcelona, Spain, at the ALBA Synchrotron Facility
-When: Monday February 29 2016 thru Friday March 4 2016.
+When: Monday February 29 2016 through Friday March 4 2016.
 Workshop homepage: https://indico.cern.ch/e/Spring2016HTCondorWorkshop
 
 ]]></content>
