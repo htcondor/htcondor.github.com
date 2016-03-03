@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-03-02T03:27:12-07:00</updated>
+  <updated>2016-03-03T03:20:09-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ ATLAS and BNL Bring Amazon EC2 Online ( March 2, 2016 )]]></title>
+      <link href="http://www.opensciencegrid.org/atlas-and-bnl-bring-amazon-ec2-online/"/>
+      <updated>2016-03-02T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  Open Science Grid news article
+discusses how a pilot project at the RHIC/ATLAS Computing Facility
+(RACF) at Brookhaven National Laboratory has used HTCondor-G to
+incorporate virtual machines from Amazon's Amazonâs Elastic Compute
+Cloud (EC2) spot market into a scientific computation platform.
+The ATLAS experiment is moving towards using commercial clouds
+for computation as budget constraints make maintaining dedicated
+data centers more difficult.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ OSG computational power helps solve 30-year old protein puzzle ( March 2, 2016 )]]></title>
+      <link href="http://www.opensciencegrid.org/osg-computational-power-helps-solve-30-year-old-protein-puzzle/"/>
+      <updated>2016-03-02T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  Open Science Grid news article
+discusses how the Baker Lab at the University of Washington has
+used HTCondor and the OSG to successfully simulate the cylindrical
+TIM-barrel (triosephosphate isomerase-barrel) protein fold, which
+has been a challenge for nearly 30 years.
+TIM-barrel protein folds occur widely in enzymes, meaning that
+understanding them is important for applications such as the
+development of new vaccines.
+The Baker Lab performed about 2.4 million core hours of
+computation on the OSG in 2015.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor helps to find gravitational waves ( February 22, 2016 )]]></title>
@@ -253,43 +295,6 @@ Further details can be found in the
 Version History.
 HTCondor 8.4.4 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ Registration open for Barcelona Workshop for HTCondor / ARC CE ( January 28, 2016 )]]></title>
-      <link href="https://indico.cern.ch/e/Spring2016HTCondorWorkshop"/>
-      <updated>2016-01-28T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[*REGISTRATION IS NOW OPEN* (until 22nd Feb.)!! The workshop fee is 80 
-EUROS (VAT included), which covers the lunches and all coffee breaks 
-along the event. The list of recommended hotels, instructions for fee 
-payment, and how to get to the venue is available in the workshop homepage.
-
-Where: Barcelona, Spain, at the ALBA Synchrotron Facility
-When: Monday February 29 2016 through Friday March 4 2016.
-Workshop homepage: https://indico.cern.ch/e/Spring2016HTCondorWorkshop
-
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ Re-release of RPMs for HTCondor 8.4.3 and 8.5.1 ( January 8, 2016 )]]></title>
-      <link href="http://research.cs.wisc.edu/htcondor"/>
-      <updated>2016-01-08T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is re-releasing the RPMs for 8.4.3 and 8.5.1.
-A recent change to correct problems with Standard Universe in the
-RPM packaging resulted in unoptimized binaries to be packaged.
-The new RPMs have optimized binaries.
 ]]></content>
     </entry>
   
