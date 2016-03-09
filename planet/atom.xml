@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-03-08T03:26:13-07:00</updated>
+  <updated>2016-03-09T03:34:26-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor helps LIGO confirm last unproven Albert Einstein theory ( March 8, 2016 )]]></title>
+      <link href="https://morgridge.org/newsarticle/high-throughput-computing-helps-ligo-confirm-einsteins-last-unproven-theory/"/>
+      <updated>2016-03-08T06:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  Morgridge Institute news article
+explains the rich back-story of HTCondor's role behind the recent announcement that
+scientists from the Laser Interferometer Gravitational-Wave Observatory (LIGO) unlocked the final
+door to Einstein's Theory of Relativity. More than 700 LIGO scientists have used HTCondor
+to run complex data analysis workflows, accumulating 50 million core-hours 
+in the past six months alone.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ ATLAS and BNL Bring Amazon EC2 Online ( March 2, 2016 )]]></title>
@@ -268,33 +286,6 @@ data.foreach { e =&gt;
 <p>RDD multiplexing is currently a <a href="https://github.com/willb/silex/pull/50">PR against the silex project</a>.  The code I used to run the timing experiments above is <a href="https://github.com/erikerlandson/silex/blob/blog/muxrdd/src/main/scala/com/redhat/et/silex/sample/split.scala#L90">saved for posterity here</a>.</p>
 
 <p>Happy multiplexing!</p>
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor 8.4.4 released! ( February 2, 2016 )]]></title>
-      <link href="manual/v8.4.4/10_3Stable_Release.html"/>
-      <updated>2016-02-02T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.4.4.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-fixed a bug that could cause the collector to crash when DNS lookup fails;
-fixed a bug that caused Condor-C jobs with short lease durations to fail;
-fixed bugs that affected EC2 grid universe jobs;
-fixed a bug that prevented startup if a prior version shared port file exists;
-fixed a bug that could cause the condor_shadow to hang on Windows;
-a few other bug fixes, consult the version history.
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.4 binaries and source code are available from our
-Downloads page.
 ]]></content>
     </entry>
   
