@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-03-17T03:44:14-07:00</updated>
+  <updated>2016-03-18T03:29:08-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -131,12 +131,7 @@ Downloads page.
         <name><![CDATA[William Benton]]></name>
         <uri>https://chapeau.freevariable.com/</uri>
       </author>
-      <content type="html"><![CDATA[<p>Here&rsquo;s a quick video I put together introducing infrastructure log processing in Spark.  At the end, there are a couple of nice graphs contrasting PCA and t-SNE for embedding high-dimensional log metadata into two dimensions.</p>
-
-<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src='https://player.vimeo.com/video/155555333' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
-
-
-<p><a href="https://vimeo.com/155555333">Log processing demo</a> from <a href="https://vimeo.com/willbenton">William Benton</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+      <content type="html"><![CDATA[<p>Here&rsquo;s a quick video I put together introducing infrastructure log processing in Spark.  At the end, there are a couple of nice graphs contrasting PCA and t-SNE for embedding high-dimensional log metadata into two dimensions. [...]</p>
 ]]></content>
     </entry>
   
