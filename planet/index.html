@@ -9,9 +9,8 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="This Morgridge Institute news article
-explains the rich back-story of HTCondor's role behind the recent announcement that
-scientists from the Laser &hellip;">
+  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.4.5.
+A stable series release contains significant bug fixes. Highlights of this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +70,33 @@ scientists from the Laser &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.5/10_3Stable_Release.html"> HTCondor 8.4.5 released! ( March 22, 2016 )</a></h1>
+      <p class="meta">
+        <time datetime="2016-03-22T05:00:00Z" pubdate data-updated="true">Mar 22<span>nd</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.5.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+fixed a bug that would cause the condor_schedd to send no flocked jobs;
+fixed a bug that caused a 60 second delay using tools when DNS lookup failed;
+prevent using accounting groups with embedded spaces that crash the negotiator;
+fixed a bug that could cause use of ports outside the port range on Windows;
+fixed a bug that could prevent dynamic slot reuse when using many slots;
+fixed a bug that prevented correct utilization reports from the job router;
+tune kernel when using cgroups to avoid OOM killing of jobs doing heavy I/O;
+a few other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.5 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
 
   <article>
     <header>
@@ -141,34 +167,6 @@ LIGO used a single HTCondor-based system to run computations across
 LIGO Data Grid, OSG and Extreme Science and Engineering Discovery
 Environment (XSEDE)-based resources, and consumed 3,956,910 compute
 hours on OSG.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.5.2/10_2Development_Release.html"> HTCondor 8.5.2 released! ( February 18, 2016 )</a></h1>
-      <p class="meta">
-        <time datetime="2016-02-18T06:00:00Z" pubdate data-updated="true">Feb 18<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.5.2.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.4.4
-stable release.
-
-Enhancements in the release include:
-condor_q now defaults to showing only the current user's jobs;
-condor_q -batch produces a single line report for a batch of jobs;
-Docker Universe jobs now report and update memory and network usage;
-immutable and protected job attributes;
-improved performance when querying a HTCondor daemon's location;
-Added the ability to set ClassAd attributes within the DAG file;
-DAGMan now provides event timestamps in dagman.out.
-
-Further details can be found in the
-Version History.
-HTCondor 8.5.2 binaries and source code are available from our
-Downloads page.
 </div>
   </article>
 
