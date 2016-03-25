@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-03-24T03:13:41-07:00</updated>
+  <updated>2016-03-25T03:23:08-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor 8.5.3 released! ( March 24, 2016 )]]></title>
+      <link href="manual/v8.5.3/10_2Development_Release.html"/>
+      <updated>2016-03-24T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[The HTCondor team is pleased to announce the release of HTCondor 8.5.3.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.4.5
+stable release.
+
+Enhancements in the release include:
+Use IPv6 (and IPv4) interfaces if they are detected;
+Prefer IPv4 addresses when both are available;
+Count Idle and Running jobs in Submitter Ads for Local and Scheduler universes;
+Can submit jobs to SLURM with the new "slurm" type in the Grid universe;
+HTCondor is built and linked with Globus 6.0.
+
+Further details can be found in the
+Version History.
+HTCondor 8.5.3 binaries and source code are available from our
+Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )]]></title>
+      <link href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"/>
+      <updated>2016-03-24T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  New Universe Daily news article
+discusses the collaboration between the HTCondor team at UW-Madison
+and the LIGO team at UW-Milwaukee, and how the HTCondor software was
+critical to the discovery of gravitational waves and will continue
+to be vital as LIGO moves forward.  "For 20 years, LIGO
+was trying to find a needle in a haystack. Now weâre going to build a
+needle detection factory,â said Peter Couvares, a Senior Scientist
+with the LIGO project.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ HTCondor 8.4.5 released! ( March 22, 2016 )]]></title>
@@ -76,48 +124,6 @@ Cloud (EC2) spot market into a scientific computation platform.
 The ATLAS experiment is moving towards using commercial clouds
 for computation as budget constraints make maintaining dedicated
 data centers more difficult.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ OSG computational power helps solve 30-year old protein puzzle ( March 2, 2016 )]]></title>
-      <link href="http://www.opensciencegrid.org/osg-computational-power-helps-solve-30-year-old-protein-puzzle/"/>
-      <updated>2016-03-02T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  Open Science Grid news article
-discusses how the Baker Lab at the University of Washington has
-used HTCondor and the OSG to successfully simulate the cylindrical
-TIM-barrel (triosephosphate isomerase-barrel) protein fold, which
-has been a challenge for nearly 30 years.
-TIM-barrel protein folds occur widely in enzymes, meaning that
-understanding them is important for applications such as the
-development of new vaccines.
-The Baker Lab performed about 2.4 million core hours of
-computation on the OSG in 2015.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor helps to find gravitational waves ( February 22, 2016 )]]></title>
-      <link href="http://www.opensciencegrid.org/osg-helps-ligo-scientists-confirm-einsteins-last-unproven-theory/"/>
-      <updated>2016-02-22T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  Open Science Grid news article
-discusses the role of HTCondor, Pegasus and the Open Science Grid in the
-recently-announced discovery of gravitational waves by the Laser
-Interferometer Gravitational-Wave Observatory (LIGO).
-LIGO used a single HTCondor-based system to run computations across
-LIGO Data Grid, OSG and Extreme Science and Engineering Discovery
-Environment (XSEDE)-based resources, and consumed 3,956,910 compute
-hours on OSG.
 ]]></content>
     </entry>
   
