@@ -9,8 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="The HTCondor team is pleased to announce the release of HTCondor 8.5.3.
-This development series release contains new features that are under &hellip;">
+  <meta name="description" content="Suppose I have a collection of (N) objects, and distances d(j,k) between each pair of objects (j) and (k); that is, my objects are members of a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +69,47 @@ This development series release contains new features that are under &hellip;">
 <h1 align="center"><u> Planet HTCondor </u></h1>
 
 <div class=\"blog-index\">
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2016/03/26/computing-simplex-vertex-locations-from-pairwise-vertex-distances/">Computing Simplex Vertex Locations From Pairwise Object Distances</a></h1>
+      <p class="meta">
+        <time datetime="2016-03-26T23:22:00Z" pubdate data-updated="true">Mar 26<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>Suppose I have a collection of (N) objects, and distances d(j,k) between each pair of objects (j) and (k); that is, my objects are members of a <a href="https://en.wikipedia.org/wiki/Metric_space">metric space</a>.  I have no knowledge about my objects, beyond these pair-wise distances.  These objects could be construed as vertices in an (N-1) dimensional <a href="https://en.wikipedia.org/wiki/Simplex">simplex</a>.  However, since I have no spatial information about my objects, I first need a way to assign spatial locations to each object, in vector space R<sup>(N-1),</sup> with only my object distances to work with.</p>
+
+<p>In this post I will derive an algorithm for assigning vertex locations in R<sup>(N-1)</sup> for each of N objects, using only pairwise object distances.</p>
+
+<p>I will assume that N >= 2, since at least two object are required to define a pairwise distance.  The case N=2 is easy, as I can assign vertex 1 to the origin, and vertex 2 to the point d(1,2), to form a 1-simplex (i.e. a line segment) whose single edge is just the distance between the two objects.</p>
+
+<p>Next consider an arbitrary N, and suppose I have already added vertices 1 through k.  The next vertex (k+1) must obey the pairwise distance relations, as follows:</p>
+
+<p><img src="http://mathurl.com/jm56vxq.png" alt="figure 1" /></p>
+
+<p>Adding the new vertex (k+1) involves adding another dimension (k) to the simplex.  I define this new kth coordinate x(k) to be zero for the existing k vertices, as annotated above; only the new vertex (k+1) will have a non-zero kth coordinate.  Expanding the quadratic terms on the left yields the following form:</p>
+
+<p><img src="http://mathurl.com/jtm7dpq.png" alt="figure 2" /></p>
+
+<p>The squared terms for the coordinates of the new vertex (k+1) are inconvenient, however I can get rid of them by subtracting pairs of equations above.  For example, if I subtract equation 1 from the remaining k-1 equations (2 through k), these squared terms disappear, leaving me with the following system of k-1 equations, which we can see is linear in the 1st k-1 coordinates of the new vertex.  Therefore, I know I'll be able to solve for those coordintates.  I can solve for the remaining kth coordinate by plugging it into the first distance equation:</p>
+
+<p><img src="http://mathurl.com/haovm32.png" alt="figure 3" /></p>
+
+<p>To clarify matters, the equations above can be re-written as the following matrix equation, solveable by any linear systems library:</p>
+
+<p><img src="http://mathurl.com/h6qdtms.png" alt="figure 4" /></p>
+
+<p>This gives me a recusion relation for adding a new vertex (k+1), given that I have already added the first k vertices.  The basis case of adding the first two vertices was already described above.  And so I can iteratively add all my vertices one at a time by applying the recursion relation.</p>
+
+<p>As a corollary, assume that I have constructed a simplex having k vertices, as shown above, and I would like to assign a spatial location to a new object, (y), given its k distances to each vertex.  The corresponding distance relations are given by:</p>
+
+<p><img src="http://mathurl.com/zdw9uv8.png" alt="figure 5" /></p>
+
+<p>I can apply a derivation very similar to the one above, to obtain the following linear equation for the (k-1) coordinates of (y):</p>
+
+<p><img src="http://mathurl.com/zvr5jre.png" alt="figure 6" /></p>
+</div>
+  </article>
 
   <article>
     <header>
@@ -272,17 +312,6 @@ data centers more difficult.
       </p>
     </header>
     <div class="entry-content"><p>In this post I am going to describe some work I've done recently on a system of Scala traits that support tree-based collection algorithms prefix-sum, nearest key query and value increment in a mixable format, all backed by Red-Black balanced tree logic, which is also a fully inheritable trait. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/08/18/lightweight-non-negative-numerics-for-better-scala-type-signatures/">Lightweight Non-Negative Numerics for Better Scala Type Signatures</a></h1>
-      <p class="meta">
-        <time datetime="2015-08-19T00:42:00Z" pubdate data-updated="true">Aug 19<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>In this post I want to discuss several advantages of defining lightweight non-negative numeric types in Scala, whose primary benefit is that they allow improved type signatures for Scala functions and methods.  I'll first describe the simple class definition, and then demonstrate how it can be used in function signatures and the benefits of doing so. [...]</p>
 </div>
   </article>
 
