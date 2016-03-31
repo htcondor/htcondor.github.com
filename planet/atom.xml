@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-03-30T03:12:52-07:00</updated>
+  <updated>2016-03-31T03:12:04-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ Join us at HTCondor Week 2016! ( March 30, 2016 )]]></title>
+      <link href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2016/"/>
+      <updated>2016-03-30T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[We want to invite you to
+
+HTCondor Week 2016, our annual HTCondor user
+conference, in beautiful Madison, Wisconsin, May 17-20, 2016. We will
+again host HTCondor Week at the Wisconsin Institutes for Discovery, a
+state-of-the-art facility for academic and private research specifically
+designed to foster private and public collaboration. It provides HTCondor Week
+attendees with a compelling environment in which to attend tutorials and talks
+from HTCondor developers and users like you. It also provides many comfortable
+spaces for one-on-one or small group collaborations throughout the week.
+
+Our current development series, 8.5, is well underway toward our upcoming
+production release. When you attend, you will learn how to take advantage of
+the latest features. You'll also get a peek into our longer term development
+plans--something you can only get at HTCondor Week!
+
+We will have a variety of in-depth tutorials and talks where you can not
+only learn more about HTCondor, but you can also learn how other people are
+using and deploying HTCondor. Best of all, you can establish contacts and
+learn best practices from people in industry, government, and academia who
+are using HTCondor to solve hard problems, many of which may be similar to
+those you are facing.
+
+Speaking of learning from the community, we'd love to have you give
+a talk at HTCondor Week. Talks are 15-20 minutes long and are a great
+way share your ideas and get feedback from the community. If you have a
+compelling use of HTCondor you'd like to share, see our
+
+speaker's page.
+
+You can register, get hotel details, and see the
+agenda overview on the
+HTCondor Week 2016 site.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[Computing Simplex Vertex Locations From Pairwise Object Distances]]></title>
@@ -56,6 +101,26 @@
     </entry>
   
     <entry>
+      <title type="html"><![CDATA[ HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )]]></title>
+      <link href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"/>
+      <updated>2016-03-24T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  New Universe Daily news article
+discusses the collaboration between the HTCondor team at UW-Madison
+and the LIGO team at UW-Milwaukee, and how the HTCondor software was
+critical to the discovery of gravitational waves and will continue
+to be vital as LIGO moves forward.  "For 20 years, LIGO
+was trying to find a needle in a haystack. Now weâre going to build a
+needle detection factory,â said Peter Couvares, a Senior Scientist
+with the LIGO project.
+]]></content>
+    </entry>
+  
+    <entry>
       <title type="html"><![CDATA[ HTCondor 8.5.3 released! ( March 24, 2016 )]]></title>
       <link href="manual/v8.5.3/10_2Development_Release.html"/>
       <updated>2016-03-24T05:00:00Z</updated>
@@ -80,26 +145,6 @@ Further details can be found in the
 Version History.
 HTCondor 8.5.3 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )]]></title>
-      <link href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"/>
-      <updated>2016-03-24T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  New Universe Daily news article
-discusses the collaboration between the HTCondor team at UW-Madison
-and the LIGO team at UW-Milwaukee, and how the HTCondor software was
-critical to the discovery of gravitational waves and will continue
-to be vital as LIGO moves forward.  "For 20 years, LIGO
-was trying to find a needle in a haystack. Now weâre going to build a
-needle detection factory,â said Peter Couvares, a Senior Scientist
-with the LIGO project.
 ]]></content>
     </entry>
   
@@ -147,26 +192,6 @@ scientists from the Laser Interferometer Gravitational-Wave Observatory (LIGO) u
 door to Einstein's Theory of Relativity. More than 700 LIGO scientists have used HTCondor
 to run complex data analysis workflows, accumulating 50 million core-hours 
 in the past six months alone.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ ATLAS and BNL Bring Amazon EC2 Online ( March 2, 2016 )]]></title>
-      <link href="http://www.opensciencegrid.org/atlas-and-bnl-bring-amazon-ec2-online/"/>
-      <updated>2016-03-02T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  Open Science Grid news article
-discusses how a pilot project at the RHIC/ATLAS Computing Facility
-(RACF) at Brookhaven National Laboratory has used HTCondor-G to
-incorporate virtual machines from Amazon's Amazonâs Elastic Compute
-Cloud (EC2) spot market into a scientific computation platform.
-The ATLAS experiment is moving towards using commercial clouds
-for computation as budget constraints make maintaining dedicated
-data centers more difficult.
 ]]></content>
     </entry>
   
