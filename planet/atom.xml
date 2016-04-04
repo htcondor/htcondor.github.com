@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-04-03T03:06:08-07:00</updated>
+  <updated>2016-04-04T03:24:54-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -101,26 +101,6 @@ HTCondor Week 2016 site.
     </entry>
   
     <entry>
-      <title type="html"><![CDATA[ HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )]]></title>
-      <link href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"/>
-      <updated>2016-03-24T05:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  New Universe Daily news article
-discusses the collaboration between the HTCondor team at UW-Madison
-and the LIGO team at UW-Milwaukee, and how the HTCondor software was
-critical to the discovery of gravitational waves and will continue
-to be vital as LIGO moves forward.  "For 20 years, LIGO
-was trying to find a needle in a haystack. Now weâre going to build a
-needle detection factory,â said Peter Couvares, a Senior Scientist
-with the LIGO project.
-]]></content>
-    </entry>
-  
-    <entry>
       <title type="html"><![CDATA[ HTCondor 8.5.3 released! ( March 24, 2016 )]]></title>
       <link href="manual/v8.5.3/10_2Development_Release.html"/>
       <updated>2016-03-24T05:00:00Z</updated>
@@ -145,6 +125,26 @@ Further details can be found in the
 Version History.
 HTCondor 8.5.3 binaries and source code are available from our
 Downloads page.
+]]></content>
+    </entry>
+  
+    <entry>
+      <title type="html"><![CDATA[ HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )]]></title>
+      <link href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"/>
+      <updated>2016-03-24T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This  New Universe Daily news article
+discusses the collaboration between the HTCondor team at UW-Madison
+and the LIGO team at UW-Milwaukee, and how the HTCondor software was
+critical to the discovery of gravitational waves and will continue
+to be vital as LIGO moves forward.  "For 20 years, LIGO
+was trying to find a needle in a haystack. Now weâre going to build a
+needle detection factory,â said Peter Couvares, a Senior Scientist
+with the LIGO project.
 ]]></content>
     </entry>
   
@@ -310,30 +310,6 @@ in the past six months alone.
       </author>
       <content type="html"><![CDATA[<p>In this post I am going to describe some work I've done recently on a system of Scala traits that support tree-based collection algorithms prefix-sum, nearest key query and value increment in a mixable format, all backed by Red-Black balanced tree logic, which is also a fully inheritable trait. [...]</p>
 ]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[GPUs and adding new resources types to the HTCondor-CE]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html"/>
-      <updated>2015-08-07T21:45:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-6301136022425730449</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[The more things change, the more they stay the same]]></title>
-      <link href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html"/>
-      <updated>2015-07-28T15:00:00Z</updated>
-      <id>tag:blogger.com,1999:blog-3007054864987759910.post-8394942129716842708</id>
-      <author>
-        <name><![CDATA[Derek Weitzel]]></name>
-        <uri>http://derekweitzel.blogspot.com</uri>
-      </author>
-      <content type="html"><![CDATA[]]></content>
     </entry>
   
 </feed>
