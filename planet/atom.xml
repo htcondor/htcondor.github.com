@@ -3,7 +3,7 @@
   <title><![CDATA[Planet HTCondor Meta Feed]]></title>
   <link href="http://htcondor.github.com/planet/atom.xml" rel="self"/>
   <link href="http://htcondor.github.com/"/>
-  <updated>2016-04-05T03:27:34-07:00</updated>
+  <updated>2016-04-06T03:19:12-07:00</updated>
   <id>http://htcondor.github.com/planet/atom.xml</id>
   <author>
     <name><![CDATA[HTCondor Project]]></name>
@@ -11,6 +11,26 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+    <entry>
+      <title type="html"><![CDATA[ Large Hadron Collider experiment uses HTCondor and Amazon Web Services to probe nature ( April 5, 2016 )]]></title>
+      <link href="https://aws.amazon.com/blogs/aws/experiment-that-discovered-the-higgs-boson-uses-aws-to-probe-nature/"/>
+      <updated>2016-04-05T05:00:00Z</updated>
+      <id></id>
+      <author>
+        <name><![CDATA[HTCondor Team]]></name>
+        <uri>http://research.cs.wisc.edu/htcondor</uri>
+      </author>
+      <content type="html"><![CDATA[This Amazon Web services blog post
+explains how scientists at Fermilab (a Tier 1 data center for the
+CMS experiment at the LHC) use HTCondor and Amazon Web Services
+to elastically adapt their computational capacity to changing requirements.
+Fermilab added 58,000 cores with HTCondor and AWS, allowing them to
+simulate 500 million events in 10 days using 2.9 million jobs.
+Adding cores dynamically improves cost efficiency by provisioning
+resources only when they are needed.
+]]></content>
+    </entry>
   
     <entry>
       <title type="html"><![CDATA[ Join us at HTCondor Week 2016! ( March 30, 2016 )]]></title>
@@ -174,24 +194,6 @@ Further details can be found in the
 Version History.
 HTCondor 8.4.5 binaries and source code are available from our
 Downloads page.
-]]></content>
-    </entry>
-  
-    <entry>
-      <title type="html"><![CDATA[ HTCondor helps LIGO confirm last unproven Albert Einstein theory ( March 8, 2016 )]]></title>
-      <link href="https://morgridge.org/newsarticle/high-throughput-computing-helps-ligo-confirm-einsteins-last-unproven-theory/"/>
-      <updated>2016-03-08T06:00:00Z</updated>
-      <id></id>
-      <author>
-        <name><![CDATA[HTCondor Team]]></name>
-        <uri>http://research.cs.wisc.edu/htcondor</uri>
-      </author>
-      <content type="html"><![CDATA[This  Morgridge Institute news article
-explains the rich back-story of HTCondor's role behind the recent announcement that
-scientists from the Laser Interferometer Gravitational-Wave Observatory (LIGO) unlocked the final
-door to Einstein's Theory of Relativity. More than 700 LIGO scientists have used HTCondor
-to run complex data analysis workflows, accumulating 50 million core-hours 
-in the past six months alone.
 ]]></content>
     </entry>
   
