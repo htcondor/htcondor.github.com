@@ -4,18 +4,18 @@
         <loc>
             http://htcondor.github.com/blog/2012/10/29/welcome-to-the-condor-project-github-site/
         </loc>
-        <lastmod>2014-05-05T16:06:10-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://htcondor.github.com/blog/archives/</loc>
-        <lastmod>2014-05-05T16:06:10-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://htcondor.github.com/planet/</loc>
-        <lastmod>2014-05-05T16:06:10-07:00</lastmod>
+        <lastmod>2016-04-16T10:42:28-07:00</lastmod>
     </url>
     <url>
         <loc>http://htcondor.github.com/</loc>
-        <lastmod>2014-05-05T16:06:10-07:00</lastmod>
+        <lastmod>2016-04-16T10:42:28-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://htcondor.github.com/blog/archives/</loc>
+        <lastmod>2016-04-16T10:42:28-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://htcondor.github.com/planet/</loc>
+        <lastmod>2016-05-30T09:37:02-07:00</lastmod>
     </url>
 </urlset>

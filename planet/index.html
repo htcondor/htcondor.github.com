@@ -9,9 +9,7 @@
   <meta name="author" content="HTCondor Project">
 
   
-  <meta name="description" content="This Amazon Web services blog post
-explains how scientists at Fermilab (a Tier 1 data center for the
-CMS experiment at the LHC) use HTCondor and &hellip;">
+  <meta name="description" content="Table of Contents A New Approach Why Docker Environment OSG Flow Current Status Future Directions Wishlist References For a long time, HTCondor has &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,63 +72,794 @@ CMS experiment at the LHC) use HTCondor and &hellip;">
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="https://aws.amazon.com/blogs/aws/experiment-that-discovered-the-higgs-boson-uses-aws-to-probe-nature/"> Large Hadron Collider experiment uses HTCondor and Amazon Web Services to probe nature ( April 5, 2016 )</a></h1>
+      <h1 class="entry-title"><a href="https://djw8605.github.io/2016/05/18/hiding-all-the-details-grid-jobs-in-docker/">Hiding all the details: Grid jobs in Docker</a></h1>
       <p class="meta">
-        <time datetime="2016-04-05T05:00:00Z" pubdate data-updated="true">Apr 5<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+        <time datetime="2016-05-18T14:57:15Z" pubdate data-updated="true">May 18<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
       </p>
     </header>
-    <div class="entry-content">This Amazon Web services blog post
-explains how scientists at Fermilab (a Tier 1 data center for the
-CMS experiment at the LHC) use HTCondor and Amazon Web Services
-to elastically adapt their computational capacity to changing requirements.
-Fermilab added 58,000 cores with HTCondor and AWS, allowing them to
-simulate 500 million events in 10 days using 2.9 million jobs.
-Adding cores dynamically improves cost efficiency by provisioning
-resources only when they are needed.
+    <div class="entry-content"><aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-gears"></i> Table of Contents</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#a-new-approach" id="markdown-toc-a-new-approach">A New Approach</a>    <ul>
+      <li><a href="#why-docker" id="markdown-toc-why-docker">Why Docker</a></li>
+      <li><a href="#environment" id="markdown-toc-environment">Environment</a></li>
+      <li><a href="#osg-flow" id="markdown-toc-osg-flow">OSG Flow</a></li>
+      <li><a href="#current-status" id="markdown-toc-current-status">Current Status</a></li>
+    </ul>
+  </li>
+  <li><a href="#future-directions" id="markdown-toc-future-directions">Future Directions</a>    <ul>
+      <li><a href="#wishlist" id="markdown-toc-wishlist">Wishlist</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<p>For a long time, HTCondor has strived to have the job runtime environment be run and defined by the submit host.  But, that is surprisingly difficult to do.  There are many reasons why the environment should be controlled by the submit host, for example:
+<!--more--></p>
+
+<ol>
+  <li>Enable OS updates independent of the job environment.  The sysadmins may want to run newer operating systems.</li>
+  <li>Allow users to define their own execution environment.  Many applications require many dependencies that can be packaged together.</li>
+</ol>
+
+<p>Previously we would have considered virtual machines.  But… virtual machines are difficult to author and maintain.  Virtual machines tend to be large (in GBs).  And they can have potentially large overheads, especially for IO.</p>
+
+<p><a href="https://research.cs.wisc.edu/htcondor/HTCondorWeek2013/presentations/ThainG_BoxingUsers.pdf"><img align="right" src="/images/posts/DockerGrid/GregSlide.png" /></a></p>
+
+<p>In 2013, Greg Thain presented putting users in a box for job isolation.  It used three technologies in order to enable the isolation:</p>
+
+<ol>
+  <li><strong>PID Namespaces</strong> - Isolation of the job processes from other jobs.  Also, job processes cannot view system processes.</li>
+  <li><strong><code class="highlighter-rouge">CHROOT</code>s</strong> - Create an isolated filesystem to protect the system from modifications.</li>
+  <li><strong>CGroups</strong> - Control Groups to isolate resource usage between jobs and the system.</li>
+</ol>
+
+<p>We used these chroot in Nebraska’s transition from RHEL5 to RHEL6.  But the <code class="highlighter-rouge">chroot</code> capability has degraded over time since it is difficult to author and maintain raw <code class="highlighter-rouge">chroot</code>s.</p>
+
+<h2 id="a-new-approach">A New Approach</h2>
+
+<p><a href="https://www.docker.com/"><img align="right" src="/images/posts/DockerGrid/DockerLogo.png" /></a></p>
+
+<p><code class="highlighter-rouge">chroot</code>, namespaces, and cgroups are all part of <a href="https://www.docker.com/">Docker</a>’s containerization solution.  Docker provides a very approachable way to compose and publish images.  Further, we don’t need to maintain a RHEL6 image, only our local customizations on top.</p>
+
+<p>We decided to use HTCondor’s <strong>new</strong> Docker universe.  We want to trnasform incomping grid jobs into Docker universe jobs.</p>
+
+<h3 id="why-docker">Why Docker</h3>
+
+<p>We chose Docker over Virtual Machines due to potential IO bottlenecks that have been identified in recent publications.</p>
+
+<p><img src="/images/posts/DockerGrid/DockerVsVMs.png" alt="Docker Vs VM IO performance" /></p>
+
+<h3 id="environment">Environment</h3>
+
+<p>Our host environment consists of:</p>
+
+<ul>
+  <li>CentOS 7.2: This is our admin’s preferred OS.</li>
+  <li>Docker v1.9.1: Default version of Docker for RHEL7.</li>
+  <li>HTCondor 8.5.4: Contains a few useful bug fixes and new features over the current stable series.</li>
+</ul>
+
+<p>The default container is based off of CentOS 6.  It includes the OSG WN packages, gcc, glibc-headers… for various system depenedencies for the CMS project.  Here is the <a href="https://hub.docker.com/r/unlhcc/osg-wn-el6/">Docker Hub</a>.</p>
+
+<p>The full DockerFile is on <a href="https://github.com/unlhcc/docker-osg-wn-el6">Github</a> and below.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM centos:centos6
+
+RUN yum -y install http://repo.grid.iu.edu/osg/3.3/osg-3.3-el6-release-latest.rpm &amp;&amp; \
+    yum -y install epel-release &amp;&amp; \
+    yum -y install osg-wn-client osg-wn-client-glexec cvmfs &amp;&amp; \
+    yum -y install glibc-headers &amp;&amp; \
+    yum -y install gcc &amp;&amp; \
+    yum -y install redhat-lsb-core sssd-client &amp;&amp; \
+    yum clean all &amp;&amp; \
+    yum -y update
+
+# Create condor user and group
+RUN groupadd -r condor &amp;&amp; \
+    useradd -r -g condor -d /var/lib/condor -s /sbin/nologin condor
+
+# Add lcmaps.db
+COPY lcmaps.db /etc/lcmaps.db
+
+RUN yum -y install openssh-clients &amp;&amp; yum clean all
+</code></pre>
+</div>
+
+<p>That’s it, that’s all of the DockerFile.</p>
+
+<p>There are a few important directories from the host that need to be available to the container - for example, the HDFS-based storage system. Docker refers to these as volume mounts. Currently, we bring in a total of 6 different directories.  Most volumes are marked read only - no need for the jobs to write to these. Exception is SSSD: need to write to a Unix socket to lookup usernames.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>DOCKER_VOLUME_DIR_CVMFS         = /cvmfs:/cvmfs:ro
+DOCKER_VOLUME_DIR_ETC_CVMFS     = /etc/cvmfs:/etc/cvmfs:ro
+DOCKER_VOLUME_DIR_HDFS          = /mnt/hadoop:/mnt/hadoop:ro
+DOCKER_VOLUME_DIR_GRID_SECURITY = /etc/grid-security:/etc/grid-security:ro
+DOCKER_VOLUME_DIR_SSSD          = /var/lib/sss/pipes/nss
+DOCKER_VOLUME_DIR_NSSWITCH      = /etc/nsswitch.conf:/etc/nsswitch.conf:ro
+DOCKER_MOUNT_VOLUMES = CVMFS, ETC_CVMFS, HDFS, GRID_SECURITY, SSSD, NSSWITCH
+</code></pre>
+</div>
+
+<h3 id="osg-flow">OSG Flow</h3>
+
+<p>The <a href="https://twiki.grid.iu.edu/bin/view/Documentation/Release3/HTCondorCEOverview">HTCondor-CE</a> accepts jobs into the cluster from external submitters.</p>
+
+<p><img align="right" src="/images/posts/DockerGrid/HTCondor-CE-Docker-highlight.png" /></p>
+
+<ol>
+  <li>GlideinWMS factories submit to the HTCondor-CE</li>
+  <li>The Job Router component transforms the CE job to use Docker universe.
+    <ul>
+      <li>Surprisingly, no new <code class="highlighter-rouge">JobUniverse</code>.</li>
+      <li>Sets <code class="highlighter-rouge">DockerImage</code>.</li>
+      <li>Changes the <code class="highlighter-rouge">Cmd</code> string.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Snippets from the <code class="highlighter-rouge">condor_job_router</code> transform language</p>
+
+<ul>
+  <li>
+    <p>Cmd needs to be prepended with <code class="highlighter-rouge">./</code>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>copy_Cmd = "orig_Cmd"
+eval_set_Cmd = ifThenElse(regexp("^/", orig_Cmd), orig_Cmd, strcat("./",orig_Cmd))
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">DockerImage</code> needs to be set:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>copy_DockerImage = "orig_DockerImage"
+eval_set_DockerImage = ifThenElse(isUndefined(orig_DockerImage),
+                      “unlhcc/osg-wn-el6",
+                      orig_DockerImage)
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h3 id="current-status">Current Status</h3>
+<p>Running Production CMS and OSG jobs on Nebraska’s CMS Tier 2.  Currently ~10% of the Nebraska Tier 2 is Docker-enabled.  Will be expanding to the entire cluster in the coming weeks: goal is to be done by the end-of-summer.  Next step is to further explore how to (safely) expose this capability to OSG VOs and users.</p>
+
+<h2 id="future-directions">Future Directions</h2>
+
+<p>HTCondor treats all Docker images the same.  We want to differentiate the images that come from the “good guys” (us) versus the “bad guys” (users).  Still uncomfortable with the idea of allowing users to request arbitrary images. RHEL7.2 includes various sandboxing mechanisms: there’s no (publicly) known ways to break out, but the track record is relatively poor.</p>
+
+<h3 id="wishlist">Wishlist</h3>
+<p>Things that would simplify our setup:</p>
+
+<ol>
+  <li>Pass resource accounting (CPU, memory usage) from Docker to HTCondor.  Scheduled for 8.5.5.</li>
+  <li>Avoid prepending ./ to the Cmd.</li>
+  <li>Make volume mounts conditional: we only want to expose HDFS and SSSD to CMS jobs.</li>
+  <li>Ability to whitelist particular images - evaluated on worker node!</li>
+  <li>Ability to mark jobs in “untrusted images” with the Linux “NO_NEW_PRIVS” flag (prevents setuid).</li>
+</ol>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://research.cs.wisc.edu/htcondor//HTCondorWeek2016/presentations/WedWeitzel_DockerGridJobs.pdf">HTCondor Week 2016 talk</a></li>
+</ul></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/05/notes-for-my-htcondor-week-talk.html">Notes for my HTCondor Week talk</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-18T03:29:02Z" pubdate data-updated="true">May 18<span>th</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>I&rsquo;m delighted to have a chance to present at <a href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2016/">HTCondor Week</a> this year and am looking forward to seeing some old friends and collaborators.  The thesis of my talk is that HTCondor users who aren&rsquo;t already leading data science initiatives are well-equipped to start doing so.  The talk is brief and high-level, so here are a few quick links to learn more if you&rsquo;re interested:</p>
+
+<ul>
+<li>Contemporary data processing frameworks like <a href="https://spark.apache.org">Apache Spark</a> and <a href="https://flink.apache.org">Apache Flink</a> offer superior programmability, flexibility, and performance.  Both projects have really excellent documentation and vibrant user communities.</li>
+<li>I&rsquo;ve written <a href="https://chapeau.freevariable.com/blog/categories/spark/">regularly about Spark in particular</a> but the best place to start here is probably my <a href="https://chapeau.freevariable.com/2014/11/apachecon.html">ApacheCon EU &lsquo;14 talk on Spark performance</a>, which both introduces Spark and shows how to use its fundamental abstractions idiomatically and efficiently.</li>
+</ul>
+
+
+<p>I also gave a quick overview of some of my team&rsquo;s recent data science projects; visit these links to learn more:</p>
+
+<ul>
+<li><a href="https://chapeau.freevariable.com/2015/06/summit-fedmsg.html">Diagnosing open-source community health with Spark</a> by William Benton,</li>
+<li><a href="http://rnowling.github.io/conferences/2016/02/17/spark-summit-east-2016.html">Insights into Customer Behavior from Clickstream Data</a> by RJ Nowling (also <a href="https://youtu.be/hGdqlM3OauQ">see the video</a>),</li>
+<li><a href="https://apachebigdata2016.sched.org/event/6M2M/using-a-relative-index-of-performance-rip-to-determine-optimum-configuration-settings-compared-to-random-forest-assessment-using-spark-diane-feddema-red-hat-inc-canada">Using a Relative Index of Performance (RIP) to Determine Optimum Configuration Settings Compared to Random Forest Assessment Using Spark</a> by Diane Feddema,</li>
+<li><a href="https://apachebigdata2016.sched.org/event/6M0b/random-forest-clustering-with-apache-spark-erik-erlandson-red-hat-inc">Random Forest Clustering with Apache Spark</a> by Erik Erlandson (see also <a href="http://erikerlandson.github.io/blog/2016/05/05/random-forest-clustering-of-machine-package-configurations/">Erik&rsquo;s blog post</a>), and</li>
+<li><a href="https://chapeau.freevariable.com/2014/07/video-of-bike-data-analysis-talk.html">Analyzing endurance-sports activity data with Spark</a> by William Benton.</li>
+</ul>
+
 </div>
   </article>
 
   <article>
     <header>
-      <h1 class="entry-title"><a href="http://research.cs.wisc.edu/htcondor/HTCondorWeek2016/"> Join us at HTCondor Week 2016! ( March 30, 2016 )</a></h1>
+      <h1 class="entry-title"><a href="https://research.cs.wisc.edu/htcondor/HTCondorWeek2016/tuesday.html"> HTCondor Week tutorials free to UW-Madison faculty, staff and students ( May 11, 2016 )</a></h1>
       <p class="meta">
-        <time datetime="2016-03-30T05:00:00Z" pubdate data-updated="true">Mar 30<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+        <time datetime="2016-05-11T05:00:00Z" pubdate data-updated="true">May 11<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
       </p>
     </header>
-    <div class="entry-content">We want to invite you to
+    <div class="entry-content">Just a reminder that the
 
-HTCondor Week 2016, our annual HTCondor user
-conference, in beautiful Madison, Wisconsin, May 17-20, 2016. We will
-again host HTCondor Week at the Wisconsin Institutes for Discovery, a
-state-of-the-art facility for academic and private research specifically
-designed to foster private and public collaboration. It provides HTCondor Week
-attendees with a compelling environment in which to attend tutorials and talks
-from HTCondor developers and users like you. It also provides many comfortable
-spaces for one-on-one or small group collaborations throughout the week.
+Tuesday tutorials at HTCondor Week are free to UW-Madison faculty,
+staff and students.  If you have any interest in using HTCondor and
+Center for High Throughput Computing resources, we'd love to see
+you on Tuesday.
 
-Our current development series, 8.5, is well underway toward our upcoming
-production release. When you attend, you will learn how to take advantage of
-the latest features. You'll also get a peek into our longer term development
-plans--something you can only get at HTCondor Week!
-
-We will have a variety of in-depth tutorials and talks where you can not
-only learn more about HTCondor, but you can also learn how other people are
-using and deploying HTCondor. Best of all, you can establish contacts and
-learn best practices from people in industry, government, and academia who
-are using HTCondor to solve hard problems, many of which may be similar to
-those you are facing.
-
-Speaking of learning from the community, we'd love to have you give
-a talk at HTCondor Week. Talks are 15-20 minutes long and are a great
-way share your ideas and get feedback from the community. If you have a
-compelling use of HTCondor you'd like to share, see our
-
-speaker's page.
-
-You can register, get hotel details, and see the
-agenda overview on the
-HTCondor Week 2016 site.
+However, as everyone knows, there ain't no such thing as a free
+lunch -- people who attend the tutorials without paying are not
+eligible for the lunch (you can still get snacks at the breaks, though).
 </div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/05/silex-0-dot-0-10.html">Silex 0.0.10</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-07T22:05:38Z" pubdate data-updated="true">May 7<span>th</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>My team and I are pleased to announce the <a href="http://silex.freevariable.com//examples/2016/05/07/0010/">latest release</a> of our <a href="http://silex.freevariable.com/">Silex library</a>, featuring cool new functionality from all of the core contributors.  Silex is a library of reusable components for Apache Spark factored out of our data science work in Red Hat&rsquo;s Emerging Technology group.  You can:</p>
+
+<ul>
+<li><a href="http://silex.freevariable.com/coordinates/">Include Silex</a> in your projects,</li>
+<li><a href="https://github.com/willb/silex">fork Silex on GitHub</a>,</li>
+<li><a href="http://silex.freevariable.com/latest/api/">read the API docs</a>, or</li>
+<li><a href="http://silex.freevariable.com">see what&rsquo;s new</a> in the project.</li>
+</ul>
+
+
+<p>Enjoy, and let us know how you&rsquo;re finding it useful!</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/05/virtual-handout-for-my-apache-big-data-talk.html">Log analytics talk at Apache: Big Data</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-07T20:29:09Z" pubdate data-updated="true">May 7<span>th</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><a href="https://chapeau.freevariable.com/2016/05/talks-at-apache-big-data-2016.html">As I mentioned earlier</a>, I&rsquo;ll be talking <a href="https://apachebigdata2016.sched.org/event/6M2v/data-science-for-the-datacenter-analyzing-logs-with-apache-spark-william-benton-red-hat-inc">about feature engineering and outlier detection for infrastructure log data at Apache: Big Data next week</a>.  Consider this post a virtual handout for that talk.  (I&rsquo;ll also be presenting another talk on scalable log data analysis later this summer.  That talk is also inspired by my recent work with logs but will focus on different parts of the problem, so stay tuned if you&rsquo;re interested in the domain!)</p>
+
+<p>Some general links:</p>
+
+<ul>
+<li>You can <a href="https://chapeau.freevariable.com/static/201605/willb-abd-2016.pdf">download a PDF of my slide deck</a>.  I recognize that people often want to download slides, although I&rsquo;d prefer you look at the rest of this post instead since my slides are not intended to stand alone without my presentation.</li>
+<li>Check out <a href="http://silex.freevariable.com">my team&rsquo;s Silex library</a>, which is intended to extend the standard Spark library with high-quality, reusable components for real-world data science.  The most recent release includes <a href="http://silex.freevariable.com/latest/api/#com.redhat.et.silex.som.SOM">the self-organizing map implementation</a> I mentioned in my talk.</li>
+<li>Watch <a href="https://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark.html">this short video presentation</a> showing some of the feature engineering and dimensionality-reduction techniques I discussed in the talk.</li>
+</ul>
+
+
+<p>The following blog posts provide a deeper dive into some of the topics I covered in the talk:</p>
+
+<ul>
+<li>When I started using Spark and ElasticSearch, the upstream documentation was pretty sparse (it was especially confusing because it required some unidiomatic configuration steps).  So I <a href="https://chapeau.freevariable.com/2015/04/elasticsearch-and-spark-1-dot-3.html">wrote up my experiences getting things working</a>.  This is an older post but may still be helpful.</li>
+<li>If you&rsquo;re interested in applying natural-language techniques to log data, you should consider your preprocessing pipeline.  <a href="https://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html">Here are the choices I made</a> when I was evaluating <code>word2vec</code> on log messages.</li>
+<li>Here&rsquo;s a brief (and not-overly technical) <a href="https://chapeau.freevariable.com/2016/05/self-organizing-maps-in-spark.html">overview of self-organizing maps</a>, including static visual explanations and an animated demo.</li>
+</ul>
+
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2016/05/05/random-forest-clustering-of-machine-package-configurations/">Random Forest Clustering of Machine Package Configurations in Apache Spark</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-05T22:05:00Z" pubdate data-updated="true">May 5<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>In this post I am going to describe some results I obtained for <a href="https://en.wikipedia.org/wiki/Cluster_analysis">clustering</a> machines by which <a href="https://en.wikipedia.org/wiki/RPM_Package_Manager">RPM packages</a> that were installed on them.  The clustering technique I used was <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm#unsup">Random Forest Clustering</a>.</p>
+
+<p><a name="data"></a></p>
+
+<h5>The Data</h5>
+
+<p>The data I clustered consisted of 135 machines, each with a list of installed RPM packages.  The number of unique package names among all 135 machines was 4397.  Each machine was assigned a vector of Boolean values: a value of <code>1</code> indicates that the corresponding RPM was installed on that machine.  This means that the clustering data occupied a space of nearly 4400 dimensions.  I discuss the implications of this <a href="#payoff">later in the post</a>, and what it has to do with Random Forest Clustering in particular.</p>
+
+<p>For ease of navigation and digestion, the remainder of this post is organized in sections:</p>
+
+<p><a href="#clustering">Introduction to Random Forest Clustering</a> <br>
+&nbsp; &nbsp; &nbsp; &nbsp;  (<a href="#payoff">The Pay-Off</a>) <br>
+<a href="#code">Package Configuration Clustering Code</a> <br>
+<a href="#results">Clustering Results</a> <br>
+&nbsp; &nbsp; &nbsp; &nbsp;  (<a href="#outliers">Outliers</a>) <br></p>
+
+<p><a name="clustering"></a></p>
+
+<h5>Random Forests and Random Forest Clustering</h5>
+
+<p>Full explainations of <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm">Random Forests</a> and <a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm#unsup">Random Forest Clustering</a> could easily occupy blog posts of their own, but I will attempt to summarize them briefly here.  Random Forest learning models <em>per se</em> are well covered in the machine learning community, and available in most machine learning toolkits.  With that in mind, I will focus on their application to Random Forest Clustering, as it is less commonly used.</p>
+
+<p>A Random Forest is an <a href="https://en.wikipedia.org/wiki/Ensemble_learning">ensemble learning model</a>, consisting of some number of individual <a href="https://en.wikipedia.org/wiki/Decision_tree_learning">decision trees</a>, each trained on a random subset of the training data, and which choose from a random subset of candidate features when learning each internal decision node.</p>
+
+<p>Random Forest Clustering begins by training a Random Forest to distinguish between the data to be clustered, and a corresponding <em>synthetic</em> data set created by sampling from the <a href="https://en.wikipedia.org/wiki/Marginal_distribution">marginal</a> distributions of each <a href="https://en.wikipedia.org/wiki/Feature_vector">feature</a>.  If the data has well defined clusters in the <a href="https://en.wikipedia.org/wiki/Joint_probability_distribution">joint feature space</a> (a common scenario), then the model can identify these clusters as standing out from the more homogeneous distribution of synthetic data.  A simple example of what this looks like in 2 dimensional data is displayed in Figure 1, where the dark red dots are the data to be clustered, and the lighter pink dots represent synthetic data generated from the marginal distributions:</p>
+
+<p><img src="/assets/images/rfc_machines/demo1_both.png" alt="Figure 1" /></p>
+
+<p>Each interior decision node, in each tree of a Random Forest, typically divides the space of feature vectors in half: the half-space &lt;= some threshold, and the half-space > that threshold.  The result is that the model learned for our data can be visualized as rectilinear regions of space.  In this simple example, these regions can be plotted directly over the data, and show that the Random Forest did indeed learn the location of the data clusters against the background of synthetic data:</p>
+
+<p><img src="/assets/images/rfc_machines/demo1_rules.png" alt="Figure 2" /></p>
+
+<p>Once this model has been trained, the actual data to be clustered are evaluated against this model.  Each data element navigates the interior decision nodes and eventually arrives at a leaf-node of each tree in the Random Forest ensemble, as illustrated in the following schematic:</p>
+
+<p><img src="/assets/images/rfc_machines/eval_leafs.png" alt="Figure 3" /></p>
+
+<p>A key insight of Random Forest Clustering is that if two objects (or, their feature vectors) are similar, then they are likely to arrive at the same leaf nodes more often than not.  As the figure above suggests, it means we can cluster objects by their corresponding vectors of leaf nodes, <em>instead</em> of their raw feature vectors.</p>
+
+<p>If we map the points in our toy example to leaf ids in this way, and then cluster the results, we obtain the following two clusters, which correspond well with the structure of the data:</p>
+
+<p><img src="/assets/images/rfc_machines/demo1_clust.png" alt="Figure 4" /></p>
+
+<p>A note on clustering leaf ids.  A leaf id is just that -- an identifier -- and in that respect a vector of leaf ids has no <em>algebra</em>; it is not meaningful to take an average of such identifiers, any more than it would be meaningful to take the average of people's names.  Pragmatically, what this means is that the popular <a href="https://en.wikipedia.org/wiki/K-means_clustering">k-means clustering algorithm</a> <em>cannot</em> be applied to this problem.</p>
+
+<p>These vectors do, however, have <em>distance</em>: for any pair of vectors, add 1 for each corresponding pair of leaf ids that differ.  If two data elements arrived at all the same leafs in the Random Forest model, all their leaf ids are the same, and their distance is zero (with respect to the model, they are the same).  Therefore, we <em>can</em> apply <a href="https://en.wikipedia.org/wiki/K-medoids">k-medoids clustering</a>.</p>
+
+<p><a name="payoff"></a></p>
+
+<h5>The Pay-Off</h5>
+
+<p>What does this somewhat indirect method of clustering buy us?  Why <em>not</em> just cluster objects by their raw feature vectors?</p>
+
+<p>The problem is that in many real-world cases (unlike in our toy example above), feature vectors computed for objects have <em>many dimensions</em> -- hundreds, thousands, perhaps millions -- instead of the two dimensions in this example.  Computing distances on such objects, necessary for clustering, is often expensive, and worse yet the quality of these distances is frequently poor due to the fact that most features in large spaces will be poorly correlated with <em>any</em> structure in the data.  This problem is so common, and so important, it has a name: the <a href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">Curse of Dimensionality</a>.</p>
+
+<p>Random Forest Clustering, which clusters on vectors of leaf-node ids from the trees in the model, side-steps the curse of dimensionality because the Random Forest training process, by learning where the data is against the background of the synthetic data, has already identified the features that are useful for identifying the structure of the data!   If any particular feature was poorly correlated with that struture, it has already been ignored by the model.  In other words, a Random Forest Clustering model is implicitly examining <strong> <em>exactly those features that are most useful for clustering</em> </strong>, thus providing a cure for the Curse of Dimensionality.</p>
+
+<p>The <a href="#data">machine package configurations</a> whose clustering I describe for this post are a good example of high dimensional data that is vulnerable to the Curse of Dimensionality.  The dimensionality of the feature space is nearly 4400, making distances between vectors potentially expensive to evaluate.  Any individual feature contributes little to the distance, having to contend with over 4000 other features.  Installed packages are also noisy.  Many packages, such as kernels, are installed everywhere.  Others may be installed but not used, making them potentially irrelevant to grouping machines.  Furthermore, there are only 135 machines, and so there are far more features than data examples, making this an underdetermined data set.</p>
+
+<p>All of these factors make the machine package configuration data a good test of the strenghts of Random Forest Clustering.</p>
+
+<p><a name="code"></a></p>
+
+<h5>Package Configuration Clustering Code</h5>
+
+<p>The implementation of Random Forest Clustering I used for the results in this post is a library available from the <a href="http://silex.freevariable.com/">silex project</a>, a package of analytics libraries and utilities for <a href="http://spark.apache.org/">Apache Spark</a>.</p>
+
+<p>In this section I will describe three code fragments that load the machine configuration data, perform a Random Forest clustering, and format some of the output.  This is the code I ran to obtain the <a href="#results">results</a> described in the final section of this post.</p>
+
+<p>The first fragment of code illustrates the logistics of loading the feature vectors from file <code>train.txt</code> that represent the installed-package configurations for each machine. A corresponding "parallel" file <code>nodesclean.txt</code> contains corresponding machine names for each vector.  A third companion file <code>rpms.txt</code> contains names of each installed package.  These are used to instantiate a specialized Scala function (<code>InvertibleIndexFunction</code>) between feature indexes and human-readable feature names (in this case, names of RPM packages).  Finally, another specialized function (<code>Extractor</code>) for instantiating Spark feature vectors is created.</p>
+
+<p>Note: <code>Extractor</code> and <code>InvertibleIndexFunction</code> are also component libraries of <a href="http://silex.freevariable.com/">silex</a></p>
+
+<p>```scala
+// Load installed-package feature vectors
+val fields = spark.textFile(s"$dataDir/train.txt").map(_.split(" ").toVector)</p>
+
+<p>// Pair feature vectors with machine names
+val nodes = spark.textFile(s"$dataDir/nodesclean.txt").map { _.split(" ")(1) }
+val ids = fields.paste(nodes)</p>
+
+<p>// Load map from feature indexes to package names
+val inp = spark.textFile(s"$dataDir/rpms.txt").map(<em>.split(" "))
+  .map(r => (r(0).toInt, r(1)))
+  .collect.toVector.sorted
+val nf = InvertibleIndexFunction(inp.map(</em>._2))</p>
+
+<p>// A feature extractor maps features into sequence of doubles
+val m = fields.first.length - 1
+val ext = Extractor(m, (v: Vector[String]) => v.map(_.toDouble).tail :FeatureSeq)
+  .withNames(nf)
+  .withCategoryInfo(IndexFunction.constant(2, m))
+```</p>
+
+<p>The next section of code is where the work of Random Forest Clustering happens.  A <code>RandomForestCluster</code> object is instantiated, and configured.  Here, the configuration is for 7 clusters, 250 synthetic points (about twice as many synthetic points as true data), and a Random Forest of 20 trees.  Training against the input data is a simple call to the <code>run</code> method.</p>
+
+<p>The <code>predictWithDistanceBy</code> method is then applied to the data paired with machine names, to yield tuples of cluster-id, distance to cluster center, and the associated machine name.  These tuples are split by distance into data with a cluster, and data considered to be "outliers" (i.e. elements far from any cluster center).  Lastly, the <code>histFeatures</code> method is applied, to examine the Random Forest Model and identify any commonly-used features.</p>
+
+<p>```scala
+// Train a Random Forest Clustering Model
+val rfcModel = RandomForestCluster(ext)
+  .setClusterK(7)
+  .setSyntheticSS(250)
+  .setRfNumTrees(20)
+  .setSeed(37)
+  .run(fields)</p>
+
+<p>// Evaluate to get tuples: (cluster, distance, machine-name)
+val cid = ids.map(rfcModel.predictWithDistanceBy(_)(x => x))</p>
+
+<p>// Split by closest distances into clusters and outliers<br/>
+val (clusters, outliers) = cid.splitFilter { case (<em>, dist, </em>) => dist &lt;= 5 }</p>
+
+<p>// Generate a histogram of features used in the RF model
+val featureHist = rfcModel.randomForestModel.histFeatures(ext.names)
+```</p>
+
+<p>The final code fragment simply formats clusters and outliers into a tabular form, as displayed in the <a href="#results">next section</a> of this post.  Note that there is neither Spark nor silex code here; standard Scala methods are sufficient to post-process the clustering data:</p>
+
+<p>```scala
+// Format clusters for display
+val clusterStr = clusters.map { case (j, d, n) => (j, (d, n)) }
+  .groupByKey
+  .collect
+  .map { case (j, nodes) =></p>
+
+<pre><code>nodes.toSeq.sorted.map { case (d, n) =&gt; s"$d  $n" }.mkString("\n")
+</code></pre>
+
+<p>  }
+  .mkString("\n\n")</p>
+
+<p>// Format outliers for display
+val outlierStr = outliers.collect
+  .map { case (_, d,n) => (d, n) }
+  .toVector.sorted
+  .map { case (d, n) => s"$d  $n" }
+  .mkString("\n")
+```</p>
+
+<p><a name="results"></a></p>
+
+<h5>Package Configuration Clustering Results</h5>
+
+<p>The result of running the code in the <a href="#code">previous section</a> is seven clusters of machines.  In the following files, the first column represents distance from the cluster center, and the second is the actual machine's node name.  A cluster distance of 0.0 indicates that the machine was indistinguishable from cluster center, as far as the Random Forest model was concerned.   The larger the distance, the more different from the cluster's center a machine was, in terms of its installed RPM packages.</p>
+
+<p>Was the clustering meaningful?  Examining the first two clusters below is promising; the machine names in these clusters are clearly similar, likely configured for some common task by the IT department.  The first cluster of machines appears to be web servers and corresponding backend services.  It would be unsurprising to find their RPM configurations were similar.</p>
+
+<p>The second cluster is a series of executor machines of varying sizes, but presumably these would be configured similarly to one another.</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_1"></script>
+
+
+
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_2"></script>
+
+
+<p>The second pair of clusters (3 &amp; 4) are small.  All of their names are similar (and furthermore, similar to some machines in other clusters), and so an IT administrator might wonder why they ended up in oddball small clusters.  Perhaps they have some spurious, non-standard packages installed that ought to be cleaned up.  Identifying these kinds of structure in a clustering is one common clustering application.</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_3"></script>
+
+
+
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_4"></script>
+
+
+<p>Cluster 5 is a series of bugzilla web servers and corresponding back-end bugzilla data base services.  Although they were clustered together, we see that the web servers have a larger distance from the center, indicating a somewhat different configuration.</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_5"></script>
+
+
+<p>Cluster 6 represents a group of performance-related machines.  Not all of these machines occupy the same distance, even though most of their names are similar.  These are also the same series of machines as in clusters 3 &amp; 4.  Does this indicate spurious package installations, or some other legitimate configuration difference?  A question for the IT department...</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_6"></script>
+
+
+<p>Cluster 7 is by far the largest.  It is primarily a combination of OpenStack machines and yet more perf machines.   This clustering was relatively stable -- it appeared across multiple independent clustering runs.  Because of its stability I would suggest to an IT administrator that the performance and OpenStack machines are sharing some configuration similarities, and the performance machines in other clusters suggest that there might be yet more configuration anomalies.  Perhaps these were OpenStack nodes that were re-purposed as performance machines?  Yet another question for IT...</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=cluster_7"></script>
+
+
+<p><a name="outliers"></a></p>
+
+<h5>Outliers</h5>
+
+<p>This last grouping represents machines which were "far" from any of the previous cluster centers.  They may be interpreted as "outliers" - machines that don't fit any model category.  Of these the node <code>frodo</code> is clearly somebody's personal machine, likely with a customized or idiosyncratic package configuration.  Unsurprising that it is farthest of all machines from any cluster, with distance 9.0.   The <code>jenkins</code> machine is also somewhat unique among the nodes, and so perhaps not surprising that its registers as anomalous.  The remaining machines match node series from other clusters.   Their large distance is another indication of spurious configurations for IT to examine.</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=outliers"></script>
+
+
+<p>I will conclude with another useful feature of Random Forest Models, which is that you can interrogate them for information such as which features were used most frequently.  Here is a histogram of model features (in this case, installed packages) that were used most frequently in the clustering model.  This particular histogram i sinteresting, as no feature was used more than twice.  The remaining features were all used exactly once.  This is a bit unusual for a Random Forest model.  Frequently some features are used commonly, with a longer tail.  This histogram is rather "flat," which may be a consequence of there being many more features (over 4000 installed packages) than there are data elements (135 machines).  This makes the problem somewhat under-determined.  To its credit, the model still achieves a meaningful clustering.</p>
+
+<p>Lastly I'll note that full histogram length was 186; in other words, of the nearly 4400 installed packages, the Random Forest model used only 186 of them -- a tiny fraction!  A nice illustration of Random Forest Clustering performing in the face of <a href="#payoff">high dimensionality</a>!</p>
+
+<script src="https://gist.github.com/erikerlandson/184d202560c628c0383c5050d9f4be24.js?file=histogram"></script>
+
+
+<p><head><style type="text/css">
+.gist {max-height:500px; overflow:auto}
+</style></head></p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/05/talks-at-apache-big-data-2016.html">Red Hat Data Science talks at Apache: Big Data 2016</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-05T20:51:11Z" pubdate data-updated="true">May 5<span>th</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p>If you&rsquo;ll be at <a href="https://apachebigdata2016.sched.org/">Apache: Big Data</a> next week, you should definitely check out some talks from my teammates in Red Hat&rsquo;s Emerging Technology group and our colleague Suneel Marthi from the CTO office:</p>
+
+<ul>
+<li><a href="https://apachebigdata2016.sched.org/event/6M0b/random-forest-clustering-with-apache-spark-erik-erlandson-red-hat-inc">Random Forest Clustering with Apache Spark</a> by Erik Erlandson,</li>
+<li><a href="https://apachebigdata2016.sched.org/event/6M2M/using-a-relative-index-of-performance-rip-to-determine-optimum-configuration-settings-compared-to-random-forest-assessment-using-spark-diane-feddema-red-hat-inc-canada">Using a Relative Index of Performance (RIP) to Determine Optimum Configuration Settings Compared to Random Forest Assessment Using Spark</a> by Diane Feddema,</li>
+<li><a href="https://apachebigdata2016.sched.org/event/6M2w/distributed-machine-learning-with-apache-mahout-suneel-marthi-red-hat">Distributed Machine Learning with Apache Mahout</a> by Suneel Marthi, and</li>
+<li><a href="https://apachebigdata2016.sched.org/event/6M2v/data-science-for-the-datacenter-analyzing-logs-with-apache-spark-william-benton-red-hat-inc">Data Science for the Datacenter: Analyzing Logs with Apache Spark</a> by William Benton.</li>
+</ul>
+
+
+<p>Unfortunately, my talk is at the same time as Suneel&rsquo;s, so I won&rsquo;t be able to attend his, but these are all great talks and you should be sure to put as many as possible on your schedule if you&rsquo;ll be in Vancouver!</p>
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://djw8605.github.io/2016/05/03/building-centos-packages-on-travisci/">Building CentOS packages on Travis-CI</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-03T19:14:15Z" pubdate data-updated="true">May 3<span>rd</span>, 2016  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><a href="https://travis-ci.org/opensciencegrid/htcondor-ce"><img src="https://travis-ci.org/opensciencegrid/htcondor-ce.svg?branch=master" alt="Build Status" /></a></p>
+
+<p>The <a href="https://travis-ci.org/">Travis-CI</a> Continuous Integration service is great for building and testing software for each commit.  But, it is limited to only supporting builds and tests on the Ubuntu OS.  The <a href="https://www.opensciencegrid.org/">OSG</a>, on the other hand, only supports the EL6 and EL7 family of OS’s (such as CentOS, Scientific Linux, and RHEL).  With the recent move of all OSG internal software projects to <a href="https://github.com/opensciencegrid">Github</a>, we have the opportunity to utilize Travis-CI infrastructure to build and test each change to our software.
+<!--more--></p>
+
+<p>In this post, I hope to describe how we used Docker on Travis-CI to create a CentOS 6 and 7 environment to build and test OSG software.</p>
+
+<h2 id="creating-the-travisyml">Creating the <code class="highlighter-rouge">.travis.yml</code></h2>
+
+<p>Any Travis-CI build requires a <code class="highlighter-rouge">.travis.yml</code> file in the top level directory of your Github repoistory.  It is used to describe how to build and test your software.  We adapted a <code class="highlighter-rouge">.travis.yml</code> from Ansible testing.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo: required
+env:
+  matrix:
+  - OS_TYPE=centos OS_VERSION=6
+  - OS_TYPE=centos OS_VERSION=7
+  
+services:
+  - docker
+  
+before_install:
+  - sudo apt-get update
+  - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker &gt; /dev/null
+  - sudo service docker restart
+  - sleep 5
+  - sudo docker pull centos:centos${OS_VERSION}
+
+  
+script:
+ # Run tests in Container
+- tests/setup_tests.sh ${OS_VERSION}
+</code></pre>
+</div>
+
+<p>In the <code class="highlighter-rouge">.travis.yml</code> file above, first we require sudo access so that we can start a Docker image.  We want to build and test the packages on both CentOS 6 and 7, so we create a matrix so that Travis-CI will create 2 builds for each change in the repo, one for CentOS 6, and the other CentOS 7.  Next, we require the docker service to be available so that we can start our image.</p>
+
+<p>In the <code class="highlighter-rouge">before_install</code>, we set some docker options (which may not be necessary) and download the CentOS docker image from <a href="https://hub.docker.com/">Docker Hub</a>.  Finally, in the <code class="highlighter-rouge">script</code> section, we run another script that will start the docker images.</p>
+
+<h2 id="setting-up-the-tests">Setting up the Tests</h2>
+
+<p>CentOS 6 and 7 are significantly different and require different docker startup procedures to get a usable system for testing OSG software.  This includes starting <code class="highlighter-rouge">systemd</code> in CentOS 7, which is necessary to test services.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/sh -xe</span>
+
+<span class="c"># This script starts docker and systemd (if el7)</span>
+
+<span class="c"># Version of CentOS/RHEL</span>
+<span class="nv">el_version</span><span class="o">=</span><span class="nv">$1</span>
+
+ <span class="c"># Run tests in Container</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$el_version</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"6"</span> <span class="o">]</span>; <span class="k">then
+
+</span>sudo docker run --rm<span class="o">=</span><span class="nb">true</span> -v <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>:/htcondor-ce:rw centos:centos<span class="k">${</span><span class="nv">OS_VERSION</span><span class="k">}</span> /bin/bash -c <span class="s2">"bash -xe /htcondor-ce/tests/test_inside_docker.sh </span><span class="k">${</span><span class="nv">OS_VERSION</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="k">elif</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$el_version</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"7"</span> <span class="o">]</span>; <span class="k">then
+
+</span>docker run --privileged -d -ti -e <span class="s2">"container=docker"</span>  -v /sys/fs/cgroup:/sys/fs/cgroup -v <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>:/htcondor-ce:rw  centos:centos<span class="k">${</span><span class="nv">OS_VERSION</span><span class="k">}</span>   /usr/sbin/init
+<span class="nv">DOCKER_CONTAINER_ID</span><span class="o">=</span><span class="k">$(</span>docker ps | grep centos | awk <span class="s1">'{print $1}'</span><span class="k">)</span>
+docker logs <span class="nv">$DOCKER_CONTAINER_ID</span>
+docker <span class="nb">exec</span> -ti <span class="nv">$DOCKER_CONTAINER_ID</span> /bin/bash -xec <span class="s2">"bash -xe /htcondor-ce/tests/test_inside_docker.sh </span><span class="k">${</span><span class="nv">OS_VERSION</span><span class="k">}</span><span class="s2">;
+  echo -ne </span><span class="se">\"</span><span class="s2">------</span><span class="se">\n</span><span class="s2">END HTCONDOR-CE TESTS</span><span class="se">\n\"</span><span class="s2">;"</span>
+docker ps -a
+docker stop <span class="nv">$DOCKER_CONTAINER_ID</span>
+docker rm -v <span class="nv">$DOCKER_CONTAINER_ID</span>
+
+<span class="k">fi</span>
+</code></pre>
+</div>
+
+<p>In the <code class="highlighter-rouge">setup_tests.sh</code> file above, we have two different startups for CentOS 6 and 7.  For both startups we mount the repo, in this case the <a href="https://github.com/opensciencegrid/htcondor-ce">HTCondor-CE</a>, so that the docker image has access to the repo files when it builds and tests the software.</p>
+
+<p>For CentOS 6, the startup is simple.  The docker image is run, and the only command is to run the <code class="highlighter-rouge">test_inside_docker.sh</code> script, which we will describe in the next section.</p>
+
+<p>For CentOS 7, we must first start docker in privileged mode so that <code class="highlighter-rouge">systemd</code> may see and use the cgroup device.  Our initial <code class="highlighter-rouge">docker run</code> command only starts <code class="highlighter-rouge">/usr/sbin/init</code>, which is <code class="highlighter-rouge">systemd</code>.  Next, it starts our <code class="highlighter-rouge">test_inside_docker.sh</code> script, which will start <code class="highlighter-rouge">systemd</code> services.  When the tests have completed, it will stop and remove the docker image.</p>
+
+<h2 id="running-the-tests">Running the Tests</h2>
+
+<p>Finally, running tests on the software repository is completely dependent on the software being tested.</p>
+
+<p>A full test file can be found in the <a href="https://github.com/opensciencegrid/htcondor-ce/blob/48d01a0a3225f3b6d4c202743a5e48257ffb9103/tests/test_inside_docker.sh">HTCondor-CE Repo</a>.</p>
+
+<ol>
+  <li>Clean the yum cache.</li>
+  <li>Install the EPEL and OSG repositories</li>
+  <li>Install RPMs required for building the software.</li>
+  <li>Build and package the software in RPMs</li>
+  <li>Install the newly package RPMs</li>
+  <li>Run the <code class="highlighter-rouge">osg-test</code> integration tests against the new packages.</li>
+</ol>
+
+<p>It should be noted that all of the above scripts run bash with the arguments <code class="highlighter-rouge">-xe</code>.  The <code class="highlighter-rouge">x</code> means to print each line before executing it, useful for debugging.  The <code class="highlighter-rouge">e</code> means to exit the bash script immediately if any command returns a non-zero exit status.  Since these scripts are designed to test software, we want to capture any faults in the tests or testing infrastructure.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>By moving to Github for OSG’s software repositories, we have made it easy to build and test each change to repos.  Additionally, we can fun full integration tests on each package for each change.  This has the potential to catch many errors.</p>
+
+<p>Here is a list of OSG builds using the above configuration:</p>
+
+<ul>
+  <li><a href="https://travis-ci.org/opensciencegrid/htcondor-ce">HTCondor-CE</a> <a href="https://travis-ci.org/opensciencegrid/htcondor-ce"><img src="https://travis-ci.org/opensciencegrid/htcondor-ce.svg?branch=master" alt="Build Status" /></a></li>
+  <li><a href="https://travis-ci.org/opensciencegrid/tarball-client">OSG Tarball Client</a> <a href="https://travis-ci.org/opensciencegrid/tarball-client"><img src="https://travis-ci.org/opensciencegrid/tarball-client.svg?branch=master" alt="Build Status" /></a></li>
+  <li><a href="https://travis-ci.org/opensciencegrid/osg-configure">OSG Configure</a> <a href="https://travis-ci.org/opensciencegrid/osg-configure"><img src="https://travis-ci.org/opensciencegrid/osg-configure.svg?branch=master" alt="Build Status" /></a></li>
+</ul></div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.5.4/10_2Development_Release.html"> HTCondor 8.5.4 released! ( May 2, 2016 )</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-02T05:00:00Z" pubdate data-updated="true">May 2<span>nd</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.5.4.
+This development series release contains new features that are under
+development. This release contains all of the bug fixes from the 8.4.6
+stable release. For sites using partitionable slots, one of the fixes
+from the 8.4.6 release corrects a serious regression in version 8.5.3.
+
+Highlights of the release are:
+Fixed a bug that delays schedd response when significant attributes change;
+Fixed a bug where the group ID was not set in Docker universe jobs;
+Limit update rate of various attributes to not overload the collector;
+To make job router configuration easier, added implicit "target" scoping;
+To make BOSCO work, the blahp does not generate limited proxies by default;
+condor_status can now display utilization per machine rather than per slot;
+Improve performance of condor_history and other tools.
+
+Further details can be found in the
+Version History.
+HTCondor 8.5.4 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/05/self-organizing-maps-in-spark.html">Self-organizing maps in Spark</a></h1>
+      <p class="meta">
+        <time datetime="2016-05-01T18:23:57Z" pubdate data-updated="true">May 1<span>st</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
+      </p>
+    </header>
+    <div class="entry-content"><p><a href="https://en.wikipedia.org/wiki/Self-organizing_map">Self-organizing maps</a> are a useful technique for identifying structure in high-dimensional data sets.  The map itself is a low-dimensional arrangement of cells, where each cell is an object comparable to the objects in the training set. The goal of self-organizing map training is to arrange a grid of cells so that nearby cells will be the best matches for similar objects.  Once we&rsquo;ve built up the map, we can identify clusters of similar objects (based on the cells that they map to) and even detect outliers (based on the distributions of map quality).</p>
+
+<p>Here are a few snapshots of the training process on color data, which I developed as a test for a parallel implementation of self-organizing maps in Apache Spark.  For this demo, I used angular similarity in the RGB color space (not Euclidean distance) as a measure of color similarity.  This means that, for example, a darker color would be considered similar to a lighter color with a similar hue.</p>
+
+<p>We start with a random map:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0000.png"/></div>
+
+
+<p>Matches made in the first training iteration essentially affect the whole map, producing a blurred, unsaturated, undifferentiated map:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0001.png"/></div>
+
+
+<p>Some structure begins to emerge pretty rapidly, though; after one quarter of our training iterations, we can already see clear clusters of colors:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0100.png"/></div>
+
+
+<p>The map begins to get more and more saturated as similar colors are grouped together.  Here&rsquo;s what it looks like after half of the training iterations:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0200.png"/></div>
+
+
+<p>&hellip;and three-quarters of the training iterations:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0300.png"/></div>
+
+
+<p>As training proceeds, it gradually affects smaller and smaller neighborhoods of the map until the very end, when each training match only affects a single cell (and thus the impact of darker colors becomes apparent, since they can cluster together in single cells that are not the best matching unit for any brighter colors):</p>
+
+<div class="embed-responsive embed-responsive-16by9"><img src="https://chapeau.freevariable.com/static/201605/large-som-step-0400.png"/></div>
+
+
+<p>In a future post, I&rsquo;ll cover the training algorithm, introduce the code, and provide some tips for implementing similar techniques in Spark.  For now, though, here is a demo video that shows an animation of the whole map training process:</p>
+
+<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src='https://player.vimeo.com/video/161080064' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
+
+
+
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://djw8605.github.io/2016/04/26/2016-04-25-htcondor-ce-bosco-release/">HTCondor-CE-Bosco Upcoming Release</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-26T21:54:18Z" pubdate data-updated="true">Apr 26<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor-CE-Bosco (CE-Bosco) is one of the largest changes for the upcoming OSG 3.3.12 release, to be released on 2016/05/10.  The HTCondor-CE-Bosco is a special configuration of the HTCondor-CE.  The HTCondor-CE-Bosco does not submit directly to a local scheduler such as Slurm or PBS, instead, it will submit jobs to a remote cluster over SSH.</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://morgridge.org/question/why-do-supercomputers-have-to-be-so-big/"> Why do supercomputers have to be so big? ( April 26, 2016 )</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-26T05:00:00Z" pubdate data-updated="true">Apr 26<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">In this Blue Sky Science article
+Lauren Michael of the Center for High Throughput Computing answers a
+question from an eight-year-old:  Why do supercomputers have to be so big?
+The article can also be viewed at the
+Wisconsin State Journal
+and the 
+Baraboo News Republic.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://research.cs.wisc.edu/htcondor/HTCondorWeek2016/"> HTCondor Week registration deadline is May 9 ( April 26, 2016 )</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-26T05:00:00Z" pubdate data-updated="true">Apr 26<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The registration deadline for
+
+HTCondor Week 2016 has been extended to Monday, May 9.  This will be
+the final extension -- we need to finalize attendance numbers for
+the caterers.
+
+Also note that Wednesday, April 27, is the last day to be guaranteed
+to get the conference rate at the
+DoubleTree Hotel.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="manual/v8.4.6/10_3Stable_Release.html"> HTCondor 8.4.6 released! ( April 21, 2016 )</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-21T05:00:00Z" pubdate data-updated="true">Apr 21<span>st</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
+      </p>
+    </header>
+    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.6.
+A stable series release contains significant bug fixes.
+
+Highlights of this release are:
+fixed a bug that could cause a job to fail to start in a dynamic slot;
+fixed a negotiator memory leak when using partitionable slot preemption;
+fixed a bug that caused supplemental groups to be wrong during file transfer;
+properly identify the Windows 10 platform;
+fixed a typographic error in the LIMIT_JOB_RUNTIMES policy;
+fixed a bug where maximum length IPv6 addresses were not parsed;
+a few other bug fixes, consult the version history.
+
+Further details can be found in the
+Version History.
+HTCondor 8.4.6 binaries and source code are available from our
+Downloads page.
+</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://djw8605.github.io/2016/04/21/a-new-blogging-platform/">A New Blogging Platform</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-21T00:00:00Z" pubdate data-updated="true">Apr 21<span>st</span>, 2016  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">I have decided to move my Blog from Blogspot to Github Pages, and Jekyll publisher.  I made this move for many reasons, but my latest blog post showed how difficult it can be to create technical posts in Blogger.  For example, syntax highlighting is very difficult.  Something as easy as below was nearly impossible to look right.  And I resorted to using gists.</div>
+  </article>
+
+  <article>
+    <header>
+      <h1 class="entry-title"><a href="https://djw8605.github.io/2016/04/20/querying-elasticsearch-cluster-for/">Querying an Elasticsearch Cluster for Gratia Records</a></h1>
+      <p class="meta">
+        <time datetime="2016-04-20T19:19:00Z" pubdate data-updated="true">Apr 20<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
+      </p>
+    </header>
+    <div class="entry-content">For the last few days I have been working on email reports for GRACC, OSG's new prototype accounting system. &nbsp;The source of the email reports are located on Github.I have learned a significant amount about queries and aggregations for ElasticSearch. &nbsp;For example, below is the query that counts the number of records for a date range. The above query searches for queries in the date range specific, and counts the number of records. &nbsp;It uses the Elasticsearch-dsl python library. &nbsp;It does not return the actual records, just a number. &nbsp;This is useful for generating raw counts and a delta for records processed over the last few days.The other query I designed is to aggregate the number of records per probe. &nbsp;This query is designed to help us understand differences in specific probe's reporting behavior.This query is much more complicated than the simple count query above. &nbsp;First, it creates a search selecting the "gracc-osg-*" indexes. &nbsp;It also creates an aggregation "A" which will be used later to aggregate by the ProbeName field. Next, we create a bucket called day_range which is of type range. &nbsp;It aggregates in two ranges, the last 24 hours and the 24 hours previous to that. &nbsp;Next, we attach our ProbeName aggregation "A" defined above. &nbsp;In return we get an aggregation for each of the ranges, for each of the probes, how many records exist for that probe. This nested aggregation is a powerful feature that will be used in the summarization of the records.</div>
   </article>
 
   <article>
@@ -140,119 +869,7 @@ HTCondor Week 2016 site.
         <time datetime="2016-03-26T23:22:00Z" pubdate data-updated="true">Mar 26<span>th</span>, 2016  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
       </p>
     </header>
-    <div class="entry-content"><p>Suppose I have a collection of (N) objects, and distances d(j,k) between each pair of objects (j) and (k); that is, my objects are members of a <a href="https://en.wikipedia.org/wiki/Metric_space">metric space</a>.  I have no knowledge about my objects, beyond these pair-wise distances.  These objects could be construed as vertices in an (N-1) dimensional <a href="https://en.wikipedia.org/wiki/Simplex">simplex</a>.  However, since I have no spatial information about my objects, I first need a way to assign spatial locations to each object, in vector space R<sup>(N-1),</sup> with only my object distances to work with.</p>
-
-<p>In this post I will derive an algorithm for assigning vertex locations in R<sup>(N-1)</sup> for each of N objects, using only pairwise object distances.</p>
-
-<p>I will assume that N >= 2, since at least two object are required to define a pairwise distance.  The case N=2 is easy, as I can assign vertex 1 to the origin, and vertex 2 to the point d(1,2), to form a 1-simplex (i.e. a line segment) whose single edge is just the distance between the two objects.  I will also assume that my N objects are distinct; that is, each pair has a non-zero distance.</p>
-
-<p>Next consider an arbitrary N, and suppose I have already added vertices 1 through k.  The next vertex (k+1) must obey the pairwise distance relations, as follows:</p>
-
-<p><img src="http://mathurl.com/jm56vxq.png" alt="figure 1" /></p>
-
-<p>Adding the new vertex (k+1) involves adding another dimension (k) to the simplex.  I define this new kth coordinate x(k) to be zero for the existing k vertices, as annotated above; only the new vertex (k+1) will have a non-zero kth coordinate.  Expanding the quadratic terms on the left yields the following form:</p>
-
-<p><img src="http://mathurl.com/jtm7dpq.png" alt="figure 2" /></p>
-
-<p>The squared terms for the coordinates of the new vertex (k+1) are inconvenient, however I can get rid of them by subtracting pairs of equations above.  For example, if I subtract equation 1 from the remaining k-1 equations (2 through k), these squared terms disappear, leaving me with the following system of k-1 equations, which we can see is linear in the 1st k-1 coordinates of the new vertex.  Therefore, I know I'll be able to solve for those coordinates.  I can solve for the remaining kth coordinate by plugging it into the first distance equation:</p>
-
-<p><img src="http://mathurl.com/haovm32.png" alt="figure 3" /></p>
-
-<p>To clarify matters, the equations above can be re-written as the following matrix equation, solveable by any linear systems library:</p>
-
-<p><img src="http://mathurl.com/h6qdtms.png" alt="figure 4" /></p>
-
-<p>This gives me a recusion relation for adding a new vertex (k+1), given that I have already added the first k vertices.  The basis case of adding the first two vertices was already described above.  And so I can iteratively add all my vertices one at a time by applying the recursion relation.</p>
-
-<p>As a corollary, assume that I have constructed a simplex having k vertices, as shown above, and I would like to assign a spatial location to a new object, (y), given its k distances to each vertex.  The corresponding distance relations are given by:</p>
-
-<p><img src="http://mathurl.com/zdw9uv8.png" alt="figure 5" /></p>
-
-<p>I can apply a derivation very similar to the one above, to obtain the following linear equation for the (k-1) coordinates of (y):</p>
-
-<p><img src="http://mathurl.com/zvr5jre.png" alt="figure 6" /></p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://newuniversedaily.com/2016/03/08/the-cyber-brain-behind-ligos-gravitational-waves-discovery/"> HTCondor was critical to the discovery of Einsteins's gravitational waves at LIGO ( March 24, 2016 )</a></h1>
-      <p class="meta">
-        <time datetime="2016-03-24T05:00:00Z" pubdate data-updated="true">Mar 24<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">This  New Universe Daily news article
-discusses the collaboration between the HTCondor team at UW-Madison
-and the LIGO team at UW-Milwaukee, and how the HTCondor software was
-critical to the discovery of gravitational waves and will continue
-to be vital as LIGO moves forward.  "For 20 years, LIGO
-was trying to find a needle in a haystack. Now weâre going to build a
-needle detection factory,â said Peter Couvares, a Senior Scientist
-with the LIGO project.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.5.3/10_2Development_Release.html"> HTCondor 8.5.3 released! ( March 24, 2016 )</a></h1>
-      <p class="meta">
-        <time datetime="2016-03-24T05:00:00Z" pubdate data-updated="true">Mar 24<span>th</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.5.3.
-This development series release contains new features that are under
-development. This release contains all of the bug fixes from the 8.4.5
-stable release.
-
-Enhancements in the release include:
-Use IPv6 (and IPv4) interfaces if they are detected;
-Prefer IPv4 addresses when both are available;
-Count Idle and Running jobs in Submitter Ads for Local and Scheduler universes;
-Can submit jobs to SLURM with the new "slurm" type in the Grid universe;
-HTCondor is built and linked with Globus 6.0.
-
-Further details can be found in the
-Version History.
-HTCondor 8.5.3 binaries and source code are available from our
-Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="manual/v8.4.5/10_3Stable_Release.html"> HTCondor 8.4.5 released! ( March 22, 2016 )</a></h1>
-      <p class="meta">
-        <time datetime="2016-03-22T05:00:00Z" pubdate data-updated="true">Mar 22<span>nd</span>, 2016  &nbsp; &mdash; &nbsp; HTCondor Team</time>
-      </p>
-    </header>
-    <div class="entry-content">The HTCondor team is pleased to announce the release of HTCondor 8.4.5.
-A stable series release contains significant bug fixes.
-
-Highlights of this release are:
-fixed a bug that would cause the condor_schedd to send no flocked jobs;
-fixed a bug that caused a 60 second delay using tools when DNS lookup failed;
-prevent using accounting groups with embedded spaces that crash the negotiator;
-fixed a bug that could cause use of ports outside the port range on Windows;
-fixed a bug that could prevent dynamic slot reuse when using many slots;
-fixed a bug that prevented correct utilization reports from the job router;
-tune kernel when using cgroups to avoid OOM killing of jobs doing heavy I/O;
-a few other bug fixes, consult the version history.
-
-Further details can be found in the
-Version History.
-HTCondor 8.4.5 binaries and source code are available from our
-Downloads page.
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2016/02/dimensionality-reduction-in-spark.html">Dimensionality reduction in Spark</a></h1>
-      <p class="meta">
-        <time datetime="2016-02-17T01:23:17Z" pubdate data-updated="true">Feb 17<span>th</span>, 2016  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Here&rsquo;s a quick video I put together introducing infrastructure log processing in Spark.  At the end, there are a couple of nice graphs contrasting PCA and t-SNE for embedding high-dimensional log metadata into two dimensions. [...]</p>
+    <div class="entry-content"><p>Suppose I have a collection of (N) objects, and distances d(j,k) between each pair of objects (j) and (k); that is, my objects are members of a <a href="https://en.wikipedia.org/wiki/Metric_space">metric space</a>.  I have no knowledge about my objects, beyond these pair-wise distances.  These objects could be construed as vertices in an (N-1) dimensional <a href="https://en.wikipedia.org/wiki/Simplex">simplex</a>.  However, since I have no spatial information about my objects, I first need a way to assign spatial locations to each object, in vector space R<sup>(N-1),</sup> with only my object distances to work with. [...]</p>
 </div>
   </article>
 
@@ -264,17 +881,6 @@ Downloads page.
       </p>
     </header>
     <div class="entry-content"><p>In this post I'm going to propose a new abstract operation on <a href="http://spark.apache.org/docs/latest/programming-guide.html#resilient-distributed-datasets-rdds">Spark RDDs</a> -- <strong>multiplexing</strong> -- that makes some categories of operations on RDDs both easier to program and in many cases much faster. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2015/12/using-word2vec-on-log-messages.html">Using word2vec on logs</a></h1>
-      <p class="meta">
-        <time datetime="2015-12-11T17:51:36Z" pubdate data-updated="true">Dec 11<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Lately, I&rsquo;ve been experimenting with <a href="http://spark.apache.org/docs/latest/mllib-feature-extraction.html#word2vec">Spark&rsquo;s implementation</a> of word2vec.  Since most of the natural-language data I have sitting around these days are service and system logs from machines at work, I thought it would be fun to see how well word2vec worked if we trained it on the text of log messages.  This is obviously pretty far from an ideal training corpus, but these brief, rich messages seem like they should have some minable content.  In the rest of this post, I&rsquo;ll show some interesting results from the model and also describe some concrete preprocessing steps to get more useful results for extracting words from the odd dialect of natural language that appears in log messages. [...]</p>
 </div>
   </article>
 
@@ -300,70 +906,6 @@ Downloads page.
 </div>
   </article>
 
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2015/11/concrete-advice-about-abstracts.html">Concrete advice about abstracts</a></h1>
-      <p class="meta">
-        <time datetime="2015-11-16T15:43:49Z" pubdate data-updated="true">Nov 16<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Consider the following hypothetical conference session abstract: [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2015/10/pacing-technical-talks.html">Pacing technical talks</a></h1>
-      <p class="meta">
-        <time datetime="2015-10-21T16:17:01Z" pubdate data-updated="true">Oct 21<span>st</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>Delivering a technical talk has a lot in common with running a half-marathon or biking a 40k time trial.  You&rsquo;re excited and maybe a little nervous, you&rsquo;re prepared to go relatively hard for a relatively long time, and you&rsquo;re acutely aware of the clock.  In both situations, you might be tempted to take off right from the gun, diving into your hardest effort (or most technical material), but this is a bad strategy. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="https://chapeau.freevariable.com/2015/10/notes-from-flink-forward.html">Notes from Flink Forward</a></h1>
-      <p class="meta">
-        <time datetime="2015-10-20T15:48:44Z" pubdate data-updated="true">Oct 20<span>th</span>, 2015  &nbsp; &mdash; &nbsp; William Benton</time>
-      </p>
-    </header>
-    <div class="entry-content"><p><a data-flickr-embed="true"  href="https://www.flickr.com/photos/willb/22238437291/in/dateposted-public/" title="Brandenburger Tor lightshow"><img src="https://farm1.staticflickr.com/739/22238437291_22636e4a72_b.jpg" width="1024" height="819" alt="Brandenburger Tor lightshow"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script> [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://erikerlandson.github.com/blog/2015/09/26/a-library-of-binary-tree-algorithms-as-mixable-scala-traits/">A Library of Binary Tree Algorithms as Mixable Scala Traits</a></h1>
-      <p class="meta">
-        <time datetime="2015-09-26T19:43:00Z" pubdate data-updated="true">Sep 26<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Erik Erlandson</time>
-      </p>
-    </header>
-    <div class="entry-content"><p>In this post I am going to describe some work I've done recently on a system of Scala traits that support tree-based collection algorithms prefix-sum, nearest key query and value increment in a mixable format, all backed by Red-Black balanced tree logic, which is also a fully inheritable trait. [...]</p>
-</div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/08/gpus-and-adding-new-resources-types-to.html">GPUs and adding new resources types to the HTCondor-CE</a></h1>
-      <p class="meta">
-        <time datetime="2015-08-07T21:45:00Z" pubdate data-updated="true">Aug 7<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
-  </article>
-
-  <article>
-    <header>
-      <h1 class="entry-title"><a href="http://derekweitzel.blogspot.com/2015/07/the-more-things-change-more-they-stay.html">The more things change, the more they stay the same</a></h1>
-      <p class="meta">
-        <time datetime="2015-07-28T15:00:00Z" pubdate data-updated="true">Jul 28<span>th</span>, 2015  &nbsp; &mdash; &nbsp; Derek Weitzel</time>
-      </p>
-    </header>
-    <div class="entry-content"></div>
-  </article>
-
 </div>
 <aside class="sidebar">
   <section>
@@ -375,7 +917,7 @@ Downloads page.
     
       <a href="http://research.cs.wisc.edu/htcondor"> HTCondor Team</a><br>
     
-      <a href="http://derekweitzel.blogspot.com"> Derek Weitzel</a><br>
+      <a href="https://djw8605.github.io"> Derek Weitzel</a><br>
     
   </section>
 </aside>
